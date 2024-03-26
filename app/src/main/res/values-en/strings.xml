@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+    <string name="channel_name">BudgetBuddy notification channel</string>
+    <string name="channel_description">Here we will give app related notifications</string>
+
+    <string name="login_head">User Login</string>
+    <string name="email">Email:</string>
+    <string name="passwd">Password:</string>
+    <string name="guardar_datos"> Store login data:</string>
+    <string name="login_error">Incorrect password or email.</string>
+
+    <string name="register">Register</string>
+    <string name="register_head">User Register</string>
+    <string name="name">Name:</string>
+    <string name="passwd2">Repite la contraseña:</string>
+    <string name="name_error">Nombre incorrecto.</string>
+    <string name="email_error">Correo incorrecto.</string>
+    <string name="passwd_error">Contraseña no válida (ambas contraseñas deben ser iguales).</string>
+
+    <string name="app_description">We welcome you to our expense management platform.\n\n
+         We are excited that you have decided to join us.\n\n
+         In BudgetBuddy, you will be able to view and monitor your expenses efficiently.
+         Explore our powerful management tools and maintain complete control over costs and resources.</string>
+
+    <string name="list_explain">This is your list of expenses in %s:</string>
+    <string name="cantidad"> Quantity: %s€</string>
+    <string name="tipo"> Type: %s</string>
+
+    <string name="factura_init">The %s bill:\n</string>
+    <string name="factura_total">Total: %s€</string>
+    <string name="date_pick">Choose a date</string>
+    <string name="date">Current date: %s</string>
+    <string name="factura_download">A bill was downloaded.</string>
+    <string name="download_description"> To see the bill of %s, go to your Android download folder.</string>
+    <string name="download_error"> Error downloading.\n\nTry again later.\n
+        If the problem does not get solved, please try to erase the download folder and check the permissions of the app.</string>
+
+    <string name="add_element">Add a new element:</string>
+    <string name="name_element">Name</string>
+    <string name="price_element">Prize (1.2€)</string>
+
+    <string name="edit_element">Edit element:</string>
+    <string name="edit_complete">%s edit complete.</string>
+    <string name="delete_complete">%s was deleted.</string>
+
+    <string name="gasto_dia">Total expense of the month (%s)</string>
+    <string name="gasto_tipo">Expenses for each type of the month (%s)</string>
+    <string name="no_data">No data</string>
+
+    <string name="change_lang">Change language to:</string>
+    <string name="change_theme">Change theme to:</string>
+    <string name="error_insert">Write on every field</string>
+    <string name="error_double">Write the value using: "."</string>
+
+    <string name="back">Go back</string>
+    <string name="menu">Menu</string>
+    <string name="infor">Information</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+
+    <string name="share_message">Hello!\n\nI want to invite you to use BudgetBuddy, an expense management platform where
+        view and monitor your expenses efficiently.\n\nContact them to receive the APK: budgetbuddy46@gmail.com</string>
+    <string name="asunto">User Support</string>
+    <string name="contenidoEmail">Hello!\n\nI would like to know more about your APP.\n\n(Write your questions here)</string>
+</resources>

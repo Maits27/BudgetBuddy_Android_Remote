@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+    <string name="channel_name">Canal de notificaciones BudgetBuddy</string>
+    <string name="channel_description">Aquí te informaremos de tus acciones en la aplicación.</string>
+
+    <string name="login_head">Login de Usuario</string>
+    <string name="email">Correo electrónico:</string>
+    <string name="passwd">Contraseña:</string>
+    <string name="guardar_datos"> Guardar datos del login:</string>
+    <string name="login_error">Contraseña o correo electrónico incorrectos.</string>
+
+    <string name="register">Registrarse</string>
+    <string name="register_head">Registro de Usuario</string>
+    <string name="name">Nombre:</string>
+    <string name="passwd2">Repite la contraseña:</string>
+    <string name="name_error">Nombre incorrecto.</string>
+    <string name="email_error">Correo incorrecto.</string>
+    <string name="passwd_error">Contraseña no válida (ambas contraseñas deben ser iguales).</string>
+
+    <string name="app_description">Te damos la bienvenida a nuestra plataforma de gestión de gastos.\n\n
+        Estamos emocionados de que hayas decidido unirte a nosotros.\n\n
+        En BudgetBuddy, podrás ver y supervisar tus gastos de manera eficiente.
+        Explora nuestras potentes herramientas de gestión y mantén un control total sobre los costos y recursos.</string>
+
+    <string name="list_explain">Este es tu listado de gastos de %s:</string>
+    <string name="cantidad"> Cantidad: %s€</string>
+    <string name="tipo"> Tipo: %s</string>
+
+    <string name="factura_init">La factura de %s es la siguiente:\n</string>
+    <string name="factura_total">Total: %s€</string>
+    <string name="date_pick">Elige una fecha</string>
+    <string name="date">Fecha actual: %s</string>
+    <string name="factura_download">Se ha descargado una factura.</string>
+    <string name="download_description"> Para ver la factura del día %s, acceda a la carpeta de descargas de su dispositivo Android.</string>
+    <string name="download_error"> Error al descargar.\n\nPruebe de nuevo en otra ocasión.\n
+        Si no se soluciona, pruebe a vaciar la carpeta de descargas o los permisos de la aplicación.</string>
+
+    <string name="add_element">Añade un nuevo elemento:</string>
+    <string name="name_element">Nombre del gasto</string>
+    <string name="price_element">Cantidad en euros (1.2€)</string>
+
+    <string name="edit_element">Editar elemento:</string>
+    <string name="edit_complete">Se ha editado el elemento %s.</string>
+    <string name="delete_complete">Se ha borrado el elemento %s.</string>
+
+    <string name="gasto_dia">Gastos por día del mes (%s)</string>
+    <string name="gasto_tipo">Gasto de cada tipo en el mes (%s)</string>
+    <string name="no_data">No hay datos</string>
+
+    <string name="change_lang">Cambia el idioma a:</string>
+    <string name="change_theme">Cambia el tema a:</string>
+    <string name="error_insert">Escribe en todos los campos</string>
+    <string name="error_double">Añade el valor con la puntuación correcta: "."</string>
+
+    <string name="back">Atrás</string>
+    <string name="menu">Menu</string>
+    <string name="infor">Información</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="delete">Borrar</string>
+    <string name="edit">Editar</string>
+    <string name="add">Añadir</string>
+    <string name="share">Compartir</string>
+    <string name="download">Descargar</string>
+
+    <string name="share_message">Hola!\n\nQuiero invitarte a utilizar BudgetBuddy, una plataforma de gestión de gastos donde
+        ver y supervisar tus gastos de manera eficiente.\n\nContáctales para recibir la APK: budgetbuddy46@gmail.com</string>
+    <string name="asunto">Atención al user</string>
+    <string name="contenidoEmail">Buenas!\n\nQuerría saber más sobre vuestra APP.\n\n(Escriba aquí sus preguntas)</string>
+</resources>

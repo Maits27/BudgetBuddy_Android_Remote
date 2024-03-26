@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+    <string name="channel_name">BudgetBuddy notifikazio kanala</string>
+    <string name="channel_description">Hemen zure ekintzen berri emango dizugu aplikazioan.</string>
+
+    <string name="login_head">Erabiltzailearen login-a</string>
+    <string name="email">Posta elektronikoa:</string>
+    <string name="passwd">Pasahitza:</string>
+    <string name="guardar_datos"> Sarbidearen datuak gorde:</string>
+    <string name="login_error">Posta elektroniko edo pasahitz okerrak.</string>
+
+    <string name="register">Erregistratu</string>
+    <string name="register_head">Erabiltzailearen erregistroa</string>
+    <string name="name">Izena:</string>
+    <string name="passwd2">Pasahitza errepikatu:</string>
+    <string name="name_error">Izen okerra.</string>
+    <string name="email_error">Posta elektroniko okerra.</string>
+    <string name="passwd_error">Pasahitz ez zuzena (biak berdinak izan behar dira).</string>
+
+    <string name="app_description">Ongietorria ematen dizugu gastuak kudeatzeko plataformara.\n\n
+         Pozik gaude gurekin bat egitea erabaki duzulako.\n\n
+         BudgetBuddy-n, zure gastuak modu eraginkorrean ikusi eta kontrolatu ahal izango dituzu.
+         Arakatu gure kudeaketa tresna indartsuak eta mantendu kostuen eta baliabideen kontrol osoa.</string>
+
+    <string name="list_explain">Hau da zure %s gastuen zerrenda:</string>
+    <string name="cantidad"> Zenbatekoa: %s€</string>
+    <string name="tipo"> Mota: %s</string>
+
+    <string name="factura_init">%s faktura hurrengoa da:\n</string>
+    <string name="factura_total">Totala: %s€</string>
+    <string name="date_pick">Aukeratu data bat</string>
+    <string name="date">Oraingo data: %s</string>
+    <string name="factura_download">Faktura bat deskargatu da.</string>
+    <string name="download_description"> %s faktura ikusteko, jo zure Android mugikorraren deskarga karpetara.</string>
+    <string name="download_error"> Errore bat egon da deskargatzerakoan.\n\nSaiatu zaitez beste behin.\n
+        Ez bada arazoa konpontzen, mesedez garbitu zure deskarga karpeta eta konprobatu aplikazioaren permisoak ondo daudela.</string>
+
+    <string name="add_element">Gehitu elementu bat:</string>
+    <string name="name_element">Gastuaren izena</string>
+    <string name="price_element">Zenbatekoa eurotan (1.2€)</string>
+
+    <string name="edit_element">Editatu elementua:</string>
+    <string name="edit_complete">%s elementua editatu da.</string>
+    <string name="delete_complete">%s elementua ezabatu da.</string>
+
+    <string name="gasto_dia">Hilabeteko gastuak (%s)</string>
+    <string name="gasto_tipo">Mota bakoitzeko hilabeteko gastuak (%s)</string>
+    <string name="no_data">Ez dago daturik</string>
+
+    <string name="change_lang">Aldatu hizkuntza:</string>
+    <string name="change_theme">Aldatu koloreak:</string>
+    <string name="error_insert">Gehitu datu guztiak</string>
+    <string name="error_double">Sar ezazu balioa puntuazio egokia erabiliz: "."</string>
+
+    <string name="back">Atzera</string>
+    <string name="menu">Menua</string>
+    <string name="infor">Informazioa</string>
+    <string name="ok">OK</string>
+    <string name="error">Errorea</string>
+    <string name="delete">Ezabatu</string>
+    <string name="edit">Editatu</string>
+    <string name="add">Gehitu</string>
+    <string name="share">Partekatu</string>
+    <string name="download">Deskargatu</string>
+
+    <string name="share_message">Kaixo!\n\nBudgetBuddy erabiltzera gonbidatu nahiko nizuke. Hau, zure gastuak kudeatzeko plataforma bat da, hauek
+        modu eraginkorrean ikusiz eta kontrolatuz.\n\nInteresarik izatekotan, jar zaitez haiekin harremanetan APK jasotzeko: budgetbuddy46@gmail.com</string>
+    <string name="asunto">Erabiltzailearekiko arreta</string>
+    <string name="contenidoEmail">Kaixo!\n\nZure APP-ari buruz gehiago jakin nahiko nuke.\n\n(Idatz itzazu hemen zure galderak)</string>
+</resources>
