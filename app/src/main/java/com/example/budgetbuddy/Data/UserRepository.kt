@@ -13,7 +13,7 @@ interface IUserRepository {
     suspend fun insertUsuario(user: User)
     suspend fun deleteUsuario(user: User): Int
     fun todosLosUsuarios(): Flow<List<User>>
-//    fun userNamePassword(email: String): List<String>
+    fun userNamePassword(email: String, passwd:String): String
     fun userName(email: String): String
     fun editarUsuario(user: User): Int
 }
@@ -40,9 +40,9 @@ class UserRepository @Inject constructor(
     }
 
 
-//    override fun userNamePassword(email: String):List<String> {
-//        return userDao.usernamePassword(email)?.get(0) ?: emptyList()
-//    }
+    override fun userNamePassword(email: String, passwd:String):String {
+        return userDao.usernamePassword(email, passwd)?: ""
+    }
 
     override fun userName(email: String): String {
         return userDao.userName(email)?:""

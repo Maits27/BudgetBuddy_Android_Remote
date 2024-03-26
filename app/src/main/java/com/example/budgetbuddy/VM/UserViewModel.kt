@@ -67,21 +67,8 @@ class UserViewModel @Inject constructor(
         userRepository.editarUsuario(user)
     }
 
-    suspend fun correctLogIn(email:String, passwd: String): String{
-        var nombre = ""
-
-//        val usuario = todosLosUsuarios.map { users ->
-//            users.filter { it.email == email && it.password==passwd }
-//        }
-
-        todosLosUsuarios.collect{
-            val usuario = it.find { it.email == email && passwd.compareHash(it.password)}
-            if (usuario != null){
-                nombre = usuario.nombre
-            }
-        }
-
-        return nombre
+   fun correctLogIn(email:String, passwd: String): String{
+        return userRepository.userNamePassword(email, passwd.hash())
     }
 
     suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): Boolean{

@@ -26,9 +26,9 @@ interface UserDao {
     @Transaction
     @Query("SELECT * FROM User")
     fun todosLosUsuarios(): Flow<List<User>>
-//    @Transaction
-//    @Query("SELECT nombre, password FROM User WHERE email=:email")
-//    fun usernamePassword(email: String): List<List<String>>?
+    @Transaction
+    @Query("SELECT nombre FROM User WHERE email=:email AND password=:passwd")
+    fun usernamePassword(email: String, passwd:String): String?
     @Transaction
     @Query("SELECT nombre FROM User WHERE email=:email")
     fun userName(email: String): String?

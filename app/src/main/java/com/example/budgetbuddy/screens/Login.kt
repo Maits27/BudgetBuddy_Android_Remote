@@ -190,11 +190,13 @@ fun Login(
             modifier = Modifier.padding(10.dp),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
+                    Log.d("LOGIN", "TODO OK0")
+                    val nombre = userViewModel.correctLogIn(correo, passwd)
+                    Log.d("LOGIN", "TODO OK1")
                     withContext(Dispatchers.Main) {
-                        val nombre = userViewModel.correctLogIn(correo, passwd)
                         if(nombre!=""){
                             onCorrectLogIn(correo, nombre)
-                            Log.d("LOGIN", "TODO OK")
+                            Log.d("LOGIN", "TODO OK2")
                             if (!checked){
                                 correo = ""
                                 passwd = ""
@@ -291,14 +293,10 @@ fun Register(
                     // Ejecuta el código que puede bloquear el hilo principal aquí
 
                     val registroExitoso = userViewModel.correctRegister(nombre, correo, passwd, passwd2)
-
                     // Cambiar al hilo principal para actualizar la UI
                     withContext(Dispatchers.Main) {
-                        Log.d("REGISTRO", "TODO OK 0")
                         if (registroExitoso) {
-                            Log.d("REGISTRO", "TODO OK 1")
                             onCorrectLogIn(correo, nombre)
-                            Log.d("REGISTRO", "TODO OK 2")
                             navController.navigate(AppScreens.MainView.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
