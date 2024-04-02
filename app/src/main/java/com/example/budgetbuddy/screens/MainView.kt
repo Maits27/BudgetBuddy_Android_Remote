@@ -15,6 +15,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -92,7 +93,8 @@ fun MainView(
     navControllerMain: NavController,
     appViewModel: AppViewModel,
     preferencesViewModel: PreferencesViewModel,
-    guardarFichero: (LocalDate, String)-> Boolean
+    onDrawerOpen: () -> Unit,
+    guardarFichero: (LocalDate, String) -> Boolean
 ){
     val context = LocalContext.current
     val navController = rememberNavController()
@@ -171,6 +173,7 @@ fun MainView(
             TopBarMainView(
                 navControllerMain = navControllerMain,
                 navController = navController,
+                onDrawerOpen = onDrawerOpen,
                 preferencesViewModel = preferencesViewModel,
                 idioma = idioma
             )
@@ -219,6 +222,7 @@ fun MainView(
 fun TopBarMainView(
     navControllerMain: NavController,
     navController: NavController,
+    onDrawerOpen: () -> Unit,
     preferencesViewModel: PreferencesViewModel,
     idioma: AppLanguage
 ){
@@ -227,12 +231,6 @@ fun TopBarMainView(
     var showLang by rememberSaveable { mutableStateOf(false) }
     var showTheme by rememberSaveable { mutableStateOf(false) }
 
-    val onLanguageChange:(AppLanguage)-> Unit = {
-        preferencesViewModel.changeLang(it)
-    }
-    val onThemeChange:(Int)-> Unit = {
-        preferencesViewModel.changeTheme(it)
-    }
     TopAppBar(
         title = {
             Text(text = stringResource(id = R.string.app_name))
@@ -242,11 +240,20 @@ fun TopBarMainView(
             titleContentColor = MaterialTheme.colorScheme.onSecondary
         ),
         navigationIcon = {
+            IconButton( onClick = { onDrawerOpen() } ){
+                Icon(
+                    Icons.Filled.Menu,
+                    contentDescription = stringResource(id = R.string.menu),
+                    tint = Color.White
+                )
+            }
+        },
+        actions = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             if (navBackStackEntry?.destination?.route == AppScreens.Home.route){
                 IconButton(onClick = { navControllerMain.navigateUp() }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        painter = painterResource(id = R.drawable.logout),
                         contentDescription = stringResource(id = R.string.back),
                         tint = Color.White
                     )
@@ -260,34 +267,33 @@ fun TopBarMainView(
                     )
                 }
             }
-        },
-        actions = {
-            IconButton( onClick = { showInfo = true } ){
-                Icon(
-                    Icons.Filled.Info,
-                    contentDescription = stringResource(id = R.string.infor),
-                    tint = Color.White
-                )
-            }
-            IconButton( onClick = { showLang = true } ){
-                Icon(
-                    painterResource(id = R.drawable.baseline_translate_24),//Icons.Filled.Settings,
-                    contentDescription = stringResource(id = R.string.infor),
-                    tint = Color.White
-                )
-            }
-            IconButton( onClick = { showTheme = true } ){
-                Icon(
-                    painterResource(id = R.drawable.palette),//Icons.Filled.Settings,
-                    contentDescription = stringResource(id = R.string.infor),
-                    tint = Color.White
-                )
-            }
+
+//            IconButton( onClick = { showInfo = true } ){
+//                Icon(
+//                    Icons.Filled.Info,
+//                    contentDescription = stringResource(id = R.string.infor),
+//                    tint = Color.White
+//                )
+//            }
+//            IconButton( onClick = { showLang = true } ){
+//                Icon(
+//                    painterResource(id = R.drawable.baseline_translate_24),//Icons.Filled.Settings,
+//                    contentDescription = stringResource(id = R.string.infor),
+//                    tint = Color.White
+//                )
+//            }
+//            IconButton( onClick = { showTheme = true } ){
+//                Icon(
+//                    painterResource(id = R.drawable.palette),//Icons.Filled.Settings,
+//                    contentDescription = stringResource(id = R.string.infor),
+//                    tint = Color.White
+//                )
+//            }
         },
     )
-    Informacion(showInfo) { showInfo = false }
-    Idiomas(showLang, onLanguageChange){ showLang = false }
-    Temas(showTheme, idioma.code ,onThemeChange){ showTheme = false }
+//    Informacion(showInfo) { showInfo = false }
+//    Idiomas(showLang, onLanguageChange){ showLang = false }
+//    Temas(showTheme, idioma.code ,onThemeChange){ showTheme = false }
 
 }
 

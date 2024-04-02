@@ -68,4 +68,5 @@
         ver y supervisar tus gastos de manera eficiente.\n\nContáctales para recibir la APK: budgetbuddy46@gmail.com</string>
     <string name="asunto">Atención al user</string>
     <string name="contenidoEmail">Buenas!\n\nQuerría saber más sobre vuestra APP.\n\n(Escriba aquí sus preguntas)</string>
+    <string name="preferences">Preferencias</string>
 </resources>

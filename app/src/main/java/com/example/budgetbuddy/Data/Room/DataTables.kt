@@ -31,7 +31,7 @@ import java.util.UUID
 
 data class GastoDia(val cantidad: Double, val fecha: LocalDate)
 data class GastoTipo(val cantidad: Double, val tipo: TipoGasto)
-data class Diseño(val pantalla: AppScreens, val icono: Painter)
+data class Diseño(val pantalla: AppScreens, val icono: Painter, val nombre: String="")
 
 /*******************************************************************************
  ****                        User Entity in Database                        ****

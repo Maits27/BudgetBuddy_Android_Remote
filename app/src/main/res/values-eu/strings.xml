@@ -68,4 +68,5 @@
         modu eraginkorrean ikusiz eta kontrolatuz.\n\nInteresarik izatekotan, jar zaitez haiekin harremanetan APK jasotzeko: budgetbuddy46@gmail.com</string>
     <string name="asunto">Erabiltzailearekiko arreta</string>
     <string name="contenidoEmail">Kaixo!\n\nZure APP-ari buruz gehiago jakin nahiko nuke.\n\n(Idatz itzazu hemen zure galderak)</string>
+    <string name="preferences">Preferentziak</string>
 </resources>

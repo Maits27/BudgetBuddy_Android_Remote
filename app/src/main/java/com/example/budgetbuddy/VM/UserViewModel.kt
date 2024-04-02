@@ -64,7 +64,13 @@ class UserViewModel @Inject constructor(
     }
 
     suspend fun correctLogIn(email:String, passwd: String): HashMap<String, Any>{
-       return userRepository.userNamePassword(email, passwd.hash())
+        if(email!="" && passwd!=""){
+            return userRepository.userNamePassword(email, passwd.hash())
+        }
+        var r = HashMap<String, Any>()
+        r["nombre"] = ""
+        r["bajar_datos"] = false
+        return  r
     }
 
     suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): Boolean{

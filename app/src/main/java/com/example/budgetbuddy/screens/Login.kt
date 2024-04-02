@@ -2,6 +2,7 @@ package com.example.budgetbuddy.screens
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -210,7 +211,7 @@ fun Login(
                                 correo = ""
                                 passwd = ""
                             }
-                            navController.navigate(AppScreens.MainView.route) {
+                            navController.navigate(AppScreens.App.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
                                 }
@@ -223,7 +224,7 @@ fun Login(
                     }
                 }
             }) {
-            Text(text = "Login")
+            Text(text = "Login", Modifier.background(color = grisClaro), color= grisOscuro)
         }
     }
 }
@@ -312,7 +313,7 @@ fun Register(
                     withContext(Dispatchers.Main) {
                         if (registroExitoso) {
                             onCorrectLogIn(correo, nombre, false)
-                            navController.navigate(AppScreens.MainView.route) {
+                            navController.navigate(AppScreens.App.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
                                 }
@@ -326,7 +327,7 @@ fun Register(
                 }
             }
         ) {
-            Text(text = stringResource(id = R.string.register))
+            Text(text = stringResource(id = R.string.register), Modifier.background(color = grisClaro), color= grisOscuro)
         }
 
     }

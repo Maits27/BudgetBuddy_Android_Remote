@@ -9,11 +9,17 @@ package com.example.budgetbuddy.navigation
  */
 
 sealed class AppScreens (val route: String) {
+    object App: AppScreens("App")
     object Home: AppScreens("Home")
     object Add: AppScreens("Add")
     object Edit: AppScreens("Edit")
     object Dashboards: AppScreens("Dashboards")
     object Facturas: AppScreens("Facturas")
+
     object LoginPage: AppScreens("LoginPage")
     object MainView: AppScreens("MainView")
+
+    object Infor: AppScreens("Infor")
+    object Preferences: AppScreens("Preferences")
+    object UserEdit: AppScreens("UserEdit")
 }

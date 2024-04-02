@@ -2,8 +2,10 @@ package com.example.budgetbuddy.shared
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,8 +46,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.budgetbuddy.Data.Enumeration.AppLanguage
+import com.example.budgetbuddy.Data.Enumeration.Tema
+import com.example.budgetbuddy.Data.Enumeration.obtenerTema
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
+import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.ui.theme.azulMedio
+import com.example.budgetbuddy.ui.theme.morado1
+import com.example.budgetbuddy.ui.theme.verdeOscuro
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -54,6 +68,18 @@ import java.time.ZoneId
 // Estos son composables que se utilizan en diferentes pantallas
 // y son independientes del resto de contenido de estas.
 
+@Composable
+fun Titulo(){
+    Text(
+        text = stringResource(id = R.string.app_name),
+        modifier = Modifier.padding(16.dp),
+        style = TextStyle(
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    )
+}
 /**
  * Cabecera de las tres pantallas principales para elegir la fecha
  * de la que se quiere visualizar la información
@@ -155,3 +181,4 @@ fun ErrorText(text: String) {
         modifier = Modifier.padding(2.dp)
     )
 }
+
