@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
@@ -48,6 +49,7 @@ import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.shared.ErrorText
 import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.ui.theme.grisOscuro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -188,6 +190,12 @@ fun Login(
 
         Button(
             modifier = Modifier.padding(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = grisClaro,
+                contentColor = grisOscuro,
+                disabledBackgroundColor = grisOscuro,
+                disabledContentColor = grisClaro,
+            ),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     Log.d("LOGIN", "TODO OK0")
@@ -289,6 +297,12 @@ fun Register(
 
         Button(
             modifier = Modifier.padding(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = grisClaro,
+                contentColor = grisOscuro,
+                disabledBackgroundColor = grisOscuro,
+                disabledContentColor = grisClaro,
+            ),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     // Ejecuta el código que puede bloquear el hilo principal aquí

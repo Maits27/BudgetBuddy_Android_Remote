@@ -38,3 +38,5 @@ val moradoOscuro = Color(0xff4A126E)
 val rosaClaro = Color(0xffEBCFFF)
 
 val grisClaro = Color(0xffF4F4F4)
+val grisOscuro = Color(0x0CF4F4F4)
+val grisNormal = Color(0x4FF4F4F4)
