@@ -3,18 +3,16 @@ package com.example.budgetbuddy.VM
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.Data.Enumeration.AppLanguage
-import com.example.budgetbuddy.Data.Gasto
-import com.example.budgetbuddy.Data.GastoDia
-import com.example.budgetbuddy.Data.GastoTipo
-import com.example.budgetbuddy.Data.IGastoRepository
+import com.example.budgetbuddy.Data.Room.Gasto
+import com.example.budgetbuddy.Data.Room.GastoDia
+import com.example.budgetbuddy.Data.Room.GastoTipo
+import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
-import com.example.budgetbuddy.preferences.IGeneralPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +20,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.random.Random
 
 /********************************************************
  ****                 App View Model                 ****
@@ -42,7 +39,7 @@ class AppViewModel @Inject constructor(
     /*************************************************
      **                    Estados                  **
      *************************************************/
-    var currentUser by mutableStateOf( "a@a.com")
+    var currentUser by mutableStateOf( "budgetbuddy46@gmail.com")
     var currentUserName by mutableStateOf("")
 
     // Flows a los que les llega constantemente las actualizaciones y datos de la BBDD.
@@ -71,20 +68,20 @@ class AppViewModel @Inject constructor(
     /*************************************************
      **          Inicialización de la BBDD          **
      *************************************************/
-    init {
-        viewModelScope.launch {
-            for (cantidad in 1 until 10){
-                Log.d("BD-Preloading", "Loading cantidad $cantidad")
-                añadirGasto( "Gasto Inicial 2$cantidad", 10.0*cantidad, LocalDate.of(2024,3, cantidad), TipoGasto.Comida)
-                añadirGasto( "Gasto Inicial 5$cantidad", 4.0*cantidad, LocalDate.of(2024,3, cantidad+20), TipoGasto.Ropa)
-                añadirGasto( "Gasto Inicial 4$cantidad", 5.0*cantidad, LocalDate.of(2024,3, cantidad+10), TipoGasto.Hogar)
-                añadirGasto( "Gasto Inicial 6$cantidad", 10.0*cantidad, LocalDate.of(2024,4, cantidad), TipoGasto.Transporte)
-                añadirGasto( "Gasto Inicial 7$cantidad", 4.0*cantidad, LocalDate.of(2024,4, cantidad+20), TipoGasto.Comida)
-                añadirGasto( "Gasto Inicial 8$cantidad", 5.0*cantidad, LocalDate.of(2024,4, cantidad+10), TipoGasto.Actividad)
-                añadirGasto( "Gasto Inicial 9$cantidad", 1.0*cantidad, LocalDate.now(), TipoGasto.Otros)
-            }
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            for (cantidad in 1 until 10){
+//                Log.d("BD-Preloading", "Loading cantidad $cantidad")
+//                añadirGasto( "Gasto Inicial 2$cantidad", 10.0*cantidad, LocalDate.of(2024,3, cantidad), TipoGasto.Comida)
+//                añadirGasto( "Gasto Inicial 5$cantidad", 4.0*cantidad, LocalDate.of(2024,3, cantidad+20), TipoGasto.Ropa)
+//                añadirGasto( "Gasto Inicial 4$cantidad", 5.0*cantidad, LocalDate.of(2024,3, cantidad+10), TipoGasto.Hogar)
+//                añadirGasto( "Gasto Inicial 6$cantidad", 10.0*cantidad, LocalDate.of(2024,4, cantidad), TipoGasto.Transporte)
+//                añadirGasto( "Gasto Inicial 7$cantidad", 4.0*cantidad, LocalDate.of(2024,4, cantidad+20), TipoGasto.Comida)
+//                añadirGasto( "Gasto Inicial 8$cantidad", 5.0*cantidad, LocalDate.of(2024,4, cantidad+10), TipoGasto.Actividad)
+//                añadirGasto( "Gasto Inicial 9$cantidad", 1.0*cantidad, LocalDate.now(), TipoGasto.Otros)
+//            }
+//        }
+//    }
 
 
     /*************************************************
@@ -94,7 +91,7 @@ class AppViewModel @Inject constructor(
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto):Gasto {
+    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto): Gasto {
         val gasto = Gasto(nombre, cantidad, fecha, tipo, currentUser)
         try {
             gastoRepository.insertGasto(gasto)
@@ -115,7 +112,7 @@ class AppViewModel @Inject constructor(
         _fecha.value = nuevoValor
 
     }
-    fun editarGasto(gasto_previo:Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto){
+    fun editarGasto(gasto_previo: Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto){
         gastoRepository.editarGasto(Gasto(nombre, cantidad,fecha, tipo, currentUser, gasto_previo.id))
     }
 
@@ -165,6 +162,11 @@ class AppViewModel @Inject constructor(
             }
         }
         return gastosAgrupados
+    }
+    fun download_user_data(){
+        viewModelScope.launch {
+            gastoRepository.download_user_data(currentUser)
+        }
     }
 }
 

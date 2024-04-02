@@ -1,6 +1,10 @@
-package com.example.budgetbuddy.Data
+package com.example.budgetbuddy.Data.Repositories
 
+import com.example.budgetbuddy.Data.DAO.GastoDao
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
+import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Data.Room.Gasto
+import com.example.budgetbuddy.utils.convertirPostGastos_Gastos
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject
@@ -16,6 +20,7 @@ interface IGastoRepository {
     suspend fun insertGasto(gasto: Gasto)
     suspend fun insertGastos(gastos: List<Gasto>): List<Unit>
     suspend fun deleteGasto(gasto: Gasto): Int
+    suspend fun download_user_data(email: String)
     fun todosLosGastos(userId: String): Flow<List<Gasto>>
     fun elementosFecha(fecha: LocalDate, userId: String): Flow<List<Gasto>>
     fun gastoTotal(userId: String): Flow<Double>
@@ -33,7 +38,8 @@ interface IGastoRepository {
  * */
 @Singleton
 class GastoRepository @Inject constructor(
-    private val gastoDao: GastoDao
+    private val gastoDao: GastoDao,
+    private val httpService: HTTPService
 ) : IGastoRepository {
     override suspend fun insertGasto(gasto: Gasto) {
         return gastoDao.insertGasto(gasto)
@@ -45,6 +51,11 @@ class GastoRepository @Inject constructor(
 
     override suspend fun deleteGasto(gasto: Gasto): Int {
         return gastoDao.deleteGasto(gasto)
+    }
+
+    override suspend fun download_user_data(email: String) {
+        val resultado = httpService.download_user_data(email)
+        insertGastos(convertirPostGastos_Gastos(resultado))
     }
 
     override fun todosLosGastos(userId: String): Flow<List<Gasto>> {

@@ -45,3 +45,14 @@ fun obtenerTipoEnIdioma(tipo: TipoGasto, idioma: String): String {
         else -> tipo.tipo       // Por defecto, devolver el mensaje original (Castellano)
     }
 }
+
+fun obtenerTipoDeNombre(nombre: String): TipoGasto?{
+    return when (nombre){
+        "Comida" -> TipoGasto.Comida
+        "Hogar" -> TipoGasto.Hogar
+        "Ropa" -> TipoGasto.Ropa
+        "Actividad" -> TipoGasto.Actividad
+        "Otros" -> TipoGasto.Otros
+        else -> null
+    }
+}

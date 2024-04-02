@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.budgetbuddy.VM.AppViewModel
-import com.example.budgetbuddy.Data.GastoDia
-import com.example.budgetbuddy.Data.GastoTipo
+import com.example.budgetbuddy.Data.Room.GastoDia
+import com.example.budgetbuddy.Data.Room.GastoTipo
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.shared.Header

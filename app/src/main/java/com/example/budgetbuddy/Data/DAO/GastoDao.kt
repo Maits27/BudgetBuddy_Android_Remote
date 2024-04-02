@@ -1,4 +1,4 @@
-package com.example.budgetbuddy.Data
+package com.example.budgetbuddy.Data.DAO
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
+import com.example.budgetbuddy.Data.Room.Gasto
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

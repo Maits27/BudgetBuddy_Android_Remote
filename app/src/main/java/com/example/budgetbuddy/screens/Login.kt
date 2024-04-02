@@ -56,7 +56,7 @@ import kotlinx.coroutines.withContext
 fun LoginPage(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String) -> Unit
+    onCorrectLogIn: (String, String, Any) -> Unit
 ){
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     if (isVertical){
@@ -133,7 +133,7 @@ fun LoginPage(
 fun Login(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String) -> Unit,
+    onCorrectLogIn: (String, String, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -191,11 +191,12 @@ fun Login(
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     Log.d("LOGIN", "TODO OK0")
-                    val nombre = userViewModel.correctLogIn(correo, passwd)
+                    val result = userViewModel.correctLogIn(correo, passwd)
+                    val nombre = result["nombre"].toString()
                     Log.d("LOGIN", "TODO OK1")
                     withContext(Dispatchers.Main) {
                         if(nombre!=""){
-                            onCorrectLogIn(correo, nombre)
+                            onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
                             Log.d("LOGIN", "TODO OK2")
                             if (!checked){
                                 correo = ""
@@ -223,7 +224,7 @@ fun Login(
 fun Register(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String) -> Unit,
+    onCorrectLogIn: (String, String, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -296,7 +297,7 @@ fun Register(
                     // Cambiar al hilo principal para actualizar la UI
                     withContext(Dispatchers.Main) {
                         if (registroExitoso) {
-                            onCorrectLogIn(correo, nombre)
+                            onCorrectLogIn(correo, nombre, false)
                             navController.navigate(AppScreens.MainView.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true

@@ -1,4 +1,4 @@
-package com.example.budgetbuddy.Data
+package com.example.budgetbuddy.Data.Room
 
 import androidx.compose.ui.graphics.painter.Painter
 
@@ -9,6 +9,7 @@ import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.navigation.AppScreens
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.util.UUID
 
@@ -32,6 +33,20 @@ data class GastoDia(val cantidad: Double, val fecha: LocalDate)
 data class GastoTipo(val cantidad: Double, val tipo: TipoGasto)
 data class Diseño(val pantalla: AppScreens, val icono: Painter)
 
+/*******************************************************************************
+ ****                        User Entity in Database                        ****
+ *******************************************************************************/
+
+/**
+ * Data class representing the user entity. Defined by a [username] and a [password].
+ */
+@Serializable
+data class AuthUser(
+    val nombre: String = "",
+    val email: String,
+    val password: String = "",
+)
+
 /**
  * Clase [Gasto], utilizada para almacenar toda la información de todos las entidades
  * tipo [Gasto] en la base de datos de Room. Si se quieren utilizar datos específicos
@@ -44,6 +59,7 @@ data class User(
     @PrimaryKey val email: String,
     var password: String
 )
+
 
 @Entity(
     foreignKeys = [

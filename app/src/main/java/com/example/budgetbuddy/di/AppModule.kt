@@ -2,13 +2,14 @@ package com.example.budgetbuddy.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.budgetbuddy.Data.Database
-import com.example.budgetbuddy.Data.GastoDao
-import com.example.budgetbuddy.Data.GastoRepository
-import com.example.budgetbuddy.Data.IGastoRepository
-import com.example.budgetbuddy.Data.IUserRepository
-import com.example.budgetbuddy.Data.UserDao
-import com.example.budgetbuddy.Data.UserRepository
+import com.example.budgetbuddy.Data.Room.Database
+import com.example.budgetbuddy.Data.DAO.GastoDao
+import com.example.budgetbuddy.Data.Repositories.GastoRepository
+import com.example.budgetbuddy.Data.Repositories.IGastoRepository
+import com.example.budgetbuddy.Data.Repositories.IUserRepository
+import com.example.budgetbuddy.Data.DAO.UserDao
+import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Data.Repositories.UserRepository
 import com.example.budgetbuddy.preferences.IGeneralPreferences
 import com.example.budgetbuddy.preferences.PreferencesRepository
 import dagger.Module
@@ -47,13 +48,13 @@ object AppModule {
     @Provides
     fun providesBudgetBuddyDatabase(@ApplicationContext app: Context) =
         Room.databaseBuilder(app, Database::class.java, "budgetBuddyDB2")
-//            .createFromAsset("database/database.db")
+            .createFromAsset("database/budgetBuddyDB2.db")
             .build()
 
     ////////////////////// DAO //////////////////////
     @Singleton
     @Provides
-    fun providesUserDao(db:Database) = db.userDao()
+    fun providesUserDao(db: Database) = db.userDao()
 
     @Singleton
     @Provides
@@ -63,11 +64,11 @@ object AppModule {
     //////////////   Repositorio Gastos   //////////////
     @Singleton
     @Provides
-    fun providesUserRepository(userDao: UserDao): IUserRepository = UserRepository(userDao)
+    fun providesUserRepository(userDao: UserDao, httpService: HTTPService): IUserRepository = UserRepository(userDao, httpService)
 
     @Singleton
     @Provides
-    fun provideGastoRepository(gastoDao: GastoDao): IGastoRepository = GastoRepository(gastoDao)
+    fun provideGastoRepository(gastoDao: GastoDao, httpService: HTTPService): IGastoRepository = GastoRepository(gastoDao, httpService)
 
 
     /////////// Repositorio de preferencias ///////////
