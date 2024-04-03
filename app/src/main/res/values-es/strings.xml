@@ -18,10 +18,7 @@
     <string name="email_error">Incorrect email.</string>
     <string name="passwd_error">Invalid password (the two of them must be the same).</string>
 
-    <string name="app_description">Te damos la bienvenida a nuestra plataforma de gestión de gastos.\n\n
-        Estamos emocionados de que hayas decidido unirte a nosotros.\n\n
-        En BudgetBuddy, podrás ver y supervisar tus gastos de manera eficiente.
-        Explora nuestras potentes herramientas de gestión y mantén un control total sobre los costos y recursos.</string>
+    <string name="app_description">"Te damos la bienvenida a nuestra plataforma de gestión de gastos.\n\nEstamos emocionados de que hayas decidido unirte a nosotros.\n\nEn BudgetBuddy, podrás ver y supervisar tus gastos de manera eficiente. Explora nuestras potentes herramientas de gestión y mantén un control total sobre los costos y recursos."</string>
 
     <string name="factura_init">La factura de %s es la siguiente:\n</string>
     <string name="factura_total">Total: %s€</string>
@@ -69,4 +66,6 @@
     <string name="asunto">Atención al user</string>
     <string name="contenidoEmail">Buenas!\n\nQuerría saber más sobre vuestra APP.\n\n(Escriba aquí sus preguntas)</string>
     <string name="preferences">Preferencias</string>
+    <string name="profile_picture">Foto de perfil</string>
+    <string name="profile">Perfil de usuario:</string>
 </resources>

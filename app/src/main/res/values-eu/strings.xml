@@ -18,10 +18,7 @@
     <string name="email_error">Posta elektroniko okerra.</string>
     <string name="passwd_error">Pasahitz ez zuzena (biak berdinak izan behar dira).</string>
 
-    <string name="app_description">Ongietorria ematen dizugu gastuak kudeatzeko plataformara.\n\n
-         Pozik gaude gurekin bat egitea erabaki duzulako.\n\n
-         BudgetBuddy-n, zure gastuak modu eraginkorrean ikusi eta kontrolatu ahal izango dituzu.
-         Arakatu gure kudeaketa tresna indartsuak eta mantendu kostuen eta baliabideen kontrol osoa.</string>
+    <string name="app_description">"Ongietorria ematen dizugu gastuak kudeatzeko plataformara.\n\nPozik gaude gurekin bat egitea erabaki duzulako.\n\nBudgetBuddy-n, zure gastuak modu eraginkorrean ikusi eta kontrolatu ahal izango dituzu. Arakatu gure kudeaketa tresna indartsuak eta mantendu kostuen eta baliabideen kontrol osoa."</string>
 
     <string name="list_explain">Hau da zure %s gastuen zerrenda:</string>
     <string name="cantidad"> Zenbatekoa: %s€</string>
@@ -69,4 +66,6 @@
     <string name="asunto">Erabiltzailearekiko arreta</string>
     <string name="contenidoEmail">Kaixo!\n\nZure APP-ari buruz gehiago jakin nahiko nuke.\n\n(Idatz itzazu hemen zure galderak)</string>
     <string name="preferences">Preferentziak</string>
+    <string name="profile_picture">Profil argazkia</string>
+    <string name="profile">Erabiltzaile profila:</string>
 </resources>

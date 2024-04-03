@@ -1,5 +1,7 @@
 package com.example.budgetbuddy.Data.Remote
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.Gasto
@@ -27,6 +29,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
+import java.io.ByteArrayOutputStream
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -144,6 +147,8 @@ class HTTPService @Inject constructor() {
         Log.d("HTTP", response.status.toString())
         response.body()
     }
+
+
 
     /*******************************************************************************
     #################################    GASTOS    #################################

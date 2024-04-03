@@ -34,7 +34,7 @@ fun Preferences(
     onConfirm: () -> Unit
 ) {
     Column (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
@@ -71,7 +71,7 @@ fun Preferences(
                     onThemeChange(0)
                     onConfirm()
                 },
-                Modifier.weight(1f),
+                Modifier.weight(1f).padding(8.dp),
                 colors = ButtonColors(
                     containerColor = verdeOscuro,
                     disabledContainerColor = verdeOscuro,
@@ -86,7 +86,7 @@ fun Preferences(
                     onThemeChange(1)
                     onConfirm()
                 },
-                Modifier.weight(1f),
+                Modifier.weight(1f).padding(8.dp),
                 colors = ButtonColors(
                     containerColor = azulMedio,
                     disabledContainerColor = azulMedio,
@@ -101,7 +101,7 @@ fun Preferences(
                     onThemeChange(2)
                     onConfirm()
                 },
-                Modifier.weight(1f),
+                Modifier.weight(1f).padding(8.dp),
                 colors = ButtonColors(
                     containerColor = morado1,
                     disabledContainerColor = morado1,

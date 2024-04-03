@@ -3,7 +3,9 @@ package com.example.budgetbuddy.Data.Repositories
 import com.example.budgetbuddy.Data.DAO.GastoDao
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.Gasto
+import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.utils.convertirPostGastos_Gastos
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

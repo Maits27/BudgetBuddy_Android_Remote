@@ -18,10 +18,7 @@
     <string name="email_error">Correo incorrecto.</string>
     <string name="passwd_error">Contraseña no válida (ambas contraseñas deben ser iguales).</string>
 
-    <string name="app_description">We welcome you to our expense management platform.\n\n
-         We are excited that you have decided to join us.\n\n
-         In BudgetBuddy, you will be able to view and monitor your expenses efficiently.
-         Explore our powerful management tools and maintain complete control over costs and resources.</string>
+    <string name="app_description">"We welcome you to our expense management platform.\n\nWe are excited that you have decided to join us.\n\nIn BudgetBuddy, you will be able to view and monitor your expenses efficiently. Explore our powerful management tools and maintain complete control over costs and resources."</string>
 
     <string name="list_explain">This is your list of expenses in %s:</string>
     <string name="cantidad"> Quantity: %s€</string>
@@ -69,4 +66,6 @@
     <string name="asunto">User Support</string>
     <string name="contenidoEmail">Hello!\n\nI would like to know more about your APP.\n\n(Write your questions here)</string>
     <string name="preferences">Preferences</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="profile">User profile:</string>
 </resources>

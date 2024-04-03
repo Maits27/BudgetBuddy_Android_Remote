@@ -17,10 +17,7 @@
     <string name="email_error">Correo incorrecto.</string>
     <string name="passwd_error">Contraseña no válida (ambas contraseñas deben ser iguales).</string>
 
-    <string name="app_description">Te damos la bienvenida a nuestra plataforma de gestión de gastos.\n\n
-        Estamos emocionados de que hayas decidido unirte a nosotros.\n\n
-        En BudgetBuddy, podrás ver y supervisar tus gastos de manera eficiente.
-        Explora nuestras potentes herramientas de gestión y mantén un control total sobre los costos y recursos.</string>
+    <string name="app_description">Te damos la bienvenida a nuestra plataforma de gestión de gastos.\n\nEstamos emocionados de que hayas decidido unirte a nosotros.\n\nEn BudgetBuddy, podrás ver y supervisar tus gastos de manera eficiente. Explora nuestras potentes herramientas de gestión y mantén un control total sobre los costos y recursos.</string>
 
     <string name="list_explain">Este es tu listado de gastos de %s:</string>
     <string name="cantidad"> Cantidad: %s€</string>
@@ -68,4 +65,6 @@
     <string name="asunto">Atención al user</string>
     <string name="contenidoEmail">Buenas!\n\nQuerría saber más sobre vuestra APP.\n\n(Escriba aquí sus preguntas)</string>
     <string name="preferences">Preferencias</string>
+    <string name="profile_picture">Foto de perfil</string>
+    <string name="profile">Perfil de usuario:</string>
 </resources>

@@ -1,10 +1,12 @@
 package com.example.budgetbuddy.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -44,6 +46,7 @@ import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
+import com.example.budgetbuddy.shared.Perfil
 import com.example.budgetbuddy2.screens.MainView
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -68,7 +71,7 @@ fun App(
         Diseño(AppScreens.Infor, painterResource(id = R.drawable.infor), stringResource(id = R.string.infor)),
         Diseño(AppScreens.MainView, painterResource(id = R.drawable.close), stringResource(id = R.string.ok)),
     )
-    val selectedItem = remember { mutableStateOf(items[0]) }
+    val selectedItem = remember { mutableStateOf<Diseño?>(null) }
 
     val onLanguageChange:(AppLanguage)-> Unit = {
         preferencesViewModel.changeLang(it)
@@ -85,25 +88,36 @@ fun App(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Spacer(Modifier.height(12.dp))
-                items.forEach { item ->
-                    NavigationDrawerItem(
-                        icon = { Icon(item.icono, contentDescription = null) },
-                        label = { Text(item.nombre) },
-                        selected = item == selectedItem.value,
-                        onClick = {
-                            scope.launch { drawerState.close() }
-                            selectedItem.value = item
-                            navControllerSecundario.navigate(item.pantalla.route) {
-                                popUpTo(navControllerSecundario.graph.startDestinationId) {
-                                    saveState = true
+                val colunMod = Modifier.width(300.dp)
+                Column (
+                    modifier = colunMod,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Perfil(appViewModel = appViewModel, modifier = colunMod)
+                    Spacer(Modifier.height(12.dp))
+                    items.forEach { item ->
+                        NavigationDrawerItem(
+                            icon = { Icon(item.icono, contentDescription = null) },
+                            label = { Text(item.nombre) },
+                            selected = item == selectedItem.value,
+                            onClick = {
+                                scope.launch {
+                                    drawerState.close()
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
+                                selectedItem.value = item
+                                navControllerSecundario.navigate(item.pantalla.route) {
+                                    popUpTo(navControllerSecundario.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                                selectedItem.value = null
+                            },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        )
+                    }
                 }
             }
         },
