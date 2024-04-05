@@ -40,7 +40,6 @@ class AppViewModel @Inject constructor(
      **                    Estados                  **
      *************************************************/
     var currentUser by mutableStateOf( "budgetbuddy46@gmail.com")
-    var currentUserName by mutableStateOf("")
 
     // Flows a los que les llega constantemente las actualizaciones y datos de la BBDD.
     // De esta forma no es necesaria una actualización cada vez que se realice un cambio.
@@ -64,6 +63,7 @@ class AppViewModel @Inject constructor(
             listaGastos.fold("") { f, gasto -> f + "\t- " + gasto.toString(idioma) }
         }
     }
+
 
     /*************************************************
      **          Inicialización de la BBDD          **

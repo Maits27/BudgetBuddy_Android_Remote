@@ -1,6 +1,8 @@
 package com.example.budgetbuddy
 
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +27,7 @@ import java.time.LocalDate
 fun MyApp(
     userViewModel: UserViewModel,
     appViewModel: AppViewModel,
+    pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
     preferencesViewModel: PreferencesViewModel,
     guardarFichero: (LocalDate, String)-> Boolean) {
     val navController = rememberNavController()
@@ -36,7 +39,7 @@ fun MyApp(
         composable(AppScreens.LoginPage.route) {
             LoginPage(navController, userViewModel){ email, name, download ->
                 appViewModel.currentUser = email
-                appViewModel.currentUserName = name
+                userViewModel.currentUserName = name
                 if (download==true){
                     appViewModel.download_user_data()
                 }
@@ -45,7 +48,9 @@ fun MyApp(
         composable(AppScreens.App.route) {
             App(
                 navControllerMain = navController,
+                userViewModel = userViewModel,
                 appViewModel = appViewModel,
+                pickMedia = pickMedia,
                 preferencesViewModel = preferencesViewModel,
                 guardarFichero
             )

@@ -123,7 +123,7 @@ fun MainView(
     val desk_notificacion = stringResource(id = R.string.download_description, fecha.toString())
 
     /**    Funciones parámetro para gestionar las acciones del estado   **/
-    val onClose:()->Unit = {showExpansion = false}
+    val onClose:() -> Unit = {showExpansion = false}
 
     Scaffold (
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -174,8 +174,6 @@ fun MainView(
                 navControllerMain = navControllerMain,
                 navController = navController,
                 onDrawerOpen = onDrawerOpen,
-                preferencesViewModel = preferencesViewModel,
-                idioma = idioma
             )
         },
         bottomBar = {
@@ -223,13 +221,7 @@ fun TopBarMainView(
     navControllerMain: NavController,
     navController: NavController,
     onDrawerOpen: () -> Unit,
-    preferencesViewModel: PreferencesViewModel,
-    idioma: AppLanguage
 ){
-
-    var showInfo by rememberSaveable { mutableStateOf(false) }
-    var showLang by rememberSaveable { mutableStateOf(false) }
-    var showTheme by rememberSaveable { mutableStateOf(false) }
 
     TopAppBar(
         title = {
@@ -267,33 +259,8 @@ fun TopBarMainView(
                     )
                 }
             }
-
-//            IconButton( onClick = { showInfo = true } ){
-//                Icon(
-//                    Icons.Filled.Info,
-//                    contentDescription = stringResource(id = R.string.infor),
-//                    tint = Color.White
-//                )
-//            }
-//            IconButton( onClick = { showLang = true } ){
-//                Icon(
-//                    painterResource(id = R.drawable.baseline_translate_24),//Icons.Filled.Settings,
-//                    contentDescription = stringResource(id = R.string.infor),
-//                    tint = Color.White
-//                )
-//            }
-//            IconButton( onClick = { showTheme = true } ){
-//                Icon(
-//                    painterResource(id = R.drawable.palette),//Icons.Filled.Settings,
-//                    contentDescription = stringResource(id = R.string.infor),
-//                    tint = Color.White
-//                )
-//            }
         },
     )
-//    Informacion(showInfo) { showInfo = false }
-//    Idiomas(showLang, onLanguageChange){ showLang = false }
-//    Temas(showTheme, idioma.code ,onThemeChange){ showTheme = false }
 
 }
 

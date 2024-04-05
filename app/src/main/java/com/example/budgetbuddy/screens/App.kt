@@ -1,5 +1,8 @@
 package com.example.budgetbuddy.screens
 
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,9 +42,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.Data.Room.Diseño
+import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
+import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
@@ -54,7 +59,9 @@ import java.time.LocalDate
 @Composable
 fun App(
     navControllerMain: NavController,
+    userViewModel: UserViewModel,
     appViewModel: AppViewModel,
+    pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
     preferencesViewModel: PreferencesViewModel,
     guardarFichero: (LocalDate, String)-> Boolean
 ){
@@ -79,6 +86,14 @@ fun App(
     val onThemeChange:(Int)-> Unit = {
         preferencesViewModel.changeTheme(it)
     }
+    val onEditUser: (User) -> Unit = {
+        userViewModel.currentUserName = it.nombre
+        // TODO
+    }
+    val onEditProfile: () -> Unit = {
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        scope.launch { drawerState.close() }
+    }
     val onDrawerOpen: () -> Unit = {
         scope.launch { drawerState.open() }
     }
@@ -94,7 +109,12 @@ fun App(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Perfil(appViewModel = appViewModel, modifier = colunMod)
+                    Perfil(
+                        appViewModel = appViewModel,
+                        userViewModel = userViewModel,
+                        modifier = colunMod,
+                        onEditProfile = onEditProfile
+                    )
                     Spacer(Modifier.height(12.dp))
                     items.forEach { item ->
                         NavigationDrawerItem(

@@ -206,6 +206,7 @@ fun Login(
                     withContext(Dispatchers.Main) {
                         if(nombre!=""){
                             onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
+                            userViewModel.getProfileImage(correo)
                             Log.d("LOGIN", "TODO OK2")
                             if (!checked){
                                 correo = ""
@@ -262,7 +263,7 @@ fun Register(
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
-        if (nameError){
+        if (!correctName(nombre)){
             ErrorText(text = stringResource(id = R.string.name_error))
         }
 
@@ -273,7 +274,7 @@ fun Register(
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
-        if (emailError){
+        if (!correctEmail(correo)){
             ErrorText(text = stringResource(id = R.string.email_error))
         }
         TextField(
@@ -292,7 +293,7 @@ fun Register(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
         )
-        if (passwdError){
+        if (!correctPasswd(passwd, passwd2)){
             ErrorText(text = stringResource(id = R.string.passwd_error))
         }
 
@@ -312,6 +313,7 @@ fun Register(
                     // Cambiar al hilo principal para actualizar la UI
                     withContext(Dispatchers.Main) {
                         if (registroExitoso) {
+                            Log.d("CorrectLogin", "TODO CORRECTO")
                             onCorrectLogIn(correo, nombre, false)
                             navController.navigate(AppScreens.App.route) {
                                 popUpTo(navController.graph.startDestinationId) {

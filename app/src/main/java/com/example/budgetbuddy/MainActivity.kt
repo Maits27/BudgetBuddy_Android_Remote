@@ -4,14 +4,26 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -19,11 +31,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.screens.LoginPage
+import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.example.budgetbuddy2.screens.MainView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -45,9 +59,35 @@ class MainActivity : AppCompatActivity() {
      * View models e ID del canal para las notificaciones.
      */
     val userViewModel by viewModels<UserViewModel> ()
-
     val appViewModel by viewModels<AppViewModel> ()
     val preferencesViewModel by viewModels<PreferencesViewModel> ()
+    private fun getPathFromUri(uri: Uri): String {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            it.moveToFirst()
+            return it.getString(columnIndex)
+        }
+        return ""
+    }
+
+    val pickMedia = registerForActivityResult(PickVisualMedia()){
+        if (it!=null){
+            var ivImage = ImageView(this)
+            ivImage.setImageURI(it)
+            val drawable: Drawable = ivImage.drawable
+
+            // Si el drawable es una instancia de BitmapDrawable, obtener el Bitmap directamente
+            if (drawable is BitmapDrawable) {
+                userViewModel.profilePicturePath = getPathFromUri(it)
+                userViewModel.setProfileImage(appViewModel.currentUser, drawable.bitmap)
+            }
+        }else{
+            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
+        }
+    }
+    
     companion object{
         const val CHANNEL_ID = "BudgetBuddy"
     }
@@ -56,6 +96,7 @@ class MainActivity : AppCompatActivity() {
      * Métodos principales de la actividad relativos al ciclo de vida
      */
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,15 +115,10 @@ class MainActivity : AppCompatActivity() {
                     // Solicitud de permisos
                     NotificationPermission()
                     StoragePermission()
-//                    MainView(
-//                        appViewModel = appViewModel,
-//                        preferencesViewModel = preferencesViewModel,
-//                        guardarFichero
-//                    )
-//                    LoginPage()
                     MyApp(
                         userViewModel = userViewModel,
                         appViewModel = appViewModel,
+                        pickMedia = pickMedia,
                         preferencesViewModel = preferencesViewModel,
                         guardarFichero
                     )
@@ -108,12 +144,7 @@ class MainActivity : AppCompatActivity() {
         val folder: File =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(folder, "Factura${nombre}_${UUID.randomUUID()}.txt")
-//        if (file.exists()) {
-//            if (!file.delete()) {
-//                Log.d("DOWNLOAD WARNING", "No se pudo eliminar el archivo existente.")
-//                return false
-//            }
-//        }
+
         return writeTextData(file, datos)
     }
     fun writeTextData(
@@ -164,6 +195,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     fun NotificationPermission(){
@@ -182,6 +214,12 @@ class MainActivity : AppCompatActivity() {
         )
         LaunchedEffect(true){
             permissionState2.launchPermissionRequest()
+        }
+        val permissionState3 = rememberPermissionState(
+            permission = android.Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        LaunchedEffect(true){
+            permissionState3.launchPermissionRequest()
         }
     }
 

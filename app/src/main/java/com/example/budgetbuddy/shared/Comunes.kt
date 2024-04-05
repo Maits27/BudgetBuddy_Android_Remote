@@ -1,24 +1,35 @@
 package com.example.budgetbuddy.shared
 
-import android.util.Log
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
@@ -26,18 +37,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,18 +61,15 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.example.budgetbuddy.Data.Enumeration.AppLanguage
-import com.example.budgetbuddy.Data.Enumeration.Tema
-import com.example.budgetbuddy.Data.Enumeration.obtenerTema
+import androidx.core.content.FileProvider
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
-import com.example.budgetbuddy.navigation.AppScreens
-import com.example.budgetbuddy.ui.theme.azulMedio
-import com.example.budgetbuddy.ui.theme.morado1
-import com.example.budgetbuddy.ui.theme.verdeOscuro
+import com.example.budgetbuddy.VM.UserViewModel
+import java.io.File
+import java.nio.file.Files
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -117,31 +127,88 @@ fun Header(
 @Composable
 fun Perfil(
     appViewModel: AppViewModel,
-    modifier: Modifier
+    userViewModel: UserViewModel,
+    modifier: Modifier,
+    onEditProfile: () -> Unit
 ){
+    val context = LocalContext.current
+    val profilePicture: Bitmap? = userViewModel.profilePicture
+//    var showPicAlert by rememberSaveable { mutableStateOf(false) }
+//    val toastMsg = stringResource(R.string.foto_error)
+//
+//    val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { pictureTaken ->
+//        if (pictureTaken) userViewModel.setProfileImage(appViewModel.currentUser)
+//        else Toast.makeText(context, toastMsg, Toast.LENGTH_LONG).show()
+//    }
+//
+//    fun onEditImageRequest() {
+//        val profileImageDir = File(context.cacheDir, "images/profile/")
+//        Files.createDirectories(profileImageDir.toPath())
+//
+//        val newProfileImagePath = File.createTempFile(appViewModel.currentUser, ".png", profileImageDir)
+//        val contentUri: Uri = FileProvider.getUriForFile(
+//            context,
+//            "das.omegaterapia.visits.fileprovider",
+//            newProfileImagePath
+//        )
+//        userViewModel.profilePicturePath = newProfileImagePath.path
+//
+//        imagePickerLauncher.launch(contentUri)
+//    }
+
     Column (
         modifier = modifier.background(color = MaterialTheme.colorScheme.tertiary),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ){
         Column (
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.user),
-                contentDescription = stringResource(id = R.string.profile_picture),
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-            )
+
+            Box(contentAlignment = Alignment.BottomEnd) {
+                Box(Modifier.padding(8.dp)) {
+                    if (profilePicture == null) {
+                        LoadingImagePlaceholder(size = 80.dp)
+                    } else {
+
+                        Image(
+                            bitmap = profilePicture.asImageBitmap(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape),
+                        )
+                    }
+                }
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = {
+                            onEditProfile()
+
+                        })
+                ) {
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.circle),
+
+                        contentDescription = null, Modifier.size(34.dp),
+                        tint = MaterialTheme.colorScheme.primary)
+                    androidx.compose.material.Icon(Icons.Filled.Edit, contentDescription = null, Modifier.size(18.dp), tint = Color.White)
+                }
+
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             // Dos textos de ejemplo
             Text(
-                text = appViewModel.currentUserName,
+                text = userViewModel.currentUserName,
                 modifier = Modifier.padding(5.dp),
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.onTertiary
@@ -155,6 +222,39 @@ fun Perfil(
             )
         }
         }
+}
+
+@Composable
+private fun LoadingImagePlaceholder(size: Dp = 140.dp) {
+    // Creates an `InfiniteTransition` that runs infinite child animation values.
+    val infiniteTransition = rememberInfiniteTransition()
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        // `infiniteRepeatable` repeats the specified duration-based `AnimationSpec` infinitely.
+        animationSpec = infiniteRepeatable(
+            // The `keyframes` animates the value by specifying multiple timestamps.
+            animation = keyframes {
+                // One iteration is 1000 milliseconds.
+                durationMillis = 1000
+                // 0.7f at the middle of an iteration.
+                0.7f at 500
+            },
+            // When the value finishes animating from 0f to 1f, it repeats by reversing the
+            // animation direction.
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    )
+
+    Image(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape)
+            .alpha(alpha),
+        painter = painterResource(id = R.drawable.start_icon),
+        contentDescription = null,
+        contentScale = ContentScale.Crop
+    )
 }
 
 /**

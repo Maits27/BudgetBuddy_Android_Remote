@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.Data.Repositories
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.example.budgetbuddy.Data.DAO.UserDao
 import com.example.budgetbuddy.Data.Remote.HTTPService
@@ -7,6 +8,7 @@ import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.utils.compareHash
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
@@ -32,6 +34,9 @@ interface IUserRepository {
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
     fun userName(email: String): String
     fun editarUsuario(user: User): Int
+
+    suspend fun getUserProfile(email: String): Bitmap
+    suspend fun setUserProfile(email: String, image: Bitmap): Bitmap
 }
 
 
@@ -45,6 +50,7 @@ class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val httpService: HTTPService
 ) : IUserRepository {
+    private lateinit var profileImage: Bitmap
     override suspend fun insertUsuario(user: AuthUser){
         Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
         try {
@@ -94,6 +100,28 @@ class UserRepository @Inject constructor(
         return userDao.editarUsuario(user)
     }
 
+    override suspend fun getUserProfile(email: String): Bitmap {
+        if (!this::profileImage.isInitialized) {
+            try {
+                profileImage = httpService.getUserProfile(email)
+            } catch (e: ResponseException) {
+                Log.e("HTTP", "Couldn't get profile image.")
+                e.printStackTrace()
+            }
+        }
+        return profileImage
+    }
+
+    override suspend fun setUserProfile(email: String, image: Bitmap): Bitmap {
+        try {
+            httpService.setUserProfile(email, image)
+            profileImage = image
+        } catch (e: ResponseException) {
+            Log.e("HTTP", "Couldn't upload profile image.")
+            e.printStackTrace()
+        }
+        return profileImage
+    }
 
 
 }

@@ -68,4 +68,5 @@
     <string name="preferences">Preferences</string>
     <string name="profile_picture">Profile picture</string>
     <string name="profile">User profile:</string>
+    <string name="foto_error">Could not load picture.</string>
 </resources>

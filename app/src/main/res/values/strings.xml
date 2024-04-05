@@ -67,4 +67,5 @@
     <string name="preferences">Preferencias</string>
     <string name="profile_picture">Foto de perfil</string>
     <string name="profile">Perfil de usuario:</string>
+    <string name="foto_error">No se ha podido cargar la imagen.</string>
 </resources>

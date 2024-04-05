@@ -148,7 +148,28 @@ class HTTPService @Inject constructor() {
         response.body()
     }
 
+    //----------   Imágen de perfil   ----------//
 
+    suspend fun getUserProfile(email: String): Bitmap {
+        val response = httpClient.get("http://34.135.202.124:8000/profile/${email}")
+        val image: ByteArray = response.body()
+        return BitmapFactory.decodeByteArray(image, 0, image.size)
+    }
+
+    suspend fun setUserProfile(email: String, image: Bitmap) {
+        val stream = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val byteArray = stream.toByteArray()
+        httpClient.submitFormWithBinaryData(
+            url = "http://34.135.202.124:8000/profile/${email}",
+            formData = formData {
+                append("file", byteArray, Headers.build {
+                    append(HttpHeaders.ContentType, "image/png")
+                    append(HttpHeaders.ContentDisposition, "filename=profile_image.png")
+                })
+            }
+        ) { method = HttpMethod.Put }
+    }
 
     /*******************************************************************************
     #################################    GASTOS    #################################

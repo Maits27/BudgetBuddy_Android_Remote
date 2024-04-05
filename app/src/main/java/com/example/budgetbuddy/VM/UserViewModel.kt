@@ -1,7 +1,13 @@
 package com.example.budgetbuddy.VM
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.Data.Repositories.UserRepository
@@ -11,6 +17,11 @@ import com.example.budgetbuddy.UserVerification.correctName
 import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.utils.hash
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ResponseException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /********************************************************
@@ -29,13 +40,12 @@ class UserViewModel @Inject constructor(
 
 
     private val todosLosUsuarios = userRepository.todosLosUsuarios()
-//    init {
-//        viewModelScope.launch {
-//            Log.d("AÑADIR USUARIO", "TODO OK0000!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-//            añadirUsuario("BudgetBuddy", "budgetbuddy46@gmail.com", "123")
-//            Log.d("AÑADIR USUARIO", "TODO OK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-//        }
-//    }
+    var profilePicture: Bitmap? by mutableStateOf(null)
+        private set
+
+    var profilePicturePath: String? = null
+    var currentUserName by mutableStateOf("")
+
 
     /*************************************************
      **                    Eventos                  **
@@ -44,14 +54,17 @@ class UserViewModel @Inject constructor(
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    suspend fun añadirUsuario(nombre: String, email: String, passwd: String): AuthUser {
-        val user = AuthUser(nombre, email, passwd.hash())
-        try {
-            userRepository.insertUsuario(user)
-        }catch (e: Exception){
-            Log.d("BASE DE DATOS!", e.toString())
+    fun añadirUsuario(nombre: String, email: String, passwd: String) {
+        viewModelScope.launch {
+            val user = AuthUser(nombre, email, passwd.hash())
+            try {
+                userRepository.insertUsuario(user)
+                profilePicture = userRepository.getUserProfile(email)
+            }catch (e: Exception){
+                Log.d("BASE DE DATOS!", e.toString())
+            }
         }
-        return user
+
     }
 
     suspend fun borrarUsuario(user: User){
@@ -73,17 +86,35 @@ class UserViewModel @Inject constructor(
         return  r
     }
 
-    suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): Boolean{
+    fun correctRegister(nombre: String, email: String, p1:String, p2:String): Boolean{
         val ok0 = correctName(nombre)
         val ok1 = correctEmail(email)
         val ok2 = correctPasswd(p1, p2)
         if (ok0 && ok1 && ok2){
+            Log.d("Registro: " ,"Ok: $ok0 $ok1 $ok2")
             if(userRepository.userName(email)==""){
+                Log.d("Vacio", "user vacio")
                 añadirUsuario(nombre, email, p1)
+                getProfileImage(email)
                 return true
             }
+            Log.d("NO Vacio", "user NO VACIO: ${userRepository.userName(email)}")
         }
         return false
+    }
+
+    fun setProfileImage(email: String, image: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO) {
+            profilePicture = null
+            profilePicture = userRepository.setUserProfile(email, image)
+        }
+    }
+
+    fun getProfileImage(email: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(100)
+            profilePicture = userRepository.getUserProfile(email)
+        }
     }
 
 
