@@ -153,6 +153,7 @@ fun App(
                         appViewModel = appViewModel,
                         preferencesViewModel = preferencesViewModel,
                         onDrawerOpen = onDrawerOpen,
+                        onLogout = { userViewModel.logout() },
                         guardarFichero
                     )
                 }

@@ -50,7 +50,7 @@ class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val httpService: HTTPService
 ) : IUserRepository {
-    private lateinit var profileImage: Bitmap
+    lateinit var profileImage: Bitmap
     override suspend fun insertUsuario(user: AuthUser){
         Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
         try {
@@ -101,13 +101,11 @@ class UserRepository @Inject constructor(
     }
 
     override suspend fun getUserProfile(email: String): Bitmap {
-        if (!this::profileImage.isInitialized) {
-            try {
-                profileImage = httpService.getUserProfile(email)
-            } catch (e: ResponseException) {
-                Log.e("HTTP", "Couldn't get profile image.")
-                e.printStackTrace()
-            }
+        try {
+            profileImage = httpService.getUserProfile(email)
+        } catch (e: ResponseException) {
+            Log.e("HTTP", "Couldn't get profile image.")
+            e.printStackTrace()
         }
         return profileImage
     }

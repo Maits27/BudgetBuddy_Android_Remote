@@ -70,6 +70,10 @@ class UserViewModel @Inject constructor(
     suspend fun borrarUsuario(user: User){
         userRepository.deleteUsuario(user)
     }
+    fun logout(){
+        profilePicture = null
+        profilePicturePath = null
+    }
 
     ////////////////////// Editar elementos //////////////////////
     fun cambiarDatos(user: User) {
@@ -95,7 +99,6 @@ class UserViewModel @Inject constructor(
             if(userRepository.userName(email)==""){
                 Log.d("Vacio", "user vacio")
                 añadirUsuario(nombre, email, p1)
-                getProfileImage(email)
                 return true
             }
             Log.d("NO Vacio", "user NO VACIO: ${userRepository.userName(email)}")

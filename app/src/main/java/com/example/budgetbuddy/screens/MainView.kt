@@ -94,6 +94,7 @@ fun MainView(
     appViewModel: AppViewModel,
     preferencesViewModel: PreferencesViewModel,
     onDrawerOpen: () -> Unit,
+    onLogout: () -> Unit,
     guardarFichero: (LocalDate, String) -> Boolean
 ){
     val context = LocalContext.current
@@ -174,6 +175,7 @@ fun MainView(
                 navControllerMain = navControllerMain,
                 navController = navController,
                 onDrawerOpen = onDrawerOpen,
+                onLogout = onLogout
             )
         },
         bottomBar = {
@@ -221,6 +223,7 @@ fun TopBarMainView(
     navControllerMain: NavController,
     navController: NavController,
     onDrawerOpen: () -> Unit,
+    onLogout:() -> Unit,
 ){
 
     TopAppBar(
@@ -243,7 +246,10 @@ fun TopBarMainView(
         actions = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             if (navBackStackEntry?.destination?.route == AppScreens.Home.route){
-                IconButton(onClick = { navControllerMain.navigateUp() }) {
+                IconButton(onClick = {
+                    onLogout()
+                    navControllerMain.navigateUp()
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.logout),
                         contentDescription = stringResource(id = R.string.back),

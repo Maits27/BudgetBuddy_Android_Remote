@@ -40,6 +40,7 @@ fun MyApp(
             LoginPage(navController, userViewModel){ email, name, download ->
                 appViewModel.currentUser = email
                 userViewModel.currentUserName = name
+                userViewModel.getProfileImage(email)
                 if (download==true){
                     appViewModel.download_user_data()
                 }
