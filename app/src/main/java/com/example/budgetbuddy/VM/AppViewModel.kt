@@ -48,13 +48,13 @@ class AppViewModel @Inject constructor(
 
     val fecha: Flow<LocalDate> = _fecha
 
-    private val listadoGastos = gastoRepository.todosLosGastos(currentUser)
+    val listadoGastos = gastoRepository.todosLosGastos(currentUser)
 
     val listadoGastosFecha: (LocalDate)-> Flow<List<Gasto>> = { gastoRepository.elementosFecha(it, currentUser) }
 
-    val listadoGastosMes: (LocalDate)-> Flow<List<GastoDia>> = { sacarDatosMes(it) }
+    val listadoGastosMes: (LocalDate)-> Flow<List<GastoDia>> = { sacarDatosMes(it, gastoRepository.todosLosGastos(currentUser)) }
 
-    val listadoGastosTipo: (LocalDate)-> Flow<List<GastoTipo>> = { sacarDatosPorTipo(it) }
+    val listadoGastosTipo: (LocalDate)-> Flow<List<GastoTipo>> = { sacarDatosPorTipo(it, gastoRepository.todosLosGastos(currentUser)) }
 
     val totalGasto: (LocalDate)-> Flow<Double> = { gastoRepository.gastoTotalDia(it, currentUser) }
 
@@ -131,10 +131,13 @@ class AppViewModel @Inject constructor(
 
     ////////////////////// Recopilar datos gráficos //////////////////////
 
-    fun sacarDatosMes(fecha: LocalDate): Flow<List<GastoDia>>{
+    fun sacarDatosMes(fecha: LocalDate, listadoGastos: Flow<List<Gasto>>): Flow<List<GastoDia>>{
+        Log.d("CURRENT USER", currentUser)
         val gastosFechados = listadoGastos.map{
-            it.filter { gasto -> gasto.fecha.year == fecha.year }
-                .filter { gasto ->  gasto.fecha.monthValue == fecha.monthValue }
+            it.filter { gasto ->
+                Log.d("gasto inicial", "$gasto")
+                gasto.fecha.year == fecha.year }
+            .filter { gasto ->  gasto.fecha.monthValue == fecha.monthValue }
         }
         val gastosAgrupados = gastosFechados.map {
             it.groupBy { gasto -> gasto.fecha }.map { (fecha, gastos) ->
@@ -147,10 +150,11 @@ class AppViewModel @Inject constructor(
         return gastosAgrupados
     }
 
-    fun sacarDatosPorTipo(fecha: LocalDate): Flow<List<GastoTipo>>{
+    fun sacarDatosPorTipo(fecha: LocalDate, listadoGastos: Flow<List<Gasto>>): Flow<List<GastoTipo>>{
         val gastosFechados = listadoGastos.map{
             it.filter { gasto -> gasto.fecha.year == fecha.year }
             .filter { gasto ->  gasto.fecha.monthValue == fecha.monthValue }
+            .filter { gasto ->  gasto.userId == currentUser }
         }
         val gastosAgrupados = gastosFechados.map {
             it.groupBy { gasto -> gasto.tipo }.map { (tipo, gastos) ->

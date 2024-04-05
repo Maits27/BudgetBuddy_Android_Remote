@@ -39,6 +39,7 @@ interface GastoDao {
     @Query("SELECT * FROM Gasto WHERE fecha=:fecha AND userId=:userId")
     fun elementosFecha(fecha: LocalDate, userId: String): Flow<List<Gasto>>
 
+
     /////////////// Funciones de cálculo ///////////////
     /**
      * En caso de no existir los datos que se están buscando,

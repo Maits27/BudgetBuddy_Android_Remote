@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
 import com.github.tehras.charts.piechart.PieChart
 import com.github.tehras.charts.piechart.PieChartData
 import com.github.tehras.charts.piechart.renderer.SimpleSliceDrawer
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 
@@ -70,9 +72,12 @@ fun Dashboards(
      **                 (valor por defecto: initial)                  **
      ******************************************************************/
     val fecha by appViewModel.fecha.collectAsState(initial = LocalDate.now())
+    val datos by appViewModel.listadoGastos.collectAsState(initial = emptyList())
     val datosMes by appViewModel.listadoGastosMes(fecha).collectAsState(emptyList())
     val datosTipo by appViewModel.listadoGastosTipo(fecha).collectAsState(emptyList())
     val textoMes = appViewModel.escribirMesyAño(fecha)
+
+
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),

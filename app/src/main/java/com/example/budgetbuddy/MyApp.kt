@@ -39,6 +39,7 @@ fun MyApp(
         composable(AppScreens.LoginPage.route) {
             LoginPage(navController, userViewModel){ email, name, download ->
                 appViewModel.currentUser = email
+                Log.d("CURRENT USER CHANGE", appViewModel.currentUser)
                 userViewModel.currentUserName = name
                 userViewModel.getProfileImage(email)
                 if (download==true){
