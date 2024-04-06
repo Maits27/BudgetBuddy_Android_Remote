@@ -3,6 +3,7 @@ package com.example.budgetbuddy
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentUris
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -47,6 +48,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
+import java.util.Calendar
 import java.util.UUID
 
 /************************************************
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     val userViewModel by viewModels<UserViewModel> ()
     val appViewModel by viewModels<AppViewModel> ()
     val preferencesViewModel by viewModels<PreferencesViewModel> ()
+
     private fun getPathFromUri(uri: Uri): String {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = contentResolver.query(uri, projection, null, null, null)
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Creación del canal de notificación
         createNotificationChannel()
+
         setContent {
             BudgetBuddyTheme(preferencesViewModel = preferencesViewModel) {
                 // Método para la descarga de ficheros
@@ -126,6 +130,45 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+    data class Image(
+        val id: Long,
+        val name: String,
+        val uri: Uri
+    )
+
+    fun imageContentProvider(){
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME
+        )
+        val millisYesterday = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_YEAR, -1)
+        }.timeInMillis
+        val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
+        val selectionArgs = arrayOf(millisYesterday.toString())
+        val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
+
+        contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )?.use { cursor ->
+            val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+            val images = mutableListOf<Image>()
+            while (cursor.moveToNext()){
+                val id = cursor.getLong(idColumn)
+                val name = cursor.getString(nameColumn)
+                val uri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+                images.add(Image(id, name, uri))
+            }
+        }
     }
 
     /**
