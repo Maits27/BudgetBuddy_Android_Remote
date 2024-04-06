@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.shared
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -39,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,10 +66,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import java.io.File
 import java.nio.file.Files
 import java.time.Instant
@@ -131,30 +137,7 @@ fun Perfil(
     modifier: Modifier,
     onEditProfile: () -> Unit
 ){
-    val context = LocalContext.current
     val profilePicture: Bitmap? = userViewModel.profilePicture
-//    var showPicAlert by rememberSaveable { mutableStateOf(false) }
-//    val toastMsg = stringResource(R.string.foto_error)
-//
-//    val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { pictureTaken ->
-//        if (pictureTaken) userViewModel.setProfileImage(appViewModel.currentUser)
-//        else Toast.makeText(context, toastMsg, Toast.LENGTH_LONG).show()
-//    }
-//
-//    fun onEditImageRequest() {
-//        val profileImageDir = File(context.cacheDir, "images/profile/")
-//        Files.createDirectories(profileImageDir.toPath())
-//
-//        val newProfileImagePath = File.createTempFile(appViewModel.currentUser, ".png", profileImageDir)
-//        val contentUri: Uri = FileProvider.getUriForFile(
-//            context,
-//            "das.omegaterapia.visits.fileprovider",
-//            newProfileImagePath
-//        )
-//        userViewModel.profilePicturePath = newProfileImagePath.path
-//
-//        imagePickerLauncher.launch(contentUri)
-//    }
 
     Column (
         modifier = modifier.background(color = MaterialTheme.colorScheme.tertiary),

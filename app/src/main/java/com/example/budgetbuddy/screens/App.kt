@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.screens
 
+import android.Manifest
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,9 +55,21 @@ import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
 import com.example.budgetbuddy.shared.Perfil
 import com.example.budgetbuddy2.screens.MainView
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun CalendarPermission(){
+    val permissionState2 = rememberPermissionState(
+        permission = Manifest.permission.WRITE_CALENDAR
+    )
+    LaunchedEffect(true){
+        permissionState2.launchPermissionRequest()
+    }
+}
 @Composable
 fun App(
     navControllerMain: NavController,
@@ -65,6 +79,7 @@ fun App(
     preferencesViewModel: PreferencesViewModel,
     guardarFichero: (LocalDate, String)-> Boolean
 ){
+    CalendarPermission()
     val navControllerSecundario = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()

@@ -1,5 +1,7 @@
 package com.example.budgetbuddy.VM
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +15,7 @@ import com.example.budgetbuddy.Data.Room.GastoDia
 import com.example.budgetbuddy.Data.Room.GastoTipo
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
+import com.example.budgetbuddy.utils.obtenerIdsCalendario
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +43,7 @@ class AppViewModel @Inject constructor(
      **                    Estados                  **
      *************************************************/
     var currentUser by mutableStateOf( "budgetbuddy46@gmail.com")
+    var calendarId by mutableStateOf( 100.toLong())
 
     // Flows a los que les llega constantemente las actualizaciones y datos de la BBDD.
     // De esta forma no es necesaria una actualización cada vez que se realice un cambio.
@@ -86,7 +90,6 @@ class AppViewModel @Inject constructor(
     /*************************************************
      **                    Eventos                  **
      *************************************************/
-
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 

@@ -51,6 +51,7 @@ fun obtenerTipoDeNombre(nombre: String): TipoGasto?{
         "Comida" -> TipoGasto.Comida
         "Hogar" -> TipoGasto.Hogar
         "Ropa" -> TipoGasto.Ropa
+        "Transporte" -> TipoGasto.Transporte
         "Actividad" -> TipoGasto.Actividad
         "Otros" -> TipoGasto.Otros
         else -> null

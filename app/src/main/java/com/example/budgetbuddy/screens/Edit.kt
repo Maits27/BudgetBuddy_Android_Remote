@@ -53,6 +53,8 @@ import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
 import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.utils.agregarGastoAlCalendario
+import com.example.budgetbuddy.utils.toLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -82,6 +84,7 @@ fun Edit(
     modifier: Modifier = Modifier.verticalScroll(rememberScrollState())
 ){
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val error_double = stringResource(id = R.string.error_double)
     val error_insert = stringResource(id = R.string.error_insert)
@@ -285,6 +288,7 @@ fun Edit(
                                 fechaTemporal,
                                 selectedOption
                             )
+                            agregarGastoAlCalendario(context, "BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
                         } else {
                             showError = true
                             error_message = error_double

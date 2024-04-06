@@ -1,9 +1,12 @@
 package com.example.budgetbuddy
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -11,36 +14,28 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.CalendarContract
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
-import com.example.budgetbuddy.screens.LoginPage
-import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
-import com.example.budgetbuddy2.screens.MainView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +44,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
 import java.util.Calendar
+import java.util.TimeZone
 import java.util.UUID
+
 
 /************************************************
  ****              Main Activity             ****
@@ -64,17 +61,6 @@ class MainActivity : AppCompatActivity() {
     val appViewModel by viewModels<AppViewModel> ()
     val preferencesViewModel by viewModels<PreferencesViewModel> ()
 
-    private fun getPathFromUri(uri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            it.moveToFirst()
-            return it.getString(columnIndex)
-        }
-        return ""
-    }
-
     val pickMedia = registerForActivityResult(PickVisualMedia()){
         if (it!=null){
             var ivImage = ImageView(this)
@@ -84,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             // Si el drawable es una instancia de BitmapDrawable, obtener el Bitmap directamente
             if (drawable is BitmapDrawable) {
                 userViewModel.profilePicturePath = getPathFromUri(it)
+                Log.d("CONTENT PROVIDER", userViewModel.profilePicturePath?:"")
                 userViewModel.setProfileImage(appViewModel.currentUser, drawable.bitmap)
             }
         }else{
@@ -131,44 +118,18 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    data class Image(
-        val id: Long,
-        val name: String,
-        val uri: Uri
-    )
-
-    fun imageContentProvider(){
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME
-        )
-        val millisYesterday = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_YEAR, -1)
-        }.timeInMillis
-        val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
-        val selectionArgs = arrayOf(millisYesterday.toString())
-        val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
-
-        contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            selectionArgs,
-            sortOrder
-        )?.use { cursor ->
-            val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-            val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
-            val images = mutableListOf<Image>()
-            while (cursor.moveToNext()){
-                val id = cursor.getLong(idColumn)
-                val name = cursor.getString(nameColumn)
-                val uri = ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
-                images.add(Image(id, name, uri))
-            }
+    /**
+     * Content Provider para recoger el path a la imagen
+     */
+    private fun getPathFromUri(uri: Uri): String {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndex(MediaStore.Images.Media.DATA)
+            it.moveToFirst()
+            return it.getString(columnIndex)
         }
+        return ""
     }
 
     /**
@@ -242,11 +203,17 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     fun NotificationPermission(){
-        val permissionState = rememberPermissionState(
-            permission = android.Manifest.permission.POST_NOTIFICATIONS
+//        val permissionState = rememberPermissionState(
+//            permission = android.Manifest.permission.POST_NOTIFICATIONS
+//        )
+//        LaunchedEffect(true){
+//            permissionState.launchPermissionRequest()
+//        }
+        val permissionState2 = rememberPermissionState(
+            permission = Manifest.permission.READ_CALENDAR
         )
         LaunchedEffect(true){
-            permissionState.launchPermissionRequest()
+            permissionState2.launchPermissionRequest()
         }
     }
     @OptIn(ExperimentalPermissionsApi::class)
