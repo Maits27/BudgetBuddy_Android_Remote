@@ -91,6 +91,7 @@ fun App(
     val scope = rememberCoroutineScope()
 
     val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
+    val saveOnCalendar by preferencesViewModel.saveOnCalendar(appViewModel.currentUser).collectAsState(initial = true)
 
     // icons to mimic drawer destinations
     val items = listOf(
@@ -181,7 +182,10 @@ fun App(
                     )
                 }
                 composable(AppScreens.UserEdit.route) {
-                    UserEdit {
+                    UserEdit (
+                        userViewModel = userViewModel,
+                        currentUser = appViewModel.currentUser
+                    ){
                         navControllerSecundario.navigate(AppScreens.MainView.route) {
                             popUpTo(navControllerSecundario.graph.startDestinationId) {
                                 saveState = true
@@ -195,7 +199,10 @@ fun App(
                     Preferences(
                         onLanguageChange = onLanguageChange,
                         idioma = idioma.code,
-                        onThemeChange = onThemeChange) {
+                        onThemeChange = onThemeChange,
+                        onSaveChange = {preferencesViewModel.changeSaveOnCalendar()},
+                        save = saveOnCalendar
+                    ) {
                         navControllerSecundario.navigate(AppScreens.MainView.route) {
                             popUpTo(navControllerSecundario.graph.startDestinationId) {
                                 saveState = true

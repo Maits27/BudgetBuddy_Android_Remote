@@ -69,4 +69,11 @@
     <string name="profile_picture">Profil argazkia</string>
     <string name="profile">Erabiltzaile profila:</string>
     <string name="foto_error">Ezin izan da irudia kargatu.</string>
+    <string name="guardar_calendario">Egutegian oroigarriak gorde:</string>
+    <string name="guardar_calendario_desc">Etorkizuneko gasturen abisuak egutegian gordeko dira.</string>
+    <string name="ajustes">Beste ezarpen batzuk:</string>
+    <string name="edit_profile">Profila editatu:</string>
+    <string name="user_edit_complete">Erabiltzailea zuzen aldatu da.</string>
+    <string name="edit_passwd">Ez da beharrezkoa pasahitza aldatzea.</string>
+    <string name="edit_passwd_desc">Pasahitza ez baduzu aldatu nahi, hutsik utz itzazu eremuak.</string>
 </resources>

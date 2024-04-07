@@ -26,10 +26,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -130,21 +132,50 @@ class HTTPService @Inject constructor() {
     ################################    USUARIOS    ################################
      *******************************************************************************/
 
-    @Throws(UserExistsException::class)
-    suspend fun createUser(user: AuthUser) {
+    @Throws(IOException::class, UserExistsException::class)
+    suspend fun createUser(user: AuthUser): Boolean {
         Log.d("HTTP", user.toString())
-        val response = httpClient.post("http://34.135.202.124:8000/users/") {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToJsonElement(user))
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = httpClient.post("http://34.135.202.124:8000/users/") {
+                    contentType(ContentType.Application.Json)
+                    setBody(Json.encodeToJsonElement(user))
+                }
+                Log.d("HTTP", response.status.toString())
+                true
+            } catch (e: IOException) {
+                // Captura la excepción en caso de que no se pueda acceder al servidor
+                Log.e("HTTP", "Error de red: ${e.message}")
+                false // Retorna null indicando que no se encontró el usuario
+            }
         }
-        Log.d("HTTP", response.status.toString())
+    }
+
+
+    @Throws(IOException::class)
+    suspend fun getUserByEmail(email: String): AuthUser? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = httpClient.get("http://34.135.202.124:8000/users/$email")
+                response.body()
+            } catch (e: ClientRequestException) {
+                // Manejar la excepción específica de ClientRequestException
+                Log.e("HTTP", "Error de red 1: ${e.message}")
+                AuthUser("", "", "") // Retorna null indicando que no se encontró el usuario
+            } catch (e: IOException) {
+                // Manejar otras excepciones de E/S
+                Log.e("HTTP", "Error de red 2: ${e.message}")
+                null // Retorna null indicando que no se encontró el usuario
+            }
+        }
     }
 
     @Throws(Exception::class)
-    suspend fun getUserByEmail(email: String): AuthUser? = runBlocking {
-        Log.d("HTTP", email)
-        val response = httpClient.get("http://34.135.202.124:8000/users/$email")
-        Log.d("HTTP", response.status.toString())
+    suspend fun editUser(email: String, user: AuthUser): AuthUser? = runBlocking {
+        val response = httpClient.put("http://34.135.202.124:8000/users/${email}") {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }
         response.body()
     }
 

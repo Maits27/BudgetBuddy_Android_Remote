@@ -28,12 +28,12 @@ import javax.inject.Singleton
  * con la BBDD
  *******************************************************************/
 interface IUserRepository {
-    suspend fun insertUsuario(user: AuthUser)
+    suspend fun insertUsuario(user: AuthUser): Boolean
     suspend fun deleteUsuario(user: User): Int
     fun todosLosUsuarios(): Flow<List<User>>
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
     fun userName(email: String): String
-    fun editarUsuario(user: User): Int
+    suspend fun editarUsuario(user: User): Int
 
     suspend fun getUserProfile(email: String): Bitmap
     suspend fun setUserProfile(email: String, image: Bitmap): Bitmap
@@ -51,14 +51,16 @@ class UserRepository @Inject constructor(
     private val httpService: HTTPService
 ) : IUserRepository {
     lateinit var profileImage: Bitmap
-    override suspend fun insertUsuario(user: AuthUser){
+    override suspend fun insertUsuario(user: AuthUser): Boolean{
         Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
         try {
-            httpService.createUser(user)
+            val remote = httpService.createUser(user)
+            if (remote) userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password))
+            return remote
         }catch (e: Exception){
             Log.d("REPO ERROR", "$e!!!!!!!!!!!!!!!!!!!!")
         }
-        return userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password))
+        return false
     }
 
     override suspend fun deleteUsuario(user: User): Int {
@@ -73,9 +75,11 @@ class UserRepository @Inject constructor(
     override suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any> {
         var result = HashMap<String, Any>()
         result["nombre"] = ""
+        result["runtime"] = true
         result["bajar_datos"] = false
 
         val remoto = httpService.getUserByEmail(email)
+        if ((remoto?.email ?: " ") != " "){result["runtime"] = false}
         if( remoto?.password==passwd ){
             val nombre = remoto.nombre
             result["nombre"] = nombre
@@ -96,7 +100,11 @@ class UserRepository @Inject constructor(
         return userDao.userName(email)?:""
     }
 
-    override fun editarUsuario(user: User): Int {
+    override suspend fun editarUsuario(user: User): Int {
+        httpService.editUser(
+            user.email,
+            AuthUser(nombre = user.nombre, email = user.email, password = user.password)
+        )
         return userDao.editarUsuario(user)
     }
 

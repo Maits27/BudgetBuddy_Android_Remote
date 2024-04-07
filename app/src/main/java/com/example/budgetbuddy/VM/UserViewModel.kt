@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /********************************************************
@@ -57,17 +58,18 @@ class UserViewModel @Inject constructor(
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    fun añadirUsuario(nombre: String, email: String, passwd: String) {
-        viewModelScope.launch {
+    private suspend fun añadirUsuario(nombre: String, email: String, passwd: String): Boolean {
+        return withContext(Dispatchers.IO) {
             val user = AuthUser(nombre, email, passwd.hash())
             try {
-                userRepository.insertUsuario(user)
-                profilePicture = userRepository.getUserProfile(email)
+                val remote = userRepository.insertUsuario(user)
+                if(remote) profilePicture = userRepository.getUserProfile(email)
+                remote
             }catch (e: Exception){
                 Log.d("BASE DE DATOS!", e.toString())
+                false
             }
         }
-
     }
 
     suspend fun borrarUsuario(user: User){
@@ -84,7 +86,7 @@ class UserViewModel @Inject constructor(
 
     ////////////////////// Editar elementos //////////////////////
     fun cambiarDatos(user: User) {
-        userRepository.editarUsuario(user)
+        viewModelScope.launch {  userRepository.editarUsuario(user) }
     }
 
     suspend fun correctLogIn(email:String, passwd: String): HashMap<String, Any>{
@@ -93,24 +95,25 @@ class UserViewModel @Inject constructor(
         }
         var r = HashMap<String, Any>()
         r["nombre"] = ""
+        r["runtime"] = false
         r["bajar_datos"] = false
         return  r
     }
-
-    fun correctRegister(nombre: String, email: String, p1:String, p2:String): Boolean{
-        val ok0 = correctName(nombre)
-        val ok1 = correctEmail(email)
-        val ok2 = correctPasswd(p1, p2)
-        if (ok0 && ok1 && ok2){
-            Log.d("Registro: " ,"Ok: $ok0 $ok1 $ok2")
+    suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): HashMap<String, Boolean>{
+        val result = HashMap<String, Boolean>()
+        result["server"] = true
+        result["name"] = correctName(nombre)
+        result["email"] = correctEmail(email)
+        result["password"] = correctPasswd(p1, p2)
+        if (result["name"]!! && result["email"]!! && result["password"]!!){
             if(userRepository.userName(email)==""){
                 Log.d("Vacio", "user vacio")
-                añadirUsuario(nombre, email, p1)
-                return true
+                result["server"] = añadirUsuario(nombre, email, p1)
+                return result
             }
             Log.d("NO Vacio", "user NO VACIO: ${userRepository.userName(email)}")
         }
-        return false
+        return result
     }
 
     fun setProfileImage(email: String, image: Bitmap) {

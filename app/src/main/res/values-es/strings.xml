@@ -69,4 +69,11 @@
     <string name="profile_picture">Foto de perfil</string>
     <string name="profile">Perfil de usuario:</string>
     <string name="foto_error">No se ha podido cargar la imagen.</string>
+    <string name="guardar_calendario">Añadir recordatorios en el calendario:</string>
+    <string name="guardar_calendario_desc">Se guardarán los recordatorios de los gastos futuros en el calendario.</string>
+    <string name="ajustes">Otros ajustes:</string>
+    <string name="edit_profile">Editar perfil:</string>
+    <string name="user_edit_complete">Usuario editado con éxito.</string>
+    <string name="edit_passwd">No es necesario editar la contraseña.</string>
+    <string name="edit_passwd_desc">"En caso de no querer editar la contraseña, simplemente deja los campos vacíos. "</string>
 </resources>

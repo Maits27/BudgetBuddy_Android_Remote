@@ -35,6 +35,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -72,6 +73,7 @@ import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
+import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import java.io.File
@@ -89,16 +91,60 @@ import java.time.ZoneId
 // y son independientes del resto de contenido de estas.
 
 @Composable
-fun Titulo(){
+fun Titulo(login: Boolean = false){
+    var colorTexto = MaterialTheme.colorScheme.primary
+    var size = 24.sp
+    var pad = 26.dp
+    if (login) {
+        colorTexto = verdeOscuro
+        size = 36.sp
+        pad = 10.dp
+    }
     Text(
         text = stringResource(id = R.string.app_name),
-        modifier = Modifier.padding(vertical = 26.dp),
+        modifier = Modifier.padding(vertical = pad),
         style = TextStyle(
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 24.sp,
+            color = colorTexto,
+            fontSize = size,
             fontWeight = FontWeight.Bold
         )
     )
+}
+@Composable
+fun Subtitulo(mensaje: String, login: Boolean = false){
+    if (!login) HorizontalDivider(color = Color.DarkGray, thickness = 1.dp)
+    Text(
+        text = mensaje,
+        modifier = Modifier.padding(vertical = 18.dp),
+        style = TextStyle(
+            color = Color.DarkGray,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    )
+    if (login) HorizontalDivider(color = Color.DarkGray, thickness = 2.dp)
+}
+@Composable
+fun Description(mensaje: String){
+    Text(
+        text = mensaje,
+        modifier = Modifier.padding(vertical = 2.dp),
+        style = TextStyle(
+            color = Color.DarkGray,
+            fontSize = 10.sp,
+            fontStyle = FontStyle.Italic
+        )
+    )
+}
+
+@Composable
+fun CloseButton(onConfirm: () -> Unit){
+    Button(
+        modifier = Modifier.padding(16.dp),
+        onClick = { onConfirm()}
+    ) {
+        Text(text = stringResource(id = R.string.ok))
+    }
 }
 /**
  * Cabecera de las tres pantallas principales para elegir la fecha

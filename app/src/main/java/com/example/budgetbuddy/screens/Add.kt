@@ -54,6 +54,7 @@ import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
+import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.utils.agregarGastoAlCalendario
 import com.example.budgetbuddy.utils.obtenerIdsCalendario
@@ -146,11 +147,7 @@ fun Add(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text = stringResource(id = R.string.add_element),
-                Modifier.padding(16.dp)
-            )
-            Divider()
+            Subtitulo(mensaje = stringResource(id = R.string.add_element), true)
 
             ///////////////////////////////////////// Campo de Nombre /////////////////////////////////////////
             OutlinedTextField(

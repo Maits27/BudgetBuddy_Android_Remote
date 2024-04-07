@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +27,9 @@ import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.Data.Enumeration.Tema
 import com.example.budgetbuddy.Data.Enumeration.obtenerTema
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.shared.CloseButton
+import com.example.budgetbuddy.shared.Description
+import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.ui.theme.azulMedio
 import com.example.budgetbuddy.ui.theme.morado1
@@ -31,7 +40,9 @@ import com.example.budgetbuddy.ui.theme.verdeOscuro
 fun Preferences(
     onLanguageChange:(AppLanguage) -> Unit,
     idioma: String,
-    onThemeChange:(Int)->Unit,
+    onThemeChange: (Int) -> Unit,
+    onSaveChange: () -> Unit,
+    save: Boolean,
     onConfirm: () -> Unit
 ) {
     Column (
@@ -41,9 +52,9 @@ fun Preferences(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
+        var checked by rememberSaveable { mutableStateOf(save) }
         Titulo()
-        Divider()
-        Text(text = stringResource(id = R.string.change_lang), modifier = Modifier.padding(10.dp))
+        Subtitulo(mensaje = stringResource(id = R.string.change_lang))
         Column (
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,12 +73,11 @@ fun Preferences(
                 }
             }
         }
-        Divider()
-        Text(text = stringResource(id = R.string.change_theme), modifier = Modifier.padding(10.dp))
+        Subtitulo(mensaje = stringResource(id = R.string.change_theme))
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -86,7 +96,7 @@ fun Preferences(
                     disabledContentColor = verdeOscuro
                 )
             ) {
-                Text(text = obtenerTema(Tema.Verde, idioma))
+                Text(text = "")
             }
             Button(
                 onClick = {
@@ -103,7 +113,7 @@ fun Preferences(
                     disabledContentColor = azulMedio
                 )
             ) {
-                Text(text = obtenerTema(Tema.Azul, idioma))
+                Text(text = "")
             }
             Button(
                 onClick = {
@@ -120,14 +130,32 @@ fun Preferences(
                     disabledContentColor = morado1
                 )
             ) {
-                Text(text = obtenerTema(Tema.Morado, idioma))
+                Text(text = "")
             }
         }
-        TextButton(onClick = { onConfirm() }
-        ) {
-            Divider()
-            Text(text = stringResource(id = R.string.ok))
+        Subtitulo(mensaje = stringResource(id = R.string.ajustes))
+        Column (Modifier.fillMaxWidth()){
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ){
+                Text(
+                    text = stringResource(id = R.string.guardar_calendario),
+                    modifier = Modifier.weight(4f)
+                )
+                Checkbox(
+                    checked = checked,
+                    onCheckedChange = {
+                        checked = it
+                        onSaveChange()},
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Description(mensaje = stringResource(id = R.string.guardar_calendario_desc))
         }
+
+        CloseButton { onConfirm() }
+
     }
 
 }

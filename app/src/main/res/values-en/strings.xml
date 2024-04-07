@@ -69,4 +69,11 @@
     <string name="profile_picture">Profile picture</string>
     <string name="profile">User profile:</string>
     <string name="foto_error">Could not load picture.</string>
+    <string name="guardar_calendario">Add reminders on calendar:</string>
+    <string name="guardar_calendario_desc">The reminders of future expenses will be saved in the calendar.</string>
+    <string name="ajustes">Other settings:</string>
+    <string name="edit_profile">Edit profile:</string>
+    <string name="user_edit_complete">User edition complete.</string>
+    <string name="edit_passwd">There\'s no need to change the password.</string>
+    <string name="edit_passwd_desc">if you don\'t want to change the password, just leave the fields empty.</string>
 </resources>

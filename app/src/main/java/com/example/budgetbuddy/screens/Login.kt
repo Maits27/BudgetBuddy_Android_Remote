@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
@@ -50,8 +52,17 @@ import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.shared.ErrorText
+import com.example.budgetbuddy.shared.Subtitulo
+import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.ui.theme.grisOscuro
+import com.example.budgetbuddy.ui.theme.verde1
+import com.example.budgetbuddy.ui.theme.verde2
+import com.example.budgetbuddy.ui.theme.verde3
+import com.example.budgetbuddy.ui.theme.verde5
+import com.example.budgetbuddy.ui.theme.verde6
+import com.example.budgetbuddy.ui.theme.verdeClaro
+import com.example.budgetbuddy.ui.theme.verdeOscuro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -72,6 +83,7 @@ fun LoginPage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Titulo(true)
             if (login){
                 Login(
                     navController,
@@ -91,7 +103,7 @@ fun LoginPage(
                         .padding(10.dp)
                 )
             }
-            Divider(color = grisClaro)
+            Divider(color = Color.DarkGray)
             Row {
                 TextButton(
                     modifier = Modifier.padding(16.dp),
@@ -106,29 +118,36 @@ fun LoginPage(
             }
         }
     }else{
-        Row(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Login(
-              navController,
-                userViewModel,
-                onCorrectLogIn,
+        Column (
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+            Titulo(true)
+            Row(
                 Modifier
-                    .padding(end = 8.dp)
-                    .weight(1f)
-          )
-          Register(
-              navController,
-              userViewModel,
-              onCorrectLogIn,
-              Modifier
-                  .padding(start = 8.dp)
-                  .weight(1f)
-          )
+                    .fillMaxSize()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Login(
+                    navController,
+                    userViewModel,
+                    onCorrectLogIn,
+                    Modifier
+                        .padding(end = 8.dp)
+                        .weight(1f)
+                )
+                Register(
+                    navController,
+                    userViewModel,
+                    onCorrectLogIn,
+                    Modifier
+                        .padding(start = 8.dp)
+                        .weight(1f)
+                )
+            }
         }
     }
 }
@@ -142,18 +161,17 @@ fun Login(
 ){
     val coroutineScope = rememberCoroutineScope()
 
-    var checked by rememberSaveable {mutableStateOf(true)}
+    var checked by rememberSaveable {mutableStateOf(false)}
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
+    var serverError by remember { mutableStateOf(false) }
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "User LogIn")
-
-        Divider(color = Color.DarkGray)
+        Subtitulo(mensaje = "User LogIn", true)
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
@@ -170,61 +188,58 @@ fun Login(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
         )
-
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ){
-            Text(text = "Save LogIn data.")
-            Checkbox(
-                checked = checked,
-                onCheckedChange = { checked = it },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = Color.Green, // Color when checked
-                    uncheckedColor = grisClaro // Color when unchecked
-                )
-            )
-        }
         
         if(error){
             ErrorText(text = "Incorrect email or password")
+        }else if (serverError){
+            ErrorText(text = "Server disconnected. Please try again later.")
         }
 
         Button(
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = grisClaro,
-                contentColor = grisOscuro,
-                disabledBackgroundColor = grisOscuro,
-                disabledContentColor = grisClaro,
+                backgroundColor = verdeOscuro,
+                contentColor = grisClaro,
+                disabledBackgroundColor = grisClaro,
+                disabledContentColor = verdeOscuro,
             ),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     val result = userViewModel.correctLogIn(correo, passwd)
                     val nombre = result["nombre"].toString()
-                    withContext(Dispatchers.Main) {
-                        if(nombre!=""){
-                            onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
-                            userViewModel.getProfileImage(correo)
-                            Log.d("LOGIN", "TODO OK2")
-                            if (!checked){
-                                correo = ""
-                                passwd = ""
-                            }
-                            navController.navigate(AppScreens.App.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
+                    serverError = if((result["runtime"] ?: false) == true){true}else{false}
+
+                    if(!serverError){
+                        withContext(Dispatchers.Main) {
+                            if(nombre!=""){
+
+                                onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
+                                userViewModel.getProfileImage(correo)
+
+                                if (!checked){
+                                    correo = ""
+                                    passwd = ""
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+
+                                navController.navigate(AppScreens.App.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+
+                            }else{
+                                error = true
                             }
-                        }else{
-                            error = true
                         }
                     }
                 }
             }) {
-            Text(text = "Login", Modifier.background(color = grisClaro), color= grisOscuro)
+            Text(text = "Sign Up",
+                Modifier.background(color = verdeOscuro),
+                color= verdeClaro
+            )
         }
     }
 }
@@ -238,6 +253,11 @@ fun Register(
 ){
     val coroutineScope = rememberCoroutineScope()
 
+    var serverOk by remember { mutableStateOf(true) }
+    var nombreOk by remember { mutableStateOf(true) }
+    var emailOk by remember { mutableStateOf(true) }
+    var passwdOk by remember { mutableStateOf(true) }
+
     var nombre by rememberSaveable { mutableStateOf("") }
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
@@ -248,9 +268,7 @@ fun Register(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "User register")
-
-        Divider(color = grisClaro)
+        Subtitulo(mensaje = "User register", true)
 
         TextField(
             value = nombre, 
@@ -259,7 +277,7 @@ fun Register(
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
-        if (!correctName(nombre)){
+        if (!nombreOk){
             ErrorText(text = "Incorrect name.")
         }
 
@@ -270,7 +288,7 @@ fun Register(
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
-        if (!correctEmail(correo)){
+        if (!emailOk){
             ErrorText(text = "Incorrect email.")
         }
         TextField(
@@ -289,27 +307,29 @@ fun Register(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
         )
-        if (!correctPasswd(passwd, passwd2)){
+        if (!passwdOk){
             ErrorText(text = "Invalid password (the two of them must be the same).")
         }
-
+        if (!serverOk){
+            ErrorText(text = "Server disconnected. Please try again later.")
+        }
         Button(
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = grisClaro,
-                contentColor = grisOscuro,
-                disabledBackgroundColor = grisOscuro,
-                disabledContentColor = grisClaro,
+                backgroundColor = verdeOscuro,
+                contentColor = grisClaro,
+                disabledBackgroundColor = grisClaro,
+                disabledContentColor = verdeOscuro,
             ),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     // Ejecuta el código que puede bloquear el hilo principal aquí
-
                     val registroExitoso = userViewModel.correctRegister(nombre, correo, passwd, passwd2)
+
                     // Cambiar al hilo principal para actualizar la UI
-                    withContext(Dispatchers.Main) {
-                        if (registroExitoso) {
-                            Log.d("CorrectLogin", "TODO CORRECTO")
+                    if (registroExitoso.values.all { it }) {
+                        withContext(Dispatchers.Main) {
+
                             onCorrectLogIn(correo, nombre, false)
                             navController.navigate(AppScreens.App.route) {
                                 popUpTo(navController.graph.startDestinationId) {
@@ -318,14 +338,20 @@ fun Register(
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        } else {
-                            // Manejar el registro fallido si es necesario
+
                         }
+                    } else {
+                        serverOk = registroExitoso["server"]?:true
+                        nombreOk = registroExitoso["name"]?:true
+                        emailOk = registroExitoso["email"]?:true
+                        passwdOk = registroExitoso["password"]?:true
                     }
                 }
             }
         ) {
-            Text(text = "Register", Modifier.background(color = grisClaro), color= grisOscuro)
+            Text(text = "Register",
+                Modifier.background(color = verdeOscuro),
+                color= verdeClaro)
         }
 
     }

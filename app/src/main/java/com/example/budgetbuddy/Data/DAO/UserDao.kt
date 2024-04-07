@@ -40,5 +40,5 @@ interface UserDao {
 
     /////////////// Funciones Update ///////////////
     @Update
-    fun editarUsuario(user: User): Int
+    suspend fun editarUsuario(user: User): Int
 }

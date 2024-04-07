@@ -51,6 +51,7 @@ import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
+import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.utils.agregarGastoAlCalendario
@@ -85,6 +86,7 @@ fun Edit(
 ){
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val error_double = stringResource(id = R.string.error_double)
     val error_insert = stringResource(id = R.string.error_insert)
@@ -121,17 +123,12 @@ fun Edit(
         changeDate = true
     }
 
-    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            text = stringResource(id = R.string.edit_element),
-            Modifier.padding(16.dp)
-        )
-        Divider()
+        Subtitulo(mensaje = stringResource(id = R.string.edit), true)
 
         ///////////////////////////////////////// Campo de Nombre /////////////////////////////////////////
         OutlinedTextField(

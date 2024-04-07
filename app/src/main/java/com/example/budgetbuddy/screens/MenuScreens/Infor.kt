@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.shared.CloseButton
 import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.shared.compartirContenido
 
@@ -34,7 +35,7 @@ fun Infor(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Titulo()
+        Titulo(true)
         Divider()
         Text(
             text = stringResource(id = R.string.app_description),
@@ -58,9 +59,6 @@ fun Infor(
                 Text(text =  stringResource(id = R.string.email))
             }
         }
-        TextButton(onClick = { onConfirm() }
-        ) {
-            Text(text = stringResource(id = R.string.ok))
-        }
+        CloseButton { onConfirm() }
     }
 }
