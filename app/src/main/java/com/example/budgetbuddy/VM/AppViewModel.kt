@@ -42,8 +42,7 @@ class AppViewModel @Inject constructor(
     /*************************************************
      **                    Estados                  **
      *************************************************/
-    var currentUser by mutableStateOf( "budgetbuddy46@gmail.com")
-    var calendarId by mutableStateOf( 100.toLong())
+    var currentUser by mutableStateOf( "")
 
     // Flows a los que les llega constantemente las actualizaciones y datos de la BBDD.
     // De esta forma no es necesaria una actualización cada vez que se realice un cambio.

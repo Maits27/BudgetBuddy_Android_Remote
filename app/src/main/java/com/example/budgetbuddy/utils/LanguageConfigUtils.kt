@@ -3,6 +3,7 @@ package com.example.budgetbuddy.utils
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Configuration
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
@@ -52,6 +53,7 @@ class LanguageManager @Inject constructor() {
     // Método que cambia el idioma de la aplicación de forma local e instantánea
     fun changeLang(lang: AppLanguage) {
         currentLang = lang
+        Log.d("IDIOMA","CURRENT LANG: $currentLang")
         val localeList = LocaleListCompat.forLanguageTags(lang.code)
         AppCompatDelegate.setApplicationLocales(localeList)
     }

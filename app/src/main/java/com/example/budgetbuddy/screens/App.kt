@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -80,6 +81,11 @@ fun App(
     guardarFichero: (LocalDate, String)-> Boolean
 ){
     CalendarPermission()
+    preferencesViewModel.restartLang(
+        preferencesViewModel.idioma.collectAsState(
+            initial = preferencesViewModel.currentSetLang).value)
+    val context = LocalContext.current
+
     val navControllerSecundario = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -168,7 +174,9 @@ fun App(
                         appViewModel = appViewModel,
                         preferencesViewModel = preferencesViewModel,
                         onDrawerOpen = onDrawerOpen,
-                        onLogout = { userViewModel.logout() },
+                        onLogout = {
+                            userViewModel.logout(context)
+                            preferencesViewModel.currentUser = ""},
                         guardarFichero
                     )
                 }

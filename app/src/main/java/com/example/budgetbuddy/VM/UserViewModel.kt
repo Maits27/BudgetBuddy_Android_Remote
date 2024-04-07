@@ -1,5 +1,8 @@
 package com.example.budgetbuddy.VM
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -12,6 +15,7 @@ import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.Data.Repositories.UserRepository
 import com.example.budgetbuddy.Data.Room.AuthUser
+import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.UserVerification.correctName
 import com.example.budgetbuddy.UserVerification.correctPasswd
@@ -43,7 +47,6 @@ class UserViewModel @Inject constructor(
     var profilePicture: Bitmap? by mutableStateOf(null)
         private set
 
-    var profilePicturePath: String? = null
     var currentUserName by mutableStateOf("")
 
 
@@ -70,9 +73,13 @@ class UserViewModel @Inject constructor(
     suspend fun borrarUsuario(user: User){
         userRepository.deleteUsuario(user)
     }
-    fun logout(){
+    fun logout(context: Context){
         profilePicture = null
-        profilePicturePath = null
+        val intent = Intent(context, MainActivity::class.java).apply {
+            putExtra("LOGGED_USERNAME", "")
+        }
+        context.startActivity(intent)
+        (context as Activity).finish()
     }
 
     ////////////////////// Editar elementos //////////////////////

@@ -69,8 +69,6 @@ class MainActivity : AppCompatActivity() {
 
             // Si el drawable es una instancia de BitmapDrawable, obtener el Bitmap directamente
             if (drawable is BitmapDrawable) {
-                userViewModel.profilePicturePath = getPathFromUri(it)
-                Log.d("CONTENT PROVIDER", userViewModel.profilePicturePath?:"")
                 userViewModel.setProfileImage(appViewModel.currentUser, drawable.bitmap)
             }
         }else{
@@ -94,11 +92,9 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
 
         setContent {
-            BudgetBuddyTheme(preferencesViewModel = preferencesViewModel) {
                 // Método para la descarga de ficheros
                 val guardarFichero: ( LocalDate, String)-> Boolean = { fecha, datos ->
                     guardarDatosEnArchivo(appViewModel, fecha, datos) }
-                preferencesViewModel.restartLang(preferencesViewModel.idioma.collectAsState(initial = preferencesViewModel.currentSetLang).value)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -109,27 +105,13 @@ class MainActivity : AppCompatActivity() {
                     MyApp(
                         userViewModel = userViewModel,
                         appViewModel = appViewModel,
-                        pickMedia = pickMedia,
                         preferencesViewModel = preferencesViewModel,
+                        pickMedia = pickMedia,
                         guardarFichero
                     )
                 }
             }
-        }
 
-    }
-    /**
-     * Content Provider para recoger el path a la imagen
-     */
-    private fun getPathFromUri(uri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndex(MediaStore.Images.Media.DATA)
-            it.moveToFirst()
-            return it.getString(columnIndex)
-        }
-        return ""
     }
 
     /**

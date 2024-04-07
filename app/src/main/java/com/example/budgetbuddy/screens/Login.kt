@@ -32,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -100,7 +101,7 @@ fun LoginPage(
                 TextButton(
                     modifier = Modifier.padding(16.dp),
                     onClick = {login = false}) {
-                    Text(text = stringResource(id = R.string.register), color = MaterialTheme.colors.onBackground)
+                    Text(text = "Register", color = MaterialTheme.colors.onBackground)
                 }
             }
         }
@@ -150,13 +151,13 @@ fun Login(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = stringResource(id = R.string.login_head))
+        Text(text = "User LogIn")
 
-        Divider(color = grisClaro)
+        Divider(color = Color.DarkGray)
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
-            label = { Text(stringResource(id = R.string.email)) },
+            label = { Text("Email:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
@@ -164,7 +165,7 @@ fun Login(
         TextField(
             value = passwd,
             onValueChange = { passwd = it },
-            label = { Text(stringResource(id = R.string.passwd)) },
+            label = { Text("Password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
@@ -174,19 +175,19 @@ fun Login(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ){
-            Text(text = stringResource(id = R.string.guardar_datos))
+            Text(text = "Save LogIn data.")
             Checkbox(
                 checked = checked,
                 onCheckedChange = { checked = it },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colors.primary, // Color when checked
-                    uncheckedColor = MaterialTheme.colors.secondary // Color when unchecked
+                    checkedColor = Color.Green, // Color when checked
+                    uncheckedColor = grisClaro // Color when unchecked
                 )
             )
         }
         
         if(error){
-            ErrorText(text = stringResource(id = R.string.login_error))
+            ErrorText(text = "Incorrect email or password")
         }
 
         Button(
@@ -199,10 +200,8 @@ fun Login(
             ),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    Log.d("LOGIN", "TODO OK0")
                     val result = userViewModel.correctLogIn(correo, passwd)
                     val nombre = result["nombre"].toString()
-                    Log.d("LOGIN", "TODO OK1")
                     withContext(Dispatchers.Main) {
                         if(nombre!=""){
                             onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
@@ -244,43 +243,40 @@ fun Register(
     var passwd by rememberSaveable { mutableStateOf("") }
     var passwd2 by rememberSaveable { mutableStateOf("") }
 
-    var nameError by rememberSaveable { mutableStateOf(false) }
-    var emailError by rememberSaveable { mutableStateOf(false) }
-    var passwdError by rememberSaveable { mutableStateOf(false) }
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = stringResource(id = R.string.register_head))
+        Text(text = "User register")
 
         Divider(color = grisClaro)
 
         TextField(
             value = nombre, 
             onValueChange = {nombre = it}, 
-            label = { Text(stringResource(id = R.string.name)) },
+            label = { Text("Name:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         if (!correctName(nombre)){
-            ErrorText(text = stringResource(id = R.string.name_error))
+            ErrorText(text = "Incorrect name.")
         }
 
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
-            label = { Text(stringResource(id = R.string.email)) },
+            label = { Text("Email:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
         if (!correctEmail(correo)){
-            ErrorText(text = stringResource(id = R.string.email_error))
+            ErrorText(text = "Incorrect email.")
         }
         TextField(
             value = passwd, 
             onValueChange = {passwd = it}, 
-            label = { Text(stringResource(id = R.string.passwd)) },
+            label = { Text("Password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
@@ -288,13 +284,13 @@ fun Register(
         TextField(
             value = passwd2, 
             onValueChange = {passwd2 = it}, 
-            label = { Text(stringResource(id = R.string.passwd2)) },
+            label = { Text("Repeat password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
         )
         if (!correctPasswd(passwd, passwd2)){
-            ErrorText(text = stringResource(id = R.string.passwd_error))
+            ErrorText(text = "Invalid password (the two of them must be the same).")
         }
 
         Button(
@@ -329,7 +325,7 @@ fun Register(
                 }
             }
         ) {
-            Text(text = stringResource(id = R.string.register), Modifier.background(color = grisClaro), color= grisOscuro)
+            Text(text = "Register", Modifier.background(color = grisClaro), color= grisOscuro)
         }
 
     }

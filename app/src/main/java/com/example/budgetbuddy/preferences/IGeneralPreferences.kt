@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 // Interfaz de acceso a las preferencias del usuario en el Datastore
 interface IGeneralPreferences {
-    fun language(): Flow<String>
-    suspend fun setLanguage(code: String)
+    fun language(email: String): Flow<String>
+    suspend fun setLanguage(email: String, code: String)
 
-    fun getThemePreference(): Flow<Int>
+    fun getThemePreference(email: String): Flow<Int>
+    suspend fun saveThemePreference(email: String, theme: Int)
 
-    suspend fun saveThemePreference(theme: Int)
+    fun getSaveOnCalendar(email: String): Flow<Boolean>
+    suspend fun changeSaveOnCalendar(email: String)
 
 }
