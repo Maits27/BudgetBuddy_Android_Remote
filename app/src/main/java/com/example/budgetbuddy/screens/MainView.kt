@@ -106,8 +106,8 @@ fun MainView(
      **    Recoger el valor actual de cada flow de los ViewModel      **
      **                 (valor por defecto: initial)                  **
      ******************************************************************/
-    val idioma by preferencesViewModel.idioma.collectAsState(initial = preferencesViewModel.currentSetLang)
-    val tema by preferencesViewModel.theme.collectAsState(initial = 0)
+    val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
+    val tema by preferencesViewModel.theme(appViewModel.currentUser).collectAsState(initial = 0)
     val fecha  by appViewModel.fecha.collectAsState(initial = LocalDate.now())
     val factura by appViewModel.facturaActual(fecha, idioma).collectAsState(initial = "")
     val total  by appViewModel.totalGasto(fecha).collectAsState(initial = 0.0)

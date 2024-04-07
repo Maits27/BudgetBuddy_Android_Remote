@@ -58,7 +58,7 @@ class PreferencesRepository @Inject constructor(private val context: Context) : 
         Log.d("IDIOMA", "Email: $email")
         Log.d("IDIOMA", "Preferences email o comillas: ${preferences[PREFERENCE_LANGUAGE(email)]?:""}")
         Log.d("IDIOMA", "Name preferences lang email: ${PREFERENCE_LANGUAGE(email)}")
-        preferences[PREFERENCE_LANGUAGE(email)]?: Locale.getDefault().language
+        preferences[PREFERENCE_LANGUAGE(email)]?: "en"
 
     }
     override suspend fun setLanguage(email: String, code: String) {

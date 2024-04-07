@@ -43,6 +43,7 @@ fun Preferences(
     ){
         Titulo()
         Divider()
+        Text(text = stringResource(id = R.string.change_lang), modifier = Modifier.padding(10.dp))
         Column (
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,6 +63,7 @@ fun Preferences(
             }
         }
         Divider()
+        Text(text = stringResource(id = R.string.change_theme), modifier = Modifier.padding(10.dp))
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,6 +125,7 @@ fun Preferences(
         }
         TextButton(onClick = { onConfirm() }
         ) {
+            Divider()
             Text(text = stringResource(id = R.string.ok))
         }
     }

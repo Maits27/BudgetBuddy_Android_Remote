@@ -77,10 +77,11 @@ private val CustomColorScheme = lightColorScheme(
  */
 @Composable
 fun BudgetBuddyTheme(
+    user: String,
     preferencesViewModel: PreferencesViewModel,
     content: @Composable () -> Unit
 ) {
-    val theme by preferencesViewModel.theme.collectAsState(initial = true)
+    val theme by preferencesViewModel.theme(user).collectAsState(initial = true)
     if (theme==0){
         MaterialTheme(
             colorScheme = DarkColorScheme,

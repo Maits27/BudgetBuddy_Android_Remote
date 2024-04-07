@@ -46,7 +46,7 @@ fun MyApp(
             LoginPage(navController, userViewModel){ email, name, download ->
                 appViewModel.currentUser = email
                 userViewModel.currentUserName = name
-                preferencesViewModel.currentUser = email
+                preferencesViewModel.changeUser(email)
                 userViewModel.getProfileImage(email)
                 if (download==true){
                     appViewModel.download_user_data()
@@ -54,7 +54,10 @@ fun MyApp(
             }
         }
         composable(AppScreens.App.route) {
-            BudgetBuddyTheme(preferencesViewModel = preferencesViewModel) {
+            BudgetBuddyTheme(
+                user = appViewModel.currentUser,
+                preferencesViewModel = preferencesViewModel
+            ) {
                 App(
                     navControllerMain = navController,
                     userViewModel = userViewModel,

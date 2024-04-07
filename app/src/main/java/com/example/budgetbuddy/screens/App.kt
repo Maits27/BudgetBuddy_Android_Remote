@@ -82,7 +82,7 @@ fun App(
 ){
     CalendarPermission()
     preferencesViewModel.restartLang(
-        preferencesViewModel.idioma.collectAsState(
+        preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(
             initial = preferencesViewModel.currentSetLang).value)
     val context = LocalContext.current
 
@@ -90,7 +90,7 @@ fun App(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val idioma by preferencesViewModel.idioma.collectAsState(initial = preferencesViewModel.currentSetLang)
+    val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
 
     // icons to mimic drawer destinations
     val items = listOf(
@@ -176,7 +176,7 @@ fun App(
                         onDrawerOpen = onDrawerOpen,
                         onLogout = {
                             userViewModel.logout(context)
-                            preferencesViewModel.currentUser = ""},
+                            preferencesViewModel.changeUser("")},
                         guardarFichero
                     )
                 }

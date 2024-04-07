@@ -12,10 +12,13 @@ import com.example.budgetbuddy.preferences.IGeneralPreferences
 import com.example.budgetbuddy.utils.LanguageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 /********************************************************
@@ -37,30 +40,35 @@ class PreferencesViewModel @Inject constructor(
     /*************************************************
      **                    Estados                  **
      *************************************************/
-    var currentUser by mutableStateOf("")
+    private val _currentUser = MutableStateFlow("")
+
+    val currentUser: Flow<String> = _currentUser
 
     val currentSetLang by languageManager::currentLang
 
-    val idioma = preferencesRepository.language(currentUser).map { AppLanguage.getFromCode(it) }
+    val idioma: (String)-> Flow<AppLanguage> = { preferencesRepository.language(it).map { AppLanguage.getFromCode(it) } }
 
-    val theme = preferencesRepository.getThemePreference(currentUser)
+    val theme: (String)-> Flow<Int> = { preferencesRepository.getThemePreference(it)}
 
-    val saveOnCalendar = preferencesRepository.getSaveOnCalendar(currentUser)
+    val saveOnCalendar: (String)-> Flow<Boolean> = { preferencesRepository.getSaveOnCalendar(it)}
 
 
     /*************************************************
      **                    Eventos                  **
      *************************************************/
 
+    fun changeUser(email: String){
+        _currentUser.value = email
+    }
+
 
     ////////////////////// Idioma //////////////////////
 
     // Cambio del idioma de preferencia
     fun changeLang(i: AppLanguage) {
-        Log.d("IDIOMAS USER", currentUser)
         languageManager.changeLang(i)
         viewModelScope.launch(Dispatchers.IO) {
-            preferencesRepository.setLanguage(currentUser, i.code)
+            preferencesRepository.setLanguage(currentUser.first(), i.code)
         }
     }
 
@@ -69,17 +77,21 @@ class PreferencesViewModel @Inject constructor(
 
     // Cambio del tema de preferencia
     fun changeTheme(color: Int){
-        viewModelScope.launch(Dispatchers.IO) { preferencesRepository.saveThemePreference(currentUser, color) }
+        viewModelScope.launch(Dispatchers.IO) { preferencesRepository.saveThemePreference(currentUser.first(), color) }
     }
 
     fun restartLang(i: AppLanguage){
         viewModelScope.launch {
-            languageManager.changeLang(preferencesRepository.language(currentUser).map { AppLanguage.getFromCode(it) }.first())
+            languageManager.changeLang(i)
+
         }
+//        viewModelScope.launch {
+//            languageManager.changeLang(preferencesRepository.language(currentUser).map { AppLanguage.getFromCode(it) }.first())
+//        }
     }
 
     fun changeSaveOnCalendar(){
-        viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveOnCalendar(currentUser) }
+        viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveOnCalendar(currentUser.first()) }
     }
 
 
