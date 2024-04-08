@@ -29,6 +29,9 @@
         android:theme="@style/Theme.BudgetBuddy"
         tools:targetApi="31"
         android:requestLegacyExternalStorage="true">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCMAAqZeqy0rdR1z5XApgSVRdlMFa_8b4A"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

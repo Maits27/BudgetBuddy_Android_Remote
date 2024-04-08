@@ -57,6 +57,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
+import com.example.budgetbuddy.shared.MapScreen
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.grisClaro
@@ -146,7 +147,7 @@ fun Edit(
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
-            Log.d("LOCATION", location.toString())
+            Log.d("LOCATION", "POST EDIT: ${location.toString()}")
             lastKnownLocation = location
         }
 
@@ -295,6 +296,8 @@ fun Edit(
 
         Calendario(show = (isTextFieldFocused == 2), onCalendarConfirm)
 
+        if (saveLoc) MapScreen(lastKnownLocation = lastKnownLocation)
+
         /** Botón para guardar los cambios en Room **/
         Button(
             onClick = {
@@ -311,7 +314,8 @@ fun Edit(
                                 euros.toDouble(),
                                 fechaTemporal,
                                 selectedOption,
-                                location = if (saveLoc){lastKnownLocation}else{null}
+                                latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
+                                longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0}
                             )
                             agregarGastoAlCalendario(context, "BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
                         } else {

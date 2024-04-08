@@ -77,7 +77,8 @@ data class PostGasto(
     @SerialName("cantidad") val cantidad: Float,
     @SerialName("fecha") val fecha: Int,
     @SerialName("tipo") val tipo: String,
-    @SerialName("location") val location: String?,
+    @SerialName("latitud") val latitud: Float,
+    @SerialName("longitud") val longitud: Float,
     @SerialName("user_id") val user_id: String,
     @SerialName("id") val id: String
 )

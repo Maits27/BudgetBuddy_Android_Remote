@@ -1,6 +1,10 @@
 package com.example.budgetbuddy.screens
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.VM.AppViewModel
@@ -73,8 +78,6 @@ fun Home(
     modifier: Modifier = Modifier,
     onEdit: (Gasto)->Unit,
 ){
-
-    val coroutineScope = rememberCoroutineScope() // Parámetro necesario para realizar corrutinas
 
     /*******************************************************************
      **    Recoger el valor actual de cada flow del AppViewModel      **

@@ -8,6 +8,7 @@ import com.example.budgetbuddy.Data.Enumeration.obtenerTipoDeNombre
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.Data.Remote.PostGasto
 import com.example.budgetbuddy.Data.Room.Gasto
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -55,7 +56,6 @@ fun String.compareHash(hash:String): Boolean{
 fun convertirPostGastos_Gastos(listado: List<PostGasto>?): List<Gasto>{
     val resultado = mutableListOf<Gasto>()
     for(pgasto in listado?: emptyList()){
-        Log.d("ERROR DE LOCALIZACION", "LOC: ${pgasto.location} NO EXISTE!!!!!!!!!!1")
         var tipo = obtenerTipoDeNombre(pgasto.tipo)
         if(tipo!=null){
             resultado.add(postGasto_gasto(pgasto, tipo))
@@ -66,13 +66,13 @@ fun convertirPostGastos_Gastos(listado: List<PostGasto>?): List<Gasto>{
     return resultado
 }
 fun postGasto_gasto(pgasto: PostGasto, tipo: TipoGasto): Gasto{
-    Log.d("ERROR DE LOCALIZACION", "LOC: ${toLocation(pgasto.location)} CONVERSION!!!!!!!!!1")
     return Gasto(
         nombre = pgasto.nombre,
         cantidad = pgasto.cantidad.toDouble(),
         tipo = tipo,
         fecha = pgasto.fecha.toLong().toLocalDate(),
-        location = toLocation(pgasto.location),
+        latitud = pgasto.latitud.toDouble(),
+        longitud = pgasto.longitud.toDouble(),
         userId = pgasto.user_id,
         id = pgasto.id
     )
@@ -92,7 +92,8 @@ fun gasto_postGastos(gasto: Gasto): PostGasto{
         cantidad = gasto.cantidad.toFloat(),
         tipo = obtenerTipoEnIdioma(gasto.tipo, "es"),
         fecha = gasto.fecha.toLong().toInt(),
-        location = fromLocation(gasto.location),
+        latitud = gasto.latitud.toFloat(),
+        longitud = gasto.longitud.toFloat(),
         user_id = gasto.userId,
         id = gasto.id
         )
@@ -107,4 +108,8 @@ private fun toLocation(locationString: String?): Location? {
     val gson = Gson()
     if (locationString=="") return null
     return locationString?.let { gson.fromJson(it, Location::class.java) }
+}
+
+fun locationToLatLng(location: Location): LatLng {
+    return LatLng(location.latitude, location.longitude)
 }

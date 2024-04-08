@@ -3,8 +3,10 @@ package com.example.budgetbuddy.shared
 import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +17,7 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,10 +25,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -67,20 +72,25 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
-import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.ui.theme.verdeOscuro
+import com.example.budgetbuddy.utils.locationToLatLng
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import java.io.File
-import java.nio.file.Files
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+
 
 
 /***********************************************
@@ -89,6 +99,38 @@ import java.time.ZoneId
 
 // Estos son composables que se utilizan en diferentes pantallas
 // y son independientes del resto de contenido de estas.
+@Composable
+fun MapScreen(lastKnownLocation: Location?, title:String="", snippet:String ="") {
+    Log.d("LOCATION", "LOCATION: $lastKnownLocation")
+    Box (
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(16.dp)
+            .border(2.dp, MaterialTheme.colorScheme.primary)
+    ){
+        when{
+            (lastKnownLocation!=null
+                    && lastKnownLocation.latitude!=0.0
+                    && lastKnownLocation.longitude!=0.0) ->{
+                val location = locationToLatLng(lastKnownLocation)
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(location, 10f)
+                }
+                GoogleMap(
+                    modifier = Modifier.size(width = 300.dp, height = 400.dp),
+                    cameraPositionState = cameraPositionState
+                ) {
+                    Marker(
+                        state = MarkerState(position = location),
+                        title = title,
+                        snippet = snippet
+                    )
+                }
+            }else-> NoData()
+        }
+    }
+}
+
 
 @Composable
 fun Titulo(login: Boolean = false){
@@ -146,7 +188,9 @@ fun CardElement(text: String){
             painter = painterResource(id = R.drawable.circle),
             contentDescription = "",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 5.dp).size(5.dp)
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .size(5.dp)
         )
         Text(
             text = text,

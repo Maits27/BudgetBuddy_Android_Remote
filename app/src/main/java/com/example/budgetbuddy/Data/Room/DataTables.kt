@@ -72,7 +72,8 @@ data class Gasto(
     var cantidad: Double,
     var fecha: LocalDate,
     var tipo: TipoGasto,
-    var location: Location?,
+    var latitud: Double,
+    var longitud: Double,
     var userId: String,
     @PrimaryKey val id: String = UUID.randomUUID().toString()
 ){

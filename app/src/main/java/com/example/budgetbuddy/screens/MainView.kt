@@ -1,6 +1,8 @@
 package com.example.budgetbuddy2.screens
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
 import androidx.compose.foundation.background
@@ -45,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -66,6 +69,7 @@ import com.example.budgetbuddy.screens.Add
 import com.example.budgetbuddy.screens.Dashboards
 import com.example.budgetbuddy.screens.Edit
 import com.example.budgetbuddy.screens.Home
+import com.example.budgetbuddy.screens.LocationPermission
 import com.example.budgetbuddy.utils.toLong
 import com.google.android.gms.location.FusedLocationProviderClient
 import java.time.LocalDate
@@ -113,7 +117,7 @@ fun MainView(
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
     var showDownloadError by rememberSaveable { mutableStateOf(false) }
     var showExpansion by rememberSaveable { mutableStateOf(false) }
-    var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, null, "")) }
+    var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, 0.0, 0.0, "")) }
 
     /**    Textos traducidos (no se puede acceder a ellos fuera de composables)   **/
     val factura_init = stringResource(id = R.string.factura_init, fecha.toString())
@@ -184,6 +188,16 @@ fun MainView(
             }
         }
     ){ innerPadding ->
+        if (ActivityCompat.checkSelfPermission(
+                LocalContext.current,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                LocalContext.current,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            LocationPermission()
+        }
         Row {
             /** Necesario para los Fragments (Requisito opcional) **/
             if (!isVertical){

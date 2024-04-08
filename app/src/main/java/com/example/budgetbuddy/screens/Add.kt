@@ -3,7 +3,6 @@ package com.example.budgetbuddy.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.health.connect.datatypes.ExerciseRoute
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,7 +26,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -50,7 +46,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
@@ -61,10 +56,10 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
+import com.example.budgetbuddy.shared.MapScreen
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.utils.agregarGastoAlCalendario
-import com.example.budgetbuddy.utils.obtenerIdsCalendario
 import com.example.budgetbuddy.utils.toLong
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -128,7 +123,9 @@ fun Add(
     var fecha by rememberSaveable { mutableStateOf(fecha_actual) }
     var selectedOption by rememberSaveable { mutableStateOf(TipoGasto.Otros) }
     var nombre by rememberSaveable { mutableStateOf("") }
-    var lastKnownLocation: Location? = null
+
+    //Location
+    val lastKnownLocation by appViewModel.locationFlow.collectAsState(initial = null)
 
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
     var error_message by remember { mutableStateOf("") }
@@ -154,12 +151,18 @@ fun Add(
         ) != PackageManager.PERMISSION_GRANTED
     ) {
         LocationPermission()
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                // Got last known location. In some rare situations this can be null.
+                Log.d("LOCATION", "POST PERMISSION: ${location.toString()}")
+                appViewModel.cambiarLocalizacion(location)
+            }
     }
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
-            Log.d("LOCATION", location.toString())
-            lastKnownLocation = location
+            Log.d("LOCATION", "POST PERMISSION: ${location.toString()}")
+            appViewModel.cambiarLocalizacion(location)
         }
 
     Column(
@@ -312,6 +315,8 @@ fun Add(
 
         Calendario(show = (isTextFieldFocused == 2), onCalendarConfirm)
 
+        if (saveLoc && lastKnownLocation!=null) MapScreen(lastKnownLocation = lastKnownLocation)
+
         /** Botón para añadir elemento en Room **/
         Button(
             onClick = {
@@ -327,7 +332,8 @@ fun Add(
                                 euros.toDouble(),
                                 fecha,
                                 selectedOption,
-                                location = if (saveLoc){lastKnownLocation}else{null}
+                                latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
+                                longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0}
                             )
                             agregarGastoAlCalendario(
                                 context,

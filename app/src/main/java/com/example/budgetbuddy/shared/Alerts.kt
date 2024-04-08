@@ -2,6 +2,7 @@ package com.example.budgetbuddy.shared
 
 import android.content.ContentResolver
 import android.content.Context
+import android.location.Location
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -196,7 +197,10 @@ fun GastoAbierto(
 
                     CardElement(text = stringResource(id = R.string.cantidad, gasto.cantidad))
                     CardElement(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(gasto.tipo, idioma.code)))
-
+                    val location = Location("")
+                    location.latitude = gasto.latitud
+                    location.longitude = gasto.longitud
+                    MapScreen(lastKnownLocation = location)
                 }
             }
         )

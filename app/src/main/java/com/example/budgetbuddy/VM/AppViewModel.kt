@@ -64,11 +64,13 @@ class AppViewModel @Inject constructor(
             listaGastos.fold("") { f, gasto -> f + "\t- " + gasto.toString(idioma) }
         }
     }
+    private val _locationFlow = MutableStateFlow<Location?>(null)
 
-
+    val locationFlow: Flow<Location?> = _locationFlow
     /*************************************************
      **          Inicialización de la BBDD          **
      *************************************************/
+
 //    init {
 //        viewModelScope.launch {
 //            for (cantidad in 1 until 10){
@@ -88,10 +90,11 @@ class AppViewModel @Inject constructor(
      **                    Eventos                  **
      *************************************************/
 
+
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto, location: Location?): Gasto {
-        val gasto = Gasto(nombre, cantidad, fecha, tipo, location, currentUser)
+    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto, latitud: Double, longitud: Double): Gasto {
+        val gasto = Gasto(nombre, cantidad, fecha, tipo, latitud, longitud, currentUser)
         try {
             gastoRepository.insertGasto(gasto)
         }catch (e: Exception){
@@ -111,8 +114,12 @@ class AppViewModel @Inject constructor(
         _fecha.value = nuevoValor
 
     }
-    fun editarGasto(gasto_previo: Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto, location: Location?){
-        gastoRepository.editarGasto(Gasto(nombre, cantidad, fecha, tipo, location, currentUser, gasto_previo.id))
+    fun cambiarLocalizacion(location: Location?) {
+        _locationFlow.value = location
+
+    }
+    fun editarGasto(gasto_previo: Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto, latitud: Double, longitud: Double){
+        gastoRepository.editarGasto(Gasto(nombre, cantidad, fecha, tipo, latitud, longitud, currentUser, gasto_previo.id))
     }
 
     ////////////////////// Pasar a formato String //////////////////////
