@@ -76,4 +76,6 @@
     <string name="user_edit_complete">Erabiltzailea zuzen aldatu da.</string>
     <string name="edit_passwd">Ez da beharrezkoa pasahitza aldatzea.</string>
     <string name="edit_passwd_desc">Pasahitza ez baduzu aldatu nahi, hutsik utz itzazu eremuak.</string>
+    <string name="guardar_loc">Gorde lokalizazioa:</string>
+    <string name="guardar_loc_desc">Gastuak burutu ziren lokalizioa gordeko da.</string>
 </resources>

@@ -70,6 +70,12 @@ dependencies {
     implementation("io.ktor:ktor-client-auth:2.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
 
+    //Geolocalizacion
+    // noinspection GradleCompatible
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
+
 
     // Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")

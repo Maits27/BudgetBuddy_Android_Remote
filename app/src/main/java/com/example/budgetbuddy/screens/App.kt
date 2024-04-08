@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.screens
 
 import android.Manifest
+import android.health.connect.datatypes.ExerciseRoute
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,6 +59,7 @@ import com.example.budgetbuddy.shared.Perfil
 import com.example.budgetbuddy2.screens.MainView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -76,6 +78,7 @@ fun App(
     navControllerMain: NavController,
     userViewModel: UserViewModel,
     appViewModel: AppViewModel,
+    fusedLocationClient: FusedLocationProviderClient,
     pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
     preferencesViewModel: PreferencesViewModel,
     guardarFichero: (LocalDate, String)-> Boolean
@@ -90,9 +93,8 @@ fun App(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
     val saveOnCalendar by preferencesViewModel.saveOnCalendar(appViewModel.currentUser).collectAsState(initial = true)
-
+    val saveLocation by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
     // icons to mimic drawer destinations
     val items = listOf(
         Diseño(AppScreens.UserEdit, painterResource(id = R.drawable.user), stringResource(id = R.string.edit)),
@@ -174,6 +176,7 @@ fun App(
                         navControllerMain = navControllerMain,
                         appViewModel = appViewModel,
                         preferencesViewModel = preferencesViewModel,
+                        fusedLocationClient = fusedLocationClient,
                         onDrawerOpen = onDrawerOpen,
                         onLogout = {
                             userViewModel.logout(context)
@@ -198,10 +201,11 @@ fun App(
                 composable(AppScreens.Preferences.route) {
                     Preferences(
                         onLanguageChange = onLanguageChange,
-                        idioma = idioma.code,
                         onThemeChange = onThemeChange,
                         onSaveChange = {preferencesViewModel.changeSaveOnCalendar()},
-                        save = saveOnCalendar
+                        onSaveLocation = {preferencesViewModel.changeSaveLocation()},
+                        saveChange = saveOnCalendar,
+                        saveLocation = saveLocation
                     ) {
                         navControllerSecundario.navigate(AppScreens.MainView.route) {
                             popUpTo(navControllerSecundario.graph.startDestinationId) {

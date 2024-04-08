@@ -77,19 +77,11 @@ data class PostGasto(
     @SerialName("cantidad") val cantidad: Float,
     @SerialName("fecha") val fecha: Int,
     @SerialName("tipo") val tipo: String,
+    @SerialName("location") val location: String?,
     @SerialName("user_id") val user_id: String,
     @SerialName("id") val id: String
 )
-private fun gasto_postgasto(gasto: Gasto): PostGasto{
-    return PostGasto(
-        nombre = gasto.nombre,
-        cantidad = gasto.cantidad.toFloat(),
-        fecha = gasto.fecha.toLong().toInt(),
-        tipo = gasto.tipo.tipo,
-        user_id = gasto.userId,
-        id = gasto.id
-    )
-}
+
 
 /*******************************************************************************
  ****                          Bearer Token Storage                         ****

@@ -2,7 +2,8 @@ package com.example.budgetbuddy.Data
 
 import androidx.room.TypeConverter
 import java.time.LocalDate
-
+import android.location.Location
+import com.google.gson.Gson
 /**
  * Type converter para ROOM database
  *
@@ -23,5 +24,18 @@ class Converters{
     @TypeConverter
     fun toLocalDate(value: Long?): LocalDate? {
         return value?.let { LocalDate.ofEpochDay(it) }
+    }
+
+    @TypeConverter
+    fun fromLocation(location: Location?): String {
+        val gson = Gson()
+        return location?.let { gson.toJson(it) }?:""
+    }
+
+    @TypeConverter
+    fun toLocation(locationString: String?): Location? {
+        val gson = Gson()
+        if (locationString=="") return null
+        return locationString?.let { gson.fromJson(it, Location::class.java) }
     }
 }

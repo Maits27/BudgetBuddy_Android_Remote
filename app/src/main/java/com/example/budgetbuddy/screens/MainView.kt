@@ -2,6 +2,7 @@ package com.example.budgetbuddy2.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,6 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -54,16 +54,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.Data.Room.Diseño
-import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.VM.PreferencesViewModel
-import com.example.budgetbuddy.shared.Idiomas
-import com.example.budgetbuddy.shared.Informacion
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.shared.ErrorAlert
-import com.example.budgetbuddy.shared.Temas
 import com.example.budgetbuddy.shared.compartirContenido
 import com.example.budgetbuddy.shared.downloadNotification
 import com.example.budgetbuddy.screens.Add
@@ -71,6 +67,7 @@ import com.example.budgetbuddy.screens.Dashboards
 import com.example.budgetbuddy.screens.Edit
 import com.example.budgetbuddy.screens.Home
 import com.example.budgetbuddy.utils.toLong
+import com.google.android.gms.location.FusedLocationProviderClient
 import java.time.LocalDate
 
 /**************************************************
@@ -93,6 +90,7 @@ fun MainView(
     navControllerMain: NavController,
     appViewModel: AppViewModel,
     preferencesViewModel: PreferencesViewModel,
+    fusedLocationClient: FusedLocationProviderClient,
     onDrawerOpen: () -> Unit,
     onLogout: () -> Unit,
     guardarFichero: (LocalDate, String) -> Boolean
@@ -115,7 +113,7 @@ fun MainView(
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
     var showDownloadError by rememberSaveable { mutableStateOf(false) }
     var showExpansion by rememberSaveable { mutableStateOf(false) }
-    var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, "")) }
+    var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, null, "")) }
 
     /**    Textos traducidos (no se puede acceder a ellos fuera de composables)   **/
     val factura_init = stringResource(id = R.string.factura_init, fecha.toString())
@@ -203,8 +201,8 @@ fun MainView(
                 startDestination = AppScreens.Home.route
             ) {
                 composable(AppScreens.Home.route) { Home(appViewModel, idioma, navController){gastoEditable = it} }
-                composable(AppScreens.Add.route){ Add(appViewModel, navController, idioma.code, fecha)}
-                composable(AppScreens.Edit.route){ Edit(gastoEditable, appViewModel, navController, idioma.code)}
+                composable(AppScreens.Add.route){ Add(appViewModel, preferencesViewModel, navController, fusedLocationClient, fecha)}
+                composable(AppScreens.Edit.route){ Edit(gastoEditable, appViewModel, preferencesViewModel, navController, fusedLocationClient)}
                 composable( AppScreens.Facturas.route) { Facturas(appViewModel, idioma) }
                 composable( AppScreens.Dashboards.route) { Dashboards(appViewModel, idioma.code, tema) }
             }

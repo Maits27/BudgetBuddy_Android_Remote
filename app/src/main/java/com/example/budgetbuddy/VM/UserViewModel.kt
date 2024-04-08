@@ -87,6 +87,7 @@ class UserViewModel @Inject constructor(
     ////////////////////// Editar elementos //////////////////////
     fun cambiarDatos(user: User) {
         viewModelScope.launch {  userRepository.editarUsuario(user) }
+        currentUserName = user.nombre
     }
 
     suspend fun correctLogIn(email:String, passwd: String): HashMap<String, Any>{

@@ -1,7 +1,6 @@
 package com.example.budgetbuddy.VM
 
-import android.content.Context
-import android.graphics.Bitmap
+import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +14,6 @@ import com.example.budgetbuddy.Data.Room.GastoDia
 import com.example.budgetbuddy.Data.Room.GastoTipo
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
-import com.example.budgetbuddy.utils.obtenerIdsCalendario
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -92,8 +90,8 @@ class AppViewModel @Inject constructor(
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto): Gasto {
-        val gasto = Gasto(nombre, cantidad, fecha, tipo, currentUser)
+    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto, location: Location?): Gasto {
+        val gasto = Gasto(nombre, cantidad, fecha, tipo, location, currentUser)
         try {
             gastoRepository.insertGasto(gasto)
         }catch (e: Exception){
@@ -113,8 +111,8 @@ class AppViewModel @Inject constructor(
         _fecha.value = nuevoValor
 
     }
-    fun editarGasto(gasto_previo: Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto){
-        gastoRepository.editarGasto(Gasto(nombre, cantidad,fecha, tipo, currentUser, gasto_previo.id))
+    fun editarGasto(gasto_previo: Gasto, nombre:String, cantidad: Double, fecha:LocalDate, tipo: TipoGasto, location: Location?){
+        gastoRepository.editarGasto(Gasto(nombre, cantidad, fecha, tipo, location, currentUser, gasto_previo.id))
     }
 
     ////////////////////// Pasar a formato String //////////////////////

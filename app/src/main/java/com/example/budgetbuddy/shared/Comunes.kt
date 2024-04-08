@@ -136,7 +136,27 @@ fun Description(mensaje: String){
         )
     )
 }
-
+@Composable
+fun CardElement(text: String){
+    Row (
+        modifier = Modifier.padding(vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(
+            painter = painterResource(id = R.drawable.circle),
+            contentDescription = "",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 5.dp).size(5.dp)
+        )
+        Text(
+            text = text,
+            style = TextStyle(
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 18.sp
+            )
+        )
+    }
+}
 @Composable
 fun CloseButton(onConfirm: () -> Unit){
     Button(

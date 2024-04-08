@@ -51,6 +51,7 @@ class PreferencesViewModel @Inject constructor(
     val theme: (String)-> Flow<Int> = { preferencesRepository.getThemePreference(it)}
 
     val saveOnCalendar: (String)-> Flow<Boolean> = { preferencesRepository.getSaveOnCalendar(it)}
+    val saveLocation: (String)-> Flow<Boolean> = { preferencesRepository.getSaveOnCalendar(it)}
 
 
     /*************************************************
@@ -85,14 +86,14 @@ class PreferencesViewModel @Inject constructor(
             languageManager.changeLang(i)
 
         }
-//        viewModelScope.launch {
-//            languageManager.changeLang(preferencesRepository.language(currentUser).map { AppLanguage.getFromCode(it) }.first())
-//        }
     }
 
     fun changeSaveOnCalendar(){
         viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveOnCalendar(currentUser.first()) }
     }
 
+    fun changeSaveLocation(){
+        viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveLocation(currentUser.first()) }
+    }
 
 }

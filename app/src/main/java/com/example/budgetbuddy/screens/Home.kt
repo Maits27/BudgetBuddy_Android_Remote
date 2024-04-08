@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.budgetbuddy.Data.Enumeration.AppLanguage
@@ -40,6 +41,7 @@ import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.shared.GastoAbierto
 import com.example.budgetbuddy.shared.Header
 import com.example.budgetbuddy.shared.NoData
 import com.example.budgetbuddy.shared.ToastMessage
@@ -82,7 +84,6 @@ fun Home(
     val gastos by appViewModel.listadoGastosFecha(fecha).collectAsState(emptyList())
 
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
-    var toast by remember { mutableStateOf("") }
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,6 +104,7 @@ fun Home(
                 ) {
                     items(gastos) {
                         /** Elementos Card **/
+                        var show by remember { mutableStateOf(false) }
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -129,50 +131,23 @@ fun Home(
                                     modifier = Modifier.weight(1f),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = Color.Transparent
-                                    ),
-                                    onClick = {
-                                        // Lanzamiento de corrutina:
-                                        // En caso de bloqueo o congelado de la base de datos, para que no afecte al uso normal y fluido de la aplicación.
-                                        // (Necedario en los métodos de tipo insert, delete y update)
-                                        coroutineScope.launch(Dispatchers.IO) { onEdit(it) }
-
-                                        navController.navigate(AppScreens.Edit.route) {
-                                            popUpTo(navController.graph.startDestinationId) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
+                                    ),onClick = { show = true }
                                 ) {
                                     Icon(
-                                        Icons.Filled.Create,
-                                        stringResource(id = R.string.edit),
+                                        painter = painterResource(id = R.drawable.eye),
+                                        stringResource(id = R.string.infor),
                                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                 }
-                                Button(
-                                    modifier = Modifier.weight(1f),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.Transparent
-                                    ),
-                                    onClick = {
-                                        // Lanzamiento de corrutina:
-                                        // En caso de bloqueo o congelado de la base de datos, para que no afecte al uso normal y fluido de la aplicación.
-                                        // (Necedario en los métodos de tipo insert, delete y update)
-                                        toast = it.nombre
-                                        coroutineScope.launch(Dispatchers.IO) {appViewModel.borrarGasto(it)}
-                                    }
+                                GastoAbierto(
+                                    show = show,
+                                    navController = navController,
+                                    appViewModel = appViewModel,
+                                    gasto = it,
+                                    idioma = idioma,
+                                    onEdit = { onEdit(it) }
                                 ) {
-                                    Icon(
-                                        Icons.Filled.Delete,
-                                        stringResource(id = R.string.delete),
-                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
-                                    )
-                                }
-                                if( toast != "" ){
-                                    ToastMessage(LocalContext.current, message = stringResource(id = R.string.delete_complete, toast))
-                                    toast = ""
+                                    show = false
                                 }
                             }
                         }

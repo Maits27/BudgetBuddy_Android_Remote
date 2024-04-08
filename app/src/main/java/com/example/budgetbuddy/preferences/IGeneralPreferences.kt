@@ -13,5 +13,6 @@ interface IGeneralPreferences {
 
     fun getSaveOnCalendar(email: String): Flow<Boolean>
     suspend fun changeSaveOnCalendar(email: String)
-
+    fun getSaveLocation(email: String): Flow<Boolean>
+    suspend fun changeSaveLocation(email: String)
 }

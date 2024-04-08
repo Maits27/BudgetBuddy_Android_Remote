@@ -75,4 +75,6 @@
     <string name="user_edit_complete">Usuario editado con éxito.</string>
     <string name="edit_passwd">No es necesario editar la contraseña.</string>
     <string name="edit_passwd_desc">En caso de no querer editar la contraseña, simplemente deja los campos vacíos.</string>
+    <string name="guardar_loc">Guardar localización:</string>
+    <string name="guardar_loc_desc">Se guardará la localización donde se hicieron los gastos.</string>
 </resources>

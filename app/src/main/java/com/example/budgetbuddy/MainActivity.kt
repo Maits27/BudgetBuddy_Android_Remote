@@ -4,18 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentResolver
-import android.content.ContentUris
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.CalendarContract
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
@@ -29,22 +23,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
-import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
-import java.util.Calendar
-import java.util.TimeZone
 import java.util.UUID
 
 
@@ -60,6 +52,8 @@ class MainActivity : AppCompatActivity() {
     val userViewModel by viewModels<UserViewModel> ()
     val appViewModel by viewModels<AppViewModel> ()
     val preferencesViewModel by viewModels<PreferencesViewModel> ()
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     val pickMedia = registerForActivityResult(PickVisualMedia()){
         if (it!=null){
@@ -89,8 +83,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Creación del canal de notificación
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         createNotificationChannel()
-
         setContent {
                 // Método para la descarga de ficheros
                 val guardarFichero: ( LocalDate, String)-> Boolean = { fecha, datos ->
@@ -106,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                         userViewModel = userViewModel,
                         appViewModel = appViewModel,
                         preferencesViewModel = preferencesViewModel,
+                        fusedLocationClient = fusedLocationClient,
                         pickMedia = pickMedia,
                         guardarFichero
                     )
@@ -216,3 +211,4 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+

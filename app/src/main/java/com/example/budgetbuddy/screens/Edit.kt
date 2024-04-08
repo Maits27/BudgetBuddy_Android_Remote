@@ -1,6 +1,10 @@
 package com.example.budgetbuddy.screens
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,12 +47,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.shared.Calendario
 import com.example.budgetbuddy.shared.ErrorAlert
 import com.example.budgetbuddy.shared.Subtitulo
@@ -56,6 +62,7 @@ import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.utils.agregarGastoAlCalendario
 import com.example.budgetbuddy.utils.toLong
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,8 +87,9 @@ Se le pasan los parámetros de:
 fun Edit(
     gasto: Gasto,
     appViewModel: AppViewModel,
+    preferencesViewModel: PreferencesViewModel,
     navController: NavController,
-    idioma: String,
+    fusedLocationClient: FusedLocationProviderClient,
     modifier: Modifier = Modifier.verticalScroll(rememberScrollState())
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -96,6 +104,8 @@ fun Edit(
      **                 (valor por defecto: initial)                  **
      ******************************************************************/
     val fecha by appViewModel.fecha.collectAsState(initial = LocalDate.now())
+    val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
+    val saveLoc by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
 
     /*******************************************************************
      **                     Valores del formulario                    **
@@ -105,6 +115,7 @@ fun Edit(
     var euros by rememberSaveable { mutableStateOf(gasto.cantidad.toString()) }
     var selectedOption by rememberSaveable { mutableStateOf(gasto.tipo) }
     var fechaTemporal by rememberSaveable {mutableStateOf(fecha)}
+    var lastKnownLocation: Location? = null
 
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
     var error_message by remember { mutableStateOf("") }
@@ -122,6 +133,22 @@ fun Edit(
         enabledDate = false
         changeDate = true
     }
+    if (ActivityCompat.checkSelfPermission(
+            LocalContext.current,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            LocalContext.current,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        LocationPermission()
+    }
+    fusedLocationClient.lastLocation
+        .addOnSuccessListener { location: Location? ->
+            // Got last known location. In some rare situations this can be null.
+            Log.d("LOCATION", location.toString())
+            lastKnownLocation = location
+        }
 
     Column(
         modifier = modifier,
@@ -172,7 +199,7 @@ fun Edit(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = obtenerTipoEnIdioma(selectedOption, idioma),
+                        text = obtenerTipoEnIdioma(selectedOption, idioma.code),
                         modifier = Modifier.padding(16.dp),
                         color = Color.DarkGray
                     )
@@ -206,7 +233,7 @@ fun Edit(
                         modifier = Modifier.background(color = MaterialTheme.colors.background)
                     ) {
                         Text(
-                            text = obtenerTipoEnIdioma(option, idioma),
+                            text = obtenerTipoEnIdioma(option, idioma.code),
                             Modifier.background(color = MaterialTheme.colors.background)
                         )
                     }
@@ -283,7 +310,8 @@ fun Edit(
                                 nombre,
                                 euros.toDouble(),
                                 fechaTemporal,
-                                selectedOption
+                                selectedOption,
+                                location = if (saveLoc){lastKnownLocation}else{null}
                             )
                             agregarGastoAlCalendario(context, "BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
                         } else {

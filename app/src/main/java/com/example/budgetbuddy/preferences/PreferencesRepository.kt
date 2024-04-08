@@ -35,6 +35,7 @@ class PreferencesRepository @Inject constructor(private val context: Context) : 
     fun PREFERENCE_LANGUAGE(email: String) = stringPreferencesKey("${email}_preference_lang")
     fun PREFERENCE_THEME_DARK(email: String) = intPreferencesKey("${email}_preference_theme")
     fun PREFERENCE_SAVE(email: String) = booleanPreferencesKey("${email}_preference_save")
+    fun PREFERENCE_LOCATION(email: String) = booleanPreferencesKey("${email}_preference_save")
 
 //    override suspend fun getLastLoggedUser(): String? =
 //        context.dataStore.data.first()[LAST_LOGGED_USER]
@@ -101,5 +102,13 @@ class PreferencesRepository @Inject constructor(private val context: Context) : 
         }
     }
 
+    override fun getSaveLocation(email: String): Flow<Boolean> = context.dataStore.data.map {
+            preferences -> preferences[PREFERENCE_LOCATION(email)]?: true
+    }
 
+    override suspend fun changeSaveLocation(email: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PREFERENCE_LOCATION(email)] = !getSaveLocation(email).first()
+        }
+    }
 }

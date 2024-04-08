@@ -76,4 +76,6 @@
     <string name="user_edit_complete">User edition complete.</string>
     <string name="edit_passwd">There\'s no need to change the password.</string>
     <string name="edit_passwd_desc">if you don\'t want to change the password, just leave the fields empty.</string>
+    <string name="guardar_loc">Save location:</string>
+    <string name="guardar_loc_desc">The location where the expenses happen will be stored.</string>
 </resources>

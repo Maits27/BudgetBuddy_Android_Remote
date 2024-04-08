@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.Data.Room
 
+import android.location.Location
 import androidx.compose.ui.graphics.painter.Painter
 
 import androidx.room.Entity
@@ -71,6 +72,7 @@ data class Gasto(
     var cantidad: Double,
     var fecha: LocalDate,
     var tipo: TipoGasto,
+    var location: Location?,
     var userId: String,
     @PrimaryKey val id: String = UUID.randomUUID().toString()
 ){

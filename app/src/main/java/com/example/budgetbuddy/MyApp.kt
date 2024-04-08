@@ -2,6 +2,7 @@ package com.example.budgetbuddy
 
 import android.app.Activity
 import android.content.Intent
+import android.health.connect.datatypes.ExerciseRoute
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -25,6 +26,7 @@ import com.example.budgetbuddy.screens.App
 import com.example.budgetbuddy.screens.LoginPage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.example.budgetbuddy2.screens.MainView
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
@@ -34,6 +36,7 @@ fun MyApp(
     userViewModel: UserViewModel,
     appViewModel: AppViewModel,
     preferencesViewModel: PreferencesViewModel,
+    fusedLocationClient: FusedLocationProviderClient,
     pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
     guardarFichero: (LocalDate, String)-> Boolean) {
     val navController = rememberNavController()
@@ -62,6 +65,7 @@ fun MyApp(
                     navControllerMain = navController,
                     userViewModel = userViewModel,
                     appViewModel = appViewModel,
+                    fusedLocationClient = fusedLocationClient,
                     pickMedia = pickMedia,
                     preferencesViewModel = preferencesViewModel,
                     guardarFichero

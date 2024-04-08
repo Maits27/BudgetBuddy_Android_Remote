@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.Data.DAO
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -25,7 +26,10 @@ interface GastoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGasto(gasto: Gasto)
 
-    suspend fun insertGastos(gastos: List<Gasto>) = gastos.map { insertGasto(it) }
+    suspend fun insertGastos(gastos: List<Gasto>) = gastos.map {
+        Log.d("ERROR LOCALIZACION", it.toString())
+        insertGasto(it)
+    }
 
     /////////////// Funciones Delete ///////////////
     @Delete

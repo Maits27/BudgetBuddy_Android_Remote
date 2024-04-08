@@ -39,10 +39,11 @@ import com.example.budgetbuddy.ui.theme.verdeOscuro
 @Composable
 fun Preferences(
     onLanguageChange:(AppLanguage) -> Unit,
-    idioma: String,
     onThemeChange: (Int) -> Unit,
     onSaveChange: () -> Unit,
-    save: Boolean,
+    onSaveLocation: () -> Unit,
+    saveChange: Boolean,
+    saveLocation: Boolean,
     onConfirm: () -> Unit
 ) {
     Column (
@@ -52,7 +53,10 @@ fun Preferences(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        var checked by rememberSaveable { mutableStateOf(save) }
+
+        var checked by rememberSaveable { mutableStateOf(saveChange) }
+        var checked2 by rememberSaveable { mutableStateOf(saveLocation) }
+
         Titulo()
         Subtitulo(mensaje = stringResource(id = R.string.change_lang))
         Column (
@@ -152,6 +156,25 @@ fun Preferences(
                 )
             }
             Description(mensaje = stringResource(id = R.string.guardar_calendario_desc))
+        }
+        Column (Modifier.fillMaxWidth()){
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ){
+                Text(
+                    text = stringResource(id = R.string.guardar_loc),
+                    modifier = Modifier.weight(4f)
+                )
+                Checkbox(
+                    checked = checked2,
+                    onCheckedChange = {
+                        checked2 = it
+                        onSaveLocation()},
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Description(mensaje = stringResource(id = R.string.guardar_loc_desc))
         }
 
         CloseButton { onConfirm() }
