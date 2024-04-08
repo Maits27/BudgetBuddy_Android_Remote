@@ -89,7 +89,7 @@ Se le pasan los parámetros de:
 @Composable
 fun LocationPermission(){
     val permissionState2 = rememberPermissionState(
-        permission = Manifest.permission.ACCESS_COARSE_LOCATION
+        permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
     LaunchedEffect(true){
         permissionState2.launchPermissionRequest()
