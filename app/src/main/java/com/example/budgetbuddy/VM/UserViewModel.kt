@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
@@ -23,6 +25,7 @@ import com.example.budgetbuddy.UserVerification.correctName
 import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.utils.hash
 import com.example.budgetbuddy.utils.user_to_authUser
+import com.example.budgetbuddy.widgets.Widget
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers

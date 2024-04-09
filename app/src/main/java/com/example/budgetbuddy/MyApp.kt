@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +27,7 @@ import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.screens.App
 import com.example.budgetbuddy.screens.LoginPage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
+import com.example.budgetbuddy.widgets.Widget
 import com.example.budgetbuddy2.screens.MainView
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.coroutineScope

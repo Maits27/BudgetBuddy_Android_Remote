@@ -35,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,6 +49,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.glance.appwidget.updateAll
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -71,7 +73,10 @@ import com.example.budgetbuddy.screens.Edit
 import com.example.budgetbuddy.screens.Home
 import com.example.budgetbuddy.screens.LocationPermission
 import com.example.budgetbuddy.utils.toLong
+import com.example.budgetbuddy.widgets.Widget
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**************************************************
@@ -100,10 +105,11 @@ fun MainView(
     guardarFichero: (LocalDate, String) -> Boolean
 ){
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-
+    coroutineScope.launch(Dispatchers.IO) { Widget().updateAll(context)  }
     /*******************************************************************
      **    Recoger el valor actual de cada flow de los ViewModel      **
      **                 (valor por defecto: initial)                  **

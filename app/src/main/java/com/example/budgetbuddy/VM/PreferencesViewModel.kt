@@ -84,7 +84,6 @@ class PreferencesViewModel @Inject constructor(
     fun restartLang(i: AppLanguage){
         viewModelScope.launch {
             languageManager.changeLang(i)
-
         }
     }
 
