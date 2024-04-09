@@ -45,6 +45,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.UserVerification.correctName
@@ -71,7 +72,7 @@ import kotlinx.coroutines.withContext
 fun LoginPage(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String, Any) -> Unit
+    onCorrectLogIn: (AuthUser, Any) -> Unit
 ){
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     if (isVertical){
@@ -156,7 +157,7 @@ fun LoginPage(
 fun Login(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String, Any) -> Unit,
+    onCorrectLogIn: (AuthUser, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -213,7 +214,7 @@ fun Login(
                         withContext(Dispatchers.Main) {
                             if(nombre!=""){
 
-                                onCorrectLogIn(correo, nombre, result["bajar_datos"]?:false)
+                                onCorrectLogIn(AuthUser(nombre, correo, passwd), result["bajar_datos"]?:false)
                                 userViewModel.getProfileImage(correo)
 
                                 if (!checked){
@@ -248,7 +249,7 @@ fun Login(
 fun Register(
     navController: NavController,
     userViewModel: UserViewModel,
-    onCorrectLogIn: (String, String, Any) -> Unit,
+    onCorrectLogIn: (AuthUser, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -330,7 +331,7 @@ fun Register(
                     if (registroExitoso.values.all { it }) {
                         withContext(Dispatchers.Main) {
 
-                            onCorrectLogIn(correo, nombre, false)
+                            onCorrectLogIn(AuthUser(nombre, correo, passwd), false)
                             navController.navigate(AppScreens.App.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true

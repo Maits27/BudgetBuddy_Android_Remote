@@ -78,4 +78,7 @@
     <string name="edit_passwd_desc">Pasahitza ez baduzu aldatu nahi, hutsik utz itzazu eremuak.</string>
     <string name="guardar_loc">Gorde lokalizazioa:</string>
     <string name="guardar_loc_desc">Gastuak burutu ziren lokalizioa gordeko da.</string>
+    <string name="widget_title">Gaurko %s gastuak:</string>
+    <string name="widget_title_no_user">Gaurko gastuak:</string>
+    <string name="widget_must_login">Saioa hasi.</string>
 </resources>

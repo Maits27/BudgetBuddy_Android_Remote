@@ -17,6 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
@@ -46,14 +47,15 @@ fun MyApp(
         startDestination = AppScreens.LoginPage.route
     ) {
         composable(AppScreens.LoginPage.route) {
-            LoginPage(navController, userViewModel){ email, name, download ->
-                appViewModel.currentUser = email
-                userViewModel.currentUserName = name
-                preferencesViewModel.changeUser(email)
-                userViewModel.getProfileImage(email)
+            LoginPage(navController, userViewModel){ user, download ->
+                appViewModel.currentUser = user.email
+                userViewModel.currentUser = user
+                preferencesViewModel.changeUser(user.email)
+                userViewModel.getProfileImage(user.email)
                 if (download==true){
                     appViewModel.download_user_data()
                 }
+                userViewModel.updateLastLoggedUsername(user.email)
             }
         }
         composable(AppScreens.App.route) {

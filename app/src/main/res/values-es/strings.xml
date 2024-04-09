@@ -78,4 +78,7 @@
     <string name="edit_passwd_desc">"En caso de no querer editar la contraseña, simplemente deja los campos vacíos. "</string>
     <string name="guardar_loc">" Guardar localización:"</string>
     <string name="guardar_loc_desc">Se guardará la localización donde se hicieron los gastos.</string>
+    <string name="widget_title">Gastos de %s de hoy:</string>
+    <string name="widget_title_no_user">Gastos de hoy:</string>
+    <string name="widget_must_login">Inicia sesión.</string>
 </resources>

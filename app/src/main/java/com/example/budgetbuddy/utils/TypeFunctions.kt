@@ -7,7 +7,9 @@ import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoDeNombre
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.Data.Remote.PostGasto
+import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.Gasto
+import com.example.budgetbuddy.Data.Room.User
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import java.math.BigInteger
@@ -112,4 +114,22 @@ private fun toLocation(locationString: String?): Location? {
 
 fun locationToLatLng(location: Location): LatLng {
     return LatLng(location.latitude, location.longitude)
+}
+
+fun user_to_authUser(user: User?): AuthUser{
+    if (user==null) return AuthUser("", "", "")
+    else return AuthUser(
+        nombre = user.nombre,
+        email = user.email,
+        password = user.password
+    )
+}
+
+fun authuser_to_user(user: AuthUser?): User{
+    if (user==null) return User("", "", "")
+    else return User(
+        nombre = user.nombre,
+        email = user.email,
+        password = user.password
+    )
 }

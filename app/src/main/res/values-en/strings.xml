@@ -78,4 +78,7 @@
     <string name="edit_passwd_desc">if you don\'t want to change the password, just leave the fields empty.</string>
     <string name="guardar_loc">Save location:</string>
     <string name="guardar_loc_desc">The location where the expenses happen will be stored.</string>
+    <string name="widget_title">Today\'s %s expenses:</string>
+    <string name="widget_title_no_user">Today\'s expenses:</string>
+    <string name="widget_must_login">Login.</string>
 </resources>

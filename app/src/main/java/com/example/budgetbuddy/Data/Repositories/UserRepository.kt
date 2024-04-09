@@ -6,19 +6,9 @@ import com.example.budgetbuddy.Data.DAO.UserDao
 import com.example.budgetbuddy.Data.Remote.HTTPService
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.User
-import com.example.budgetbuddy.utils.compareHash
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.example.budgetbuddy.utils.user_to_authUser
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.Json.Default.encodeToString
-import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Retrofit
-import retrofit2.http.POST
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +17,7 @@ import javax.inject.Singleton
  * Los métodos definidos son las acciones posibles para interactuar
  * con la BBDD
  *******************************************************************/
-interface IUserRepository {
+interface IUserRepository: ILoginSettings {
     suspend fun insertUsuario(user: AuthUser): Boolean
     suspend fun deleteUsuario(user: User): Int
     fun todosLosUsuarios(): Flow<List<User>>
@@ -38,8 +28,6 @@ interface IUserRepository {
     suspend fun getUserProfile(email: String): Bitmap
     suspend fun setUserProfile(email: String, image: Bitmap): Bitmap
 }
-
-
 /**
  * Implementación de [IGastoRepository] que usa Hilt para inyectar los
  * parámetros necesarios. Desde aquí se accede a [GastoDao], que se encarga
@@ -48,9 +36,14 @@ interface IUserRepository {
 @Singleton
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
-    private val httpService: HTTPService
+    private val httpService: HTTPService,
+    private val loginSettings: ILoginSettings
 ) : IUserRepository {
     lateinit var profileImage: Bitmap
+
+    override suspend fun getLastLoggedUser(): String? = loginSettings.getLastLoggedUser()
+    override suspend fun setLastLoggedUser(user: String) = loginSettings.setLastLoggedUser(user)
+
     override suspend fun insertUsuario(user: AuthUser): Boolean{
         Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
         try {
@@ -83,6 +76,7 @@ class UserRepository @Inject constructor(
         if( remoto?.password==passwd ){
             val nombre = remoto.nombre
             result["nombre"] = nombre
+
             val local = userDao.usernamePassword(email, passwd)?: ""
             if (local == "") {
                 result["bajar_datos"] = true
@@ -103,7 +97,7 @@ class UserRepository @Inject constructor(
     override suspend fun editarUsuario(user: User): Int {
         httpService.editUser(
             user.email,
-            AuthUser(nombre = user.nombre, email = user.email, password = user.password)
+            user_to_authUser(user)
         )
         return userDao.editarUsuario(user)
     }

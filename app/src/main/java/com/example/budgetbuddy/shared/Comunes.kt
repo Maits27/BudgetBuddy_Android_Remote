@@ -301,7 +301,7 @@ fun Perfil(
 
             // Dos textos de ejemplo
             Text(
-                text = userViewModel.currentUserName,
+                text = userViewModel.currentUser.nombre,
                 modifier = Modifier.padding(5.dp),
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.onTertiary

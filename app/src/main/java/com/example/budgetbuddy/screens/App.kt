@@ -56,6 +56,7 @@ import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
 import com.example.budgetbuddy.shared.Perfil
+import com.example.budgetbuddy.utils.user_to_authUser
 import com.example.budgetbuddy2.screens.MainView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -111,7 +112,7 @@ fun App(
         preferencesViewModel.changeTheme(it)
     }
     val onEditUser: (User) -> Unit = {
-        userViewModel.currentUserName = it.nombre
+        userViewModel.currentUser = user_to_authUser(it)
         // TODO
     }
     val onEditProfile: () -> Unit = {

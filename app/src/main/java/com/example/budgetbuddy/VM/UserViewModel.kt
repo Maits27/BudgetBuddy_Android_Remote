@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
+import com.example.budgetbuddy.Data.Repositories.IUserRepository
 import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.Data.Repositories.UserRepository
 import com.example.budgetbuddy.Data.Room.AuthUser
@@ -20,12 +21,14 @@ import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.UserVerification.correctName
 import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.utils.hash
+import com.example.budgetbuddy.utils.user_to_authUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -40,20 +43,25 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: IUserRepository
 ) : ViewModel() {
 
 
     private val todosLosUsuarios = userRepository.todosLosUsuarios()
+    val lastLoggedUser: String? = runBlocking { return@runBlocking userRepository.getLastLoggedUser() }
     var profilePicture: Bitmap? by mutableStateOf(null)
         private set
 
-    var currentUserName by mutableStateOf("")
+    var currentUser by mutableStateOf(AuthUser("", "", ""))
 
 
     /*************************************************
      **                    Eventos                  **
      *************************************************/
+
+    fun updateLastLoggedUsername(user: String) = runBlocking {
+        userRepository.setLastLoggedUser(user)
+    }
 
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
@@ -87,7 +95,7 @@ class UserViewModel @Inject constructor(
     ////////////////////// Editar elementos //////////////////////
     fun cambiarDatos(user: User) {
         viewModelScope.launch {  userRepository.editarUsuario(user) }
-        currentUserName = user.nombre
+        currentUser = user_to_authUser(user)
     }
 
     suspend fun correctLogIn(email:String, passwd: String): HashMap<String, Any>{

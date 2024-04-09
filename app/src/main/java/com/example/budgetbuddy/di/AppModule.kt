@@ -9,6 +9,7 @@ import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Repositories.IUserRepository
 import com.example.budgetbuddy.Data.DAO.UserDao
 import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Data.Repositories.ILoginSettings
 import com.example.budgetbuddy.Data.Repositories.UserRepository
 import com.example.budgetbuddy.preferences.IGeneralPreferences
 import com.example.budgetbuddy.preferences.PreferencesRepository
@@ -43,7 +44,11 @@ object AppModule {
      */
 
 
-    //////////////   Instancia de ROOM   //////////////
+    /** ////////////////////////////////////////////////////////
+     /////////////////   Instancia de Room   //////////////////
+    //////////////////////////////////////////////////////////
+     */
+
     @Singleton
     @Provides
     fun providesBudgetBuddyDatabase(@ApplicationContext app: Context) =
@@ -51,7 +56,10 @@ object AppModule {
 //            .createFromAsset("database/budgetBuddyDB2.db")
             .build()
 
-    ////////////////////// DAO //////////////////////
+    /** ////////////////////////////////////////////////////////
+     ///////////////////////   DAOs   /////////////////////////
+    //////////////////////////////////////////////////////////
+     */
     @Singleton
     @Provides
     fun providesUserDao(db: Database) = db.userDao()
@@ -60,18 +68,26 @@ object AppModule {
     @Provides
     fun provideGastoDao(db: Database) = db.gastoDao()
 
-
-    //////////////   Repositorio Gastos   //////////////
+    /** ////////////////////////////////////////////////////////
+     //////////////   Repositorios Aplicación   ///////////////
+    //////////////////////////////////////////////////////////
+     */
     @Singleton
     @Provides
-    fun providesUserRepository(userDao: UserDao, httpService: HTTPService): IUserRepository = UserRepository(userDao, httpService)
+    fun providesUserRepository(userDao: UserDao, httpService: HTTPService, loginSettings: ILoginSettings): IUserRepository = UserRepository(userDao, httpService, loginSettings)
 
     @Singleton
     @Provides
     fun provideGastoRepository(gastoDao: GastoDao, httpService: HTTPService): IGastoRepository = GastoRepository(gastoDao, httpService)
 
 
-    /////////// Repositorio de preferencias ///////////
+    /** ////////////////////////////////////////////////////////
+     ////////////   Repositorio de Preferencias   /////////////
+    //////////////////////////////////////////////////////////
+     */
+    @Singleton
+    @Provides
+    fun provideLoginSettings(@ApplicationContext app: Context): ILoginSettings = PreferencesRepository(app)
     @Singleton
     @Provides
     fun provideUserPreferences(@ApplicationContext app: Context): IGeneralPreferences = PreferencesRepository(app)

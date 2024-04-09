@@ -63,6 +63,9 @@ dependencies {
     implementation ("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.activity:activity:1.8.2")
 
+    // Glance for Widgets
+    implementation ("androidx.glance:glance-appwidget:1.0.0-alpha03")
+    // BBDD remotas
     implementation("io.ktor:ktor-client-core:2.0.0")
     implementation("io.ktor:ktor-client-cio:2.0.0")
     implementation("io.ktor:ktor-client-json:2.0.0")
