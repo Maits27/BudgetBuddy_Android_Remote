@@ -1,7 +1,11 @@
 package com.example.budgetbuddy.preferences
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -120,7 +124,15 @@ class PreferencesRepository @Inject constructor(
 
     override fun getSaveLocation(email: String): Flow<Boolean> =
         context.dataStore.data.map { preferences ->
-            preferences[PREFERENCE_LOCATION(email)] ?: true
+            if(ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED){
+                false
+            }else{preferences[PREFERENCE_LOCATION(email)] ?: true}
         }
 
     override suspend fun changeSaveLocation(email: String) {

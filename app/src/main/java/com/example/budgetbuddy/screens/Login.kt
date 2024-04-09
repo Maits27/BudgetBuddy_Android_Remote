@@ -64,6 +64,7 @@ import com.example.budgetbuddy.ui.theme.verde5
 import com.example.budgetbuddy.ui.theme.verde6
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
+import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -207,7 +208,8 @@ fun Login(
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     val result = userViewModel.correctLogIn(correo, passwd)
-                    val nombre = result["nombre"].toString()
+                    val user = result["user"]
+                    val nombre = if(user is AuthUser) {user.nombre}else{""}
                     serverError = if((result["runtime"] ?: false) == true){true}else{false}
 
                     if(!serverError){

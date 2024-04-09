@@ -87,9 +87,6 @@ fun UserEdit(
     onConfirm: () -> Unit
 ){
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val editComplete = stringResource(id = R.string.user_edit_complete)
 
     var nombreOk by remember { mutableStateOf(true) }
     var passwdOk by remember { mutableStateOf(true) }

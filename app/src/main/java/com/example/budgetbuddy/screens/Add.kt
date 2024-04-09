@@ -87,14 +87,14 @@ Se le pasan los parámetros de:
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LocationPermission(){
+fun LocationPermission(): Boolean{
     val permissionState2 = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
     LaunchedEffect(true){
         permissionState2.launchPermissionRequest()
     }
-
+    return true
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -150,13 +150,7 @@ fun Add(
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        LocationPermission()
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                // Got last known location. In some rare situations this can be null.
-                Log.d("LOCATION", "POST PERMISSION: ${location.toString()}")
-                appViewModel.cambiarLocalizacion(location)
-            }
+
     }
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->

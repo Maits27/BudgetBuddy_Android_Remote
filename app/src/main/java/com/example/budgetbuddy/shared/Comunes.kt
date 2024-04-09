@@ -2,6 +2,7 @@ package com.example.budgetbuddy.shared
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.net.Uri
@@ -44,6 +45,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,9 +74,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
+import com.example.budgetbuddy.screens.LocationPermission
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.example.budgetbuddy.utils.locationToLatLng
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -101,37 +105,69 @@ import java.time.ZoneId
 // y son independientes del resto de contenido de estas.
 @Composable
 fun MapScreen(lastKnownLocation: Location?, title:String="", snippet:String ="") {
-    Log.d("LOCATION", "LOCATION: $lastKnownLocation")
-    Box (
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(16.dp)
-            .border(2.dp, MaterialTheme.colorScheme.primary)
-    ){
-        when{
-            (lastKnownLocation!=null
-                    && lastKnownLocation.latitude!=0.0
-                    && lastKnownLocation.longitude!=0.0) ->{
-                val location = locationToLatLng(lastKnownLocation)
-                val cameraPositionState = rememberCameraPositionState {
-                    position = CameraPosition.fromLatLngZoom(location, 10f)
+    var askPermission by rememberSaveable {mutableStateOf(false)}
+    when{
+        (lastKnownLocation!=null
+                && lastKnownLocation.latitude!=0.0
+                && lastKnownLocation.longitude!=0.0) ->{
+                    Box (
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(16.dp)
+                            .border(2.dp, MaterialTheme.colorScheme.primary)
+                    ){
+
+                        val location = locationToLatLng(lastKnownLocation)
+                        val cameraPositionState = rememberCameraPositionState {
+                            position = CameraPosition.fromLatLngZoom(location, 10f)
+                        }
+                        GoogleMap(
+                            modifier = Modifier.size(width = 300.dp, height = 400.dp),
+                            cameraPositionState = cameraPositionState
+                        ) {
+                            Marker(
+                                state = MarkerState(position = location),
+                                title = title,
+                                snippet = snippet
+                            )
+                        }
                 }
-                GoogleMap(
-                    modifier = Modifier.size(width = 300.dp, height = 400.dp),
-                    cameraPositionState = cameraPositionState
-                ) {
-                    Marker(
-                        state = MarkerState(position = location),
-                        title = title,
-                        snippet = snippet
-                    )
-                }
-            }else-> NoData()
+        }else-> {
+            NoMap { askPermission = true }
+            if (askPermission) askPermission = !LocationPermission()
         }
     }
 }
 
+@Composable
+fun NoMap(askPermission:()->Unit){
+    Column (
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ){
+        Image(painter = painterResource(id = R.drawable.nomap), contentDescription = "")
+        if(ActivityCompat.checkSelfPermission(
+                LocalContext.current,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                LocalContext.current,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED){
+            TextButton(
+                onClick = { askPermission() },
+                Modifier.wrapContentSize(),
+            ) {
 
+                Text(text = "Give Location Permissions.")
+            }
+        }else{
+            Text(text = "Este gasto no tiene localización añadida.")
+        }
+    }
+}
 @Composable
 fun Titulo(login: Boolean = false){
     var colorTexto = MaterialTheme.colorScheme.primary
@@ -409,6 +445,7 @@ fun NoData(){
 
     }
 }
+
 
 @Composable
 fun ErrorText(text: String) {

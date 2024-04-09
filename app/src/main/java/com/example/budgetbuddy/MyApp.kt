@@ -48,6 +48,7 @@ fun MyApp(
     ) {
         composable(AppScreens.LoginPage.route) {
             LoginPage(navController, userViewModel){ user, download ->
+                Log.d("COMPARE USERS", user.toString())
                 appViewModel.currentUser = user.email
                 userViewModel.currentUser = user
                 preferencesViewModel.changeUser(user.email)

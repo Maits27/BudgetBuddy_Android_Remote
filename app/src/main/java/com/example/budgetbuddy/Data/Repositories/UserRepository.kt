@@ -6,6 +6,8 @@ import com.example.budgetbuddy.Data.DAO.UserDao
 import com.example.budgetbuddy.Data.Remote.HTTPService
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.User
+import com.example.budgetbuddy.utils.compareHash
+import com.example.budgetbuddy.utils.hash
 import com.example.budgetbuddy.utils.user_to_authUser
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.flow.Flow
@@ -67,16 +69,16 @@ class UserRepository @Inject constructor(
 
     override suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any> {
         var result = HashMap<String, Any>()
-        result["nombre"] = ""
+        result["user"] = AuthUser("", "", "")
         result["runtime"] = true
         result["bajar_datos"] = false
 
         val remoto = httpService.getUserByEmail(email)
-        if ((remoto?.email ?: " ") != " "){result["runtime"] = false}
-        if( remoto?.password==passwd ){
+        if ((remoto?.email ?: "") != ""){result["runtime"] = false}
+        Log.d("COMPARE USERS", "MIA: $passwd REMOTO: ${remoto?.password}" )
+        if( passwd==remoto?.password){
             val nombre = remoto.nombre
-            result["nombre"] = nombre
-
+            result["user"] = AuthUser(nombre, email, passwd)
             val local = userDao.usernamePassword(email, passwd)?: ""
             if (local == "") {
                 result["bajar_datos"] = true

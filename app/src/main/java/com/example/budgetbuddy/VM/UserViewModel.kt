@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,6 +61,7 @@ class UserViewModel @Inject constructor(
      *************************************************/
 
     fun updateLastLoggedUsername(user: String) = runBlocking {
+        Log.d("COMPARE USERS", "SET USER: $user")
         userRepository.setLastLoggedUser(user)
     }
 
@@ -85,6 +87,7 @@ class UserViewModel @Inject constructor(
     }
     fun logout(context: Context){
         profilePicture = null
+        currentUser = AuthUser("", "", "")
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra("LOGGED_USERNAME", "")
         }
@@ -103,7 +106,7 @@ class UserViewModel @Inject constructor(
             return userRepository.userNamePassword(email, passwd.hash())
         }
         var r = HashMap<String, Any>()
-        r["nombre"] = ""
+        r["user"] = AuthUser("", "", "")
         r["runtime"] = false
         r["bajar_datos"] = false
         return  r
