@@ -104,8 +104,11 @@ import java.time.ZoneId
 // Estos son composables que se utilizan en diferentes pantallas
 // y son independientes del resto de contenido de estas.
 @Composable
-fun MapScreen(lastKnownLocation: Location?, title:String="", snippet:String ="") {
-    var askPermission by rememberSaveable {mutableStateOf(false)}
+fun MapScreen(
+    lastKnownLocation: Location?,
+    title: String = "",
+    snippet: String = ""
+) {
     when{
         (lastKnownLocation!=null
                 && lastKnownLocation.latitude!=0.0
@@ -133,14 +136,13 @@ fun MapScreen(lastKnownLocation: Location?, title:String="", snippet:String ="")
                         }
                 }
         }else-> {
-            NoMap { askPermission = true }
-            if (askPermission) askPermission = !LocationPermission()
+            NoMap()
         }
     }
 }
 
 @Composable
-fun NoMap(askPermission:()->Unit){
+fun NoMap(){
     Column (
         modifier = Modifier
             .wrapContentSize()
@@ -148,7 +150,12 @@ fun NoMap(askPermission:()->Unit){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Image(painter = painterResource(id = R.drawable.nomap), contentDescription = "")
+        Icon(
+            painter = painterResource(id = R.drawable.nomap_bw),
+            tint = MaterialTheme.colorScheme.onTertiary,
+            contentDescription = "",
+            modifier = Modifier.padding(10.dp).size(200.dp)
+        )
         if(ActivityCompat.checkSelfPermission(
                 LocalContext.current,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -156,13 +163,9 @@ fun NoMap(askPermission:()->Unit){
                 LocalContext.current,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED){
-            TextButton(
-                onClick = { askPermission() },
-                Modifier.wrapContentSize(),
-            ) {
 
-                Text(text = "Give Location Permissions.")
-            }
+            Text(text = "Give Location Permissions.")
+
         }else{
             Text(text = "Este gasto no tiene localización añadida.")
         }

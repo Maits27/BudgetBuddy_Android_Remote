@@ -33,6 +33,7 @@ import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
+import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
@@ -52,6 +53,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
+import com.example.budgetbuddy.Data.Room.CompactGasto
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.shared.GastoAbierto
@@ -70,10 +72,13 @@ import kotlin.text.uppercase
  *******************************************************************************/
 
 class Widget : GlanceAppWidget() {
-    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
+//    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent { Content() }
+    }
 
     @Composable
-    override fun Content() {
+    fun Content() {
 
         /*************************************************
          **                 Variables                   **
@@ -85,7 +90,7 @@ class Widget : GlanceAppWidget() {
         val user = prefs[currentUserKey]
         val data: String? = prefs[todayGastoDataKey]
 
-        val gastos: List<Gasto> = if (data != null) Json.decodeFromString(data) else emptyList()
+        val gastos: List<CompactGasto> = if (data != null) Json.decodeFromString(data) else emptyList()
 
         /*************************************************
          **                Main Widget UI               **
@@ -146,33 +151,38 @@ class Widget : GlanceAppWidget() {
                 // Dena ondo
                 else -> {
                     LazyColumn(modifier = GlanceModifier.fillMaxSize().defaultWeight()) {
-                        items(gastos, itemId = { it.hashCode().toLong() }) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(3.dp),
-                                shape = CardDefaults.elevatedShape,
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
-                            ) {
-                                androidx.compose.foundation.layout.Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                                ) {
-                                    androidx.compose.foundation.layout.Column(
-                                        Modifier
-                                            .padding(16.dp)
-                                            .weight(3f)
-                                    ) {
-                                        androidx.compose.material3.Text(text = it.nombre, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-                                        androidx.compose.material3.Text(text = stringResource(id = R.string.cantidad, it.cantidad))
-                                        androidx.compose.material3.Text(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(it.tipo, Locale.getDefault().language.lowercase())))
-                                    }
-
-                                }
-                            }
+                        items(gastos, itemId = { it.hashCode().toLong() }) { item ->
+                            GastoItem(gasto = item)
                         }
                     }
+//                    LazyColumn(modifier = GlanceModifier.fillMaxSize().defaultWeight()) {
+//                        items(gastos, itemId = { it.hashCode().toLong() }) {
+//                            Card(
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(3.dp),
+//                                shape = CardDefaults.elevatedShape,
+//                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+//                            ) {
+//                                androidx.compose.foundation.layout.Row(
+//                                    Modifier.fillMaxWidth(),
+//                                    horizontalArrangement = Arrangement.Center,
+//                                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+//                                ) {
+//                                    androidx.compose.foundation.layout.Column(
+//                                        Modifier
+//                                            .padding(16.dp)
+//                                            .weight(3f)
+//                                    ) {
+//                                        androidx.compose.material3.Text(text = it.nombre, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+//                                        androidx.compose.material3.Text(text = stringResource(id = R.string.cantidad, it.cantidad))
+//                                        androidx.compose.material3.Text(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(it.tipo, Locale.getDefault().language.lowercase())))
+//                                    }
+//
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
 
@@ -181,19 +191,56 @@ class Widget : GlanceAppWidget() {
             Image(
                 provider = ImageProvider(R.drawable.reload),
                 contentDescription = null,
-                modifier = GlanceModifier.size(24.dp).clickable(actionRunCallback<WidgetRefreshCallback>())
+                modifier = GlanceModifier.size(24.dp).clickable { actionRunCallback<RefreshAction>() }
             )
+        }
+    }
+
+    @Composable
+    fun GastoItem(gasto: CompactGasto){
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+
+            /*------------------------------------------------
+            |                   Visit Data                   |
+            ------------------------------------------------*/
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = GlanceModifier.fillMaxWidth().defaultWeight()
+            ) {
+
+                //------------------   Hour   ------------------//
+
+
+
+                Spacer(GlanceModifier.width(16.dp))
+
+
+                //----------   Client Data and Town   ----------//
+
+                Column {
+                    Text(text = gasto.nombre, modifier = GlanceModifier.defaultWeight())
+                    Text(text = gasto.cantidad.toString(), modifier = GlanceModifier.defaultWeight())
+                }
+            }
+
+
         }
     }
 
     /**
      * Callback para recargar el widget
      */
-    private class WidgetRefreshCallback : ActionCallback {
-
-        override suspend fun onRun(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-            val intent = Intent(context, WidgetReceiver::class.java).apply { action = UPDATE_ACTION }
-            context.sendBroadcast(intent)
+    private class RefreshAction : ActionCallback {
+        override suspend fun onAction(
+            context: Context,
+            glanceId: GlanceId,
+            parameters: ActionParameters
+        ) {
+           Widget().update(context, glanceId)
         }
     }
 }

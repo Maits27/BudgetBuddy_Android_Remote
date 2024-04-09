@@ -82,3 +82,17 @@ data class Gasto(
         return "${nombre} (${obtenerTipoEnIdioma(tipo, idioma.code)}):\t\t${cantidad}€\n"
     }
 }
+
+
+@Serializable
+data class CompactGasto(
+    var nombre: String,
+    var cantidad: Double,
+    var tipo: TipoGasto,
+){
+    constructor(gasto: Gasto): this(
+        nombre = gasto.nombre,
+        cantidad = gasto.cantidad,
+        tipo = gasto.tipo
+    )
+}

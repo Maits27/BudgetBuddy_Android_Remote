@@ -87,14 +87,13 @@ Se le pasan los parámetros de:
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LocationPermission(): Boolean{
+fun LocationPermission(){
     val permissionState2 = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
     LaunchedEffect(true){
         permissionState2.launchPermissionRequest()
     }
-    return true
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

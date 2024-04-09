@@ -2,6 +2,7 @@ package com.example.budgetbuddy.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
@@ -35,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -87,6 +89,7 @@ fun Home(
     val gastos by appViewModel.listadoGastosFecha(fecha).collectAsState(emptyList())
 
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
+    var askPermission by remember {mutableStateOf(false)}
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -65,6 +65,7 @@ dependencies {
 
     // Glance for Widgets
     implementation ("androidx.glance:glance-appwidget:1.0.0-alpha03")
+    implementation("androidx.glance:glance:1.0.0")
     // BBDD remotas
     implementation("io.ktor:ktor-client-core:2.0.0")
     implementation("io.ktor:ktor-client-cio:2.0.0")

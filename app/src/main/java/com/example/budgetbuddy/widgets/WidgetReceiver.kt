@@ -14,6 +14,7 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.example.budgetbuddy.Data.Repositories.GastoRepository
 import com.example.budgetbuddy.Data.Repositories.ILoginSettings
 import com.example.budgetbuddy.Data.Repositories.UserRepository
+import com.example.budgetbuddy.Data.Room.CompactGasto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -56,7 +57,7 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
         Log.d("Widget", "onReceive Called; Action: ${intent.action}")
 
         // We filter actions in order to prevent updating twice in onUpdate events.
-        if (intent.action == UPDATE_ACTION) {
+        if (intent.action == UPDATE_ACTION || intent.action.equals("ACTION_TRIGGER_LAMBDA")) {
             observeData(context)
         }
     }
@@ -75,7 +76,7 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
 
             // If there's  a user get it's visits
             val gastos = if (currentUsername != "") {
-                gastoRepository.elementosFecha(LocalDate.now(), currentUsername).first()
+                gastoRepository.elementosFecha(LocalDate.now(), currentUsername).first().map(::CompactGasto)
             } else emptyList()
 
 
