@@ -71,7 +71,7 @@ import com.example.budgetbuddy.screens.Add
 import com.example.budgetbuddy.screens.Dashboards
 import com.example.budgetbuddy.screens.Edit
 import com.example.budgetbuddy.screens.Home
-import com.example.budgetbuddy.screens.LocationPermission
+import com.example.budgetbuddy.utils.LocationPermission
 import com.example.budgetbuddy.utils.toLong
 import com.example.budgetbuddy.widgets.Widget
 import com.google.android.gms.location.FusedLocationProviderClient

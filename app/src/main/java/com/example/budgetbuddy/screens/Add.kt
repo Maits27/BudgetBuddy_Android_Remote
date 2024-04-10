@@ -85,16 +85,7 @@ Se le pasan los parámetros de:
  * @modifier:      Para dar un estilo predeterminado a los composables (default).
  */
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun LocationPermission(){
-    val permissionState2 = rememberPermissionState(
-        permission = Manifest.permission.ACCESS_FINE_LOCATION
-    )
-    LaunchedEffect(true){
-        permissionState2.launchPermissionRequest()
-    }
-}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Add(

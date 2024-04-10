@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +63,16 @@ android {
 dependencies {
     implementation ("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.activity:activity:1.8.2")
+
+    // Import the Firebase BoM
+    //noinspection GradleCompatible
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    implementation("com.google.firebase:firebase-messaging:23.4.1")
+//    implementation("com.facebook.android:facebook-android-sdk:[4,5)")
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
 
     // Glance for Widgets
     implementation ("androidx.glance:glance-appwidget:1.0.0-alpha03")

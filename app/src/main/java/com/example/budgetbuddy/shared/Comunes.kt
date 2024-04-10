@@ -78,7 +78,6 @@ import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
-import com.example.budgetbuddy.screens.LocationPermission
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.example.budgetbuddy.utils.locationToLatLng
 import com.google.accompanist.permissions.ExperimentalPermissionsApi

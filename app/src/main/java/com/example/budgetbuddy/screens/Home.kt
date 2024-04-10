@@ -89,7 +89,6 @@ fun Home(
     val gastos by appViewModel.listadoGastosFecha(fecha).collectAsState(emptyList())
 
     /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
-    var askPermission by remember {mutableStateOf(false)}
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,

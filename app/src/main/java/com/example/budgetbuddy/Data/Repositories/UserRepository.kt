@@ -74,9 +74,10 @@ class UserRepository @Inject constructor(
         result["bajar_datos"] = false
 
         val remoto = httpService.getUserByEmail(email)
-        if ((remoto?.email ?: "") != ""){result["runtime"] = false}
-        Log.d("COMPARE USERS", "MIA: $passwd REMOTO: ${remoto?.password}" )
-        if( passwd==remoto?.password){
+        // Si es "" es que ha conseguido respuesta nula del servidor (login incorrecto, pero server activo)
+        if ( (remoto?.email ?: " ")!=" " ){result["runtime"] = false}
+
+        if( passwd == remoto?.password ){
             val nombre = remoto.nombre
             result["user"] = AuthUser(nombre, email, passwd)
             val local = userDao.usernamePassword(email, passwd)?: ""

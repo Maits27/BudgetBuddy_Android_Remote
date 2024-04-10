@@ -57,6 +57,7 @@ import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
 import com.example.budgetbuddy.shared.Perfil
+import com.example.budgetbuddy.utils.CalendarWritePermission
 import com.example.budgetbuddy.utils.user_to_authUser
 import com.example.budgetbuddy.widgets.Widget
 import com.example.budgetbuddy2.screens.MainView
@@ -66,16 +67,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun CalendarPermission(){
-    val permissionState2 = rememberPermissionState(
-        permission = Manifest.permission.WRITE_CALENDAR
-    )
-    LaunchedEffect(true){
-        permissionState2.launchPermissionRequest()
-    }
-}
 @Composable
 fun App(
     navControllerMain: NavController,
@@ -86,7 +77,7 @@ fun App(
     preferencesViewModel: PreferencesViewModel,
     guardarFichero: (LocalDate, String)-> Boolean
 ){
-    CalendarPermission()
+    CalendarWritePermission()
     preferencesViewModel.restartLang(
         preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(
             initial = preferencesViewModel.currentSetLang).value)

@@ -21,15 +21,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
+import com.example.budgetbuddy.utils.CalendarPermission
+import com.example.budgetbuddy.utils.StoragePermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
@@ -94,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Solicitud de permisos
-                    NotificationPermission()
+                    CalendarPermission()
                     StoragePermission()
                     MyApp(
                         userViewModel = userViewModel,
@@ -176,39 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    @OptIn(ExperimentalPermissionsApi::class)
-    @Composable
-    fun NotificationPermission(){
-//        val permissionState = rememberPermissionState(
-//            permission = android.Manifest.permission.POST_NOTIFICATIONS
-//        )
-//        LaunchedEffect(true){
-//            permissionState.launchPermissionRequest()
-//        }
-        val permissionState2 = rememberPermissionState(
-            permission = Manifest.permission.READ_CALENDAR
-        )
-        LaunchedEffect(true){
-            permissionState2.launchPermissionRequest()
-        }
-    }
-    @OptIn(ExperimentalPermissionsApi::class)
-    @Composable
-    fun StoragePermission(){
-        val permissionState2 = rememberPermissionState(
-            permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        LaunchedEffect(true){
-            permissionState2.launchPermissionRequest()
-        }
-        val permissionState3 = rememberPermissionState(
-            permission = android.Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-        LaunchedEffect(true){
-            permissionState3.launchPermissionRequest()
-        }
-    }
+
 
 }
 

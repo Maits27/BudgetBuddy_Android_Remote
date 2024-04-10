@@ -61,6 +61,7 @@ import com.example.budgetbuddy.shared.MapScreen
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.ToastMessage
 import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.utils.LocationPermission
 import com.example.budgetbuddy.utils.agregarGastoAlCalendario
 import com.example.budgetbuddy.utils.toLong
 import com.google.android.gms.location.FusedLocationProviderClient
