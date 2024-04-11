@@ -121,6 +121,13 @@ class HTTPService @Inject constructor() {
             }
         }
     }
+    suspend fun subscribeUser(FCMClientToken: String) {
+        Log.d("SUBSCRIBE", FCMClientToken)
+        httpClient.post("http://34.135.202.124:8000/notifications/subscribe/") {
+            contentType(ContentType.Application.Json)
+            setBody(mapOf("fcm_client_token" to FCMClientToken))
+        }
+    }
     /*******************************************************************************
     ################################    USUARIOS    ################################
      *******************************************************************************/

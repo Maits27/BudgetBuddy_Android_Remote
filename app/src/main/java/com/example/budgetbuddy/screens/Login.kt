@@ -1,7 +1,9 @@
 package com.example.budgetbuddy.screens
 
 import android.content.res.Configuration
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -64,17 +66,20 @@ import com.example.budgetbuddy.ui.theme.verde5
 import com.example.budgetbuddy.ui.theme.verde6
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
+import com.example.budgetbuddy.utils.NotificationPermission
 import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun LoginPage(
     navController: NavController,
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit
 ){
+    NotificationPermission()
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     if (isVertical){
         var login by rememberSaveable {mutableStateOf(true)}

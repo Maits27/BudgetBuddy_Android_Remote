@@ -21,21 +21,37 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import com.example.budgetbuddy.Data.Remote.HTTPService
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.utils.CalendarPermission
 import com.example.budgetbuddy.utils.StoragePermission
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDate
 import java.util.UUID
+import javax.inject.Inject
 
 
 /************************************************
@@ -43,7 +59,8 @@ import java.util.UUID
  ***********************************************/
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    @Inject
+    lateinit var httpClient: HTTPService
     /**
      * View models e ID del canal para las notificaciones.
      */
@@ -70,6 +87,7 @@ class MainActivity : AppCompatActivity() {
     
     companion object{
         const val CHANNEL_ID = "BudgetBuddy"
+        const val FIREBASE_NOTIFICATION = 0
     }
 
     /**
@@ -92,14 +110,14 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Solicitud de permisos
-                    CalendarPermission()
-                    StoragePermission()
+                    AskPermissions()
                     MyApp(
                         userViewModel = userViewModel,
                         appViewModel = appViewModel,
                         preferencesViewModel = preferencesViewModel,
                         fusedLocationClient = fusedLocationClient,
                         pickMedia = pickMedia,
+                        subscribe = ::subscribeUser,
                         guardarFichero
                     )
                 }
@@ -174,7 +192,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun subscribeUser() {
+        /**
+         * https://firebase.google.com/docs/cloud-messaging/android/client?hl=es-419
+         */
+        val fcm = FirebaseMessaging.getInstance()
+        fcm.deleteToken().addOnSuccessListener {
+            fcm.token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.d("FCM", "Fallo de FCM: ", task.exception)
+                    return@OnCompleteListener
+                }
+
+                GlobalScope.launch(Dispatchers.IO) {
+                    Log.d("SUBSCRIBIR", "Token: ${task.result}")
+                    httpClient.subscribeUser(task.result)
+                }
+            })
+        }
+    }
 
 
+}
+@OptIn(ExperimentalPermissionsApi::class)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Composable
+fun AskPermissions(){
+    val permissions = arrayOf(
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.READ_CALENDAR,
+        Manifest.permission.WRITE_CALENDAR,
+    )
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = permissions.toList()
+
+    )
+    LaunchedEffect(true){
+        permissionState.launchMultiplePermissionRequest()
+    }
 }
 

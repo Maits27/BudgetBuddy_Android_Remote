@@ -3,10 +3,12 @@ package com.example.budgetbuddy
 import android.app.Activity
 import android.content.Intent
 import android.health.connect.datatypes.ExerciseRoute
+import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MyApp(
     userViewModel: UserViewModel,
@@ -41,8 +44,10 @@ fun MyApp(
     preferencesViewModel: PreferencesViewModel,
     fusedLocationClient: FusedLocationProviderClient,
     pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
+    subscribe:()-> Unit,
     guardarFichero: (LocalDate, String)-> Boolean) {
     val navController = rememberNavController()
+
 
     NavHost(
         navController = navController,
@@ -59,6 +64,9 @@ fun MyApp(
                     appViewModel.download_user_data()
                 }
                 userViewModel.updateLastLoggedUsername(user.email)
+                Log.d("SUBSCRIBE", "SUBSCRIBE INIT")
+                subscribe()
+                Log.d("SUBSCRIBE", "SUBSCRIBE END")
             }
         }
         composable(AppScreens.App.route) {

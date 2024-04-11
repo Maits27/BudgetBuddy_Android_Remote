@@ -64,6 +64,11 @@ dependencies {
     implementation ("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.activity:activity:1.8.2")
 
+    //Encript
+//    implementation ("javax.crypto:javax.crypto-api:1.1.1")
+//    implementation ("org.bouncycastle:bcpkix-jdk15on:1.68")
+//    implementation ("org.bouncycastle:bcprov-jdk15on:1.68")
+
     // Import the Firebase BoM
     //noinspection GradleCompatible
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))

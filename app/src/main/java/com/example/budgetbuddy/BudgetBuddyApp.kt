@@ -28,5 +28,3 @@ class BudgetBuddyApp : Application() {
         super.onCreate()
     }
 }
-
-
