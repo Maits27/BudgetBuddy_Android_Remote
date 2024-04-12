@@ -14,7 +14,7 @@ val verde5 = Color(0xffC8FFD2)
 val verde6 = Color(0xff92AC90)
 
 val verdeOscuro = Color(0xff082e20)
-val verdeClaro = Color(0xffCFFFDB)
+val verdeClaro = Color(0xFFE1FFE9)
 
 val azul1 = Color(0xff0E2D68)
 val azul2 = Color(0xff09579e)

@@ -26,7 +26,7 @@
 
     <string name="factura_init">%s faktura hurrengoa da:\n</string>
     <string name="factura_total">Totala: %s€</string>
-    <string name="date_pick">Aukeratu data bat</string>
+    <string name="date_pick">Aukeratu data bat:</string>
     <string name="date">Oraingo data: %s</string>
     <string name="factura_download">Faktura bat deskargatu da.</string>
     <string name="download_description"> %s faktura ikusteko, jo zure Android mugikorraren deskarga karpetara.</string>
@@ -81,4 +81,7 @@
     <string name="widget_title">Gaurko %s gastuak:</string>
     <string name="widget_title_no_user">Gaurko gastuak:</string>
     <string name="widget_must_login">Saioa hasi.</string>
+    <string name="location">Lokazioa mapan:</string>
+    <string name="am_title">Gaurko gastua: %s</string>
+    <string name="am_body">%s (%s) gaurko %s€-ko gastua, aurretik gehitu izan zen eta gaurko programatu zen.</string>
 </resources>

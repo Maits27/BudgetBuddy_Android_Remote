@@ -14,7 +14,7 @@ import com.example.budgetbuddy.VM.PreferencesViewModel
 private val DarkColorScheme = lightColorScheme(
     primary = verdeOscuro,
     secondary = verdeOscuro,
-    tertiary = verdeClaro,
+    tertiary = verde5,
     background = grisClaro,
     onPrimary = grisClaro,
     onSecondary = grisClaro,

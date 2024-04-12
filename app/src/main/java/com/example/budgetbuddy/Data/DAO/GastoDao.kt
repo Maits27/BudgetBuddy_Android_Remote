@@ -27,7 +27,6 @@ interface GastoDao {
     suspend fun insertGasto(gasto: Gasto)
 
     suspend fun insertGastos(gastos: List<Gasto>) = gastos.map {
-        Log.d("ERROR LOCALIZACION", it.toString())
         insertGasto(it)
     }
 

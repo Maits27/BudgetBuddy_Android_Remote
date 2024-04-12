@@ -26,7 +26,7 @@
 
     <string name="factura_init">The %s bill:\n</string>
     <string name="factura_total">Total: %s€</string>
-    <string name="date_pick">Choose a date</string>
+    <string name="date_pick">Choose a date:</string>
     <string name="date">Current date: %s</string>
     <string name="factura_download">A bill was downloaded.</string>
     <string name="download_description"> To see the bill of %s, go to your Android download folder.</string>
@@ -81,4 +81,7 @@
     <string name="widget_title">Today\'s %s expenses:</string>
     <string name="widget_title_no_user">Today\'s expenses:</string>
     <string name="widget_must_login">Login.</string>
+    <string name="location">Location in map:</string>
+    <string name="am_title">Today\'s expense: %s</string>
+    <string name="am_body">Today\'s %s expense (%s) of %s€ that was added before is scheduled for today.</string>
 </resources>

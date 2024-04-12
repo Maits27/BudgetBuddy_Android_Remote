@@ -49,9 +49,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
+import com.example.budgetbuddy.Data.Room.AlarmItem
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.shared.Calendario
@@ -68,6 +70,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
 
 
@@ -99,6 +102,7 @@ fun Add(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scheduler = AndroidAlarmScheduler(context)
 
     val error_double = stringResource(id = R.string.error_double)
     val error_insert = stringResource(id = R.string.error_insert)
@@ -324,6 +328,13 @@ fun Add(
                                 "BUDGET BUDDY",
                                 "$nombre (${selectedOption.tipo}): $euros€",
                                 fecha.toLong()
+                            )
+                            scheduler.schedule(
+                                AlarmItem(
+                                    time = LocalDateTime.of(fecha.year, fecha.monthValue, fecha.dayOfMonth, LocalDateTime.now().hour, LocalDateTime.now().minute+1),
+                                    title = context.getString(R.string.am_title, nombre),
+                                    body = context.getString(R.string.am_body, nombre, selectedOption.tipo, euros)
+                                )
                             )
                         } else {
                             showError = true

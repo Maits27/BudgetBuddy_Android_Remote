@@ -94,6 +94,7 @@ fun Edit(
     fusedLocationClient: FusedLocationProviderClient,
     modifier: Modifier = Modifier.verticalScroll(rememberScrollState())
 ){
+    Log.d("GASTO","Gasto to edit: $gasto")
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -297,7 +298,10 @@ fun Edit(
 
         Calendario(show = (isTextFieldFocused == 2), onCalendarConfirm)
 
-        if (saveLoc) MapScreen(lastKnownLocation = lastKnownLocation)
+        val location = Location("")
+        location.latitude = gasto.latitud
+        location.longitude = gasto.longitud
+        if (saveLoc) MapScreen(lastKnownLocation = location)
 
         /** Botón para guardar los cambios en Room **/
         Button(

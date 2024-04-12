@@ -22,7 +22,7 @@
 
     <string name="factura_init">La factura de %s es la siguiente:\n</string>
     <string name="factura_total">Total: %s€</string>
-    <string name="date_pick">Elige una fecha</string>
+    <string name="date_pick">Elige una fecha:</string>
     <string name="date">Fecha actual: %s</string>
     <string name="factura_download">Se ha descargado una factura.</string>
     <string name="download_description"> Para ver la factura del día %s, acceda a la carpeta de descargas de su dispositivo Android.</string>
@@ -81,4 +81,7 @@
     <string name="widget_title">Gastos de %s de hoy:</string>
     <string name="widget_title_no_user">Gastos de hoy:</string>
     <string name="widget_must_login">Inicia sesión.</string>
+    <string name="location">Localización en el mapa:</string>
+    <string name="am_title">Gasto de hoy: %s</string>
+    <string name="am_body">El gasto %s (%s) de %s€ que fue añadido con antelación está programado para hoy.</string>
 </resources>

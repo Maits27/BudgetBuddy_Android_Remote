@@ -43,6 +43,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -112,28 +114,33 @@ fun MapScreen(
         (lastKnownLocation!=null
                 && lastKnownLocation.latitude!=0.0
                 && lastKnownLocation.longitude!=0.0) ->{
-                    Box (
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .padding(16.dp)
-                            .border(2.dp, MaterialTheme.colorScheme.primary)
-                    ){
-
-                        val location = locationToLatLng(lastKnownLocation)
-                        val cameraPositionState = rememberCameraPositionState {
-                            position = CameraPosition.fromLatLngZoom(location, 10f)
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.location),
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            color = MaterialTheme.colorScheme.onTertiary
+                        )
+                        Box (
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .border(2.dp, MaterialTheme.colorScheme.primary)
+                        ){
+                            val location = locationToLatLng(lastKnownLocation)
+                            val cameraPositionState = rememberCameraPositionState {
+                                position = CameraPosition.fromLatLngZoom(location, 10f)
+                            }
+                            GoogleMap(
+                                modifier = Modifier.size(width = 300.dp, height = 200.dp),
+                                cameraPositionState = cameraPositionState
+                            ) {
+                                Marker(
+                                    state = MarkerState(position = location),
+                                    title = title,
+                                    snippet = snippet
+                                )
+                            }
                         }
-                        GoogleMap(
-                            modifier = Modifier.size(width = 300.dp, height = 400.dp),
-                            cameraPositionState = cameraPositionState
-                        ) {
-                            Marker(
-                                state = MarkerState(position = location),
-                                title = title,
-                                snippet = snippet
-                            )
-                        }
-                }
+                    }
         }else-> {
             NoMap()
         }
@@ -153,7 +160,9 @@ fun NoMap(){
             painter = painterResource(id = R.drawable.nomap_bw),
             tint = MaterialTheme.colorScheme.onTertiary,
             contentDescription = "",
-            modifier = Modifier.padding(10.dp).size(200.dp)
+            modifier = Modifier
+                .padding(10.dp)
+                .size(200.dp)
         )
         if(ActivityCompat.checkSelfPermission(
                 LocalContext.current,
@@ -264,18 +273,30 @@ fun Header(
     }
     Text(
         text = titulo,
-        Modifier.padding(top=16.dp, bottom = 10.dp)
+        Modifier.padding(top=16.dp, bottom = 5.dp)
     )
-    Button(
-        onClick = { showCalendar = true }
-    ) {
-        Text(text = stringResource(id = R.string.date_pick))
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ){
+        Text(text = stringResource(id = R.string.date_pick), Modifier.padding(horizontal = 10.dp))
+        IconButton(
+            modifier = Modifier.wrapContentSize(),
+            onClick = { showCalendar = true }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.calendar_edit),
+                contentDescription =stringResource(id = R.string.date_pick),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(35.dp)
+            )
+        }
     }
     Calendario(
         show = showCalendar,
         onCalendarConfirm
     )
-    Divider()
+    Divider(Modifier.padding(top = 10.dp))
 }
 
 @Composable

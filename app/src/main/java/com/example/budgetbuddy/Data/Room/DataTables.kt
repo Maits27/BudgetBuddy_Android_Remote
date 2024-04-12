@@ -12,6 +12,7 @@ import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.navigation.AppScreens
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 
@@ -33,6 +34,12 @@ import java.util.UUID
 data class GastoDia(val cantidad: Double, val fecha: LocalDate)
 data class GastoTipo(val cantidad: Double, val tipo: TipoGasto)
 data class Diseño(val pantalla: AppScreens, val icono: Painter, val nombre: String="")
+
+data class AlarmItem (
+    val time: LocalDateTime,
+    val title: String,
+    val body: String
+)
 
 /*******************************************************************************
  ****                        User Entity in Database                        ****

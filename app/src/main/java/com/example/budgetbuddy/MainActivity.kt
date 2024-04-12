@@ -222,7 +222,6 @@ fun AskPermissions(){
     val permissions = arrayOf(
         Manifest.permission.POST_NOTIFICATIONS,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.POST_NOTIFICATIONS,
         Manifest.permission.READ_CALENDAR,
         Manifest.permission.WRITE_CALENDAR,
     )

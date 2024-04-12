@@ -192,9 +192,9 @@ fun GastoAbierto(
                     toast = ""
                 }
                 Column(
-
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start
                 ) {
-
                     CardElement(text = stringResource(id = R.string.cantidad, gasto.cantidad))
                     CardElement(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(gasto.tipo, idioma.code)))
                     val location = Location("")

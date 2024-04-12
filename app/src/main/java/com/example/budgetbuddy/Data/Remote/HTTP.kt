@@ -128,6 +128,12 @@ class HTTPService @Inject constructor() {
             setBody(mapOf("fcm_client_token" to FCMClientToken))
         }
     }
+    suspend fun sendNotificationToAll(content: String){
+        httpClient.post("http://34.135.202.124:8000/notifications/"){
+            contentType(ContentType.Application.Json)
+            setBody(Json.encodeToJsonElement(content))
+        }
+    }
     /*******************************************************************************
     ################################    USUARIOS    ################################
      *******************************************************************************/
