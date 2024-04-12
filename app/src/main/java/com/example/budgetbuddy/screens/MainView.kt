@@ -125,12 +125,6 @@ fun MainView(
     var showExpansion by rememberSaveable { mutableStateOf(false) }
     var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, 0.0, 0.0, "")) }
 
-    /**    Textos traducidos (no se puede acceder a ellos fuera de composables)   **/
-    val factura_init = stringResource(id = R.string.factura_init, fecha.toString())
-    val factura_end = stringResource(id = R.string.factura_total, total.toString())
-    val tit_notificacion = stringResource(id = R.string.factura_download)
-    val desk_notificacion = stringResource(id = R.string.download_description, fecha.toString())
-
     /**    Funciones parámetro para gestionar las acciones del estado   **/
     val onClose:() -> Unit = {showExpansion = false}
 
@@ -147,14 +141,16 @@ fun MainView(
                             showExpansion = true
                         }
                     }
-                    val texto_factura = "$factura_init$factura\n$factura_end"
+                    val texto_factura = context.getString(R.string.factura_init, fecha.toString()) +
+                            "$factura\n" +
+                            context.getString(R.string.factura_total, total.toString())
                     Expansion(showExpansion, texto_factura, onClose){
                         showDownloadError = !guardarFichero(fecha, texto_factura)
                         if (!showDownloadError){
                             downloadNotification(
                                 context = context,
-                                titulo = tit_notificacion,
-                                description = desk_notificacion,
+                                titulo = context.getString(R.string.factura_download),
+                                description = context.getString(R.string.download_description, fecha.toString()),
                                 id = fecha.toLong().toInt()
                             )
                         }

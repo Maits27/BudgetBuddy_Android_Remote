@@ -99,9 +99,6 @@ fun Edit(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val error_double = stringResource(id = R.string.error_double)
-    val error_insert = stringResource(id = R.string.error_insert)
-
     /*******************************************************************
      **    Recoger el valor actual de cada flow del AppViewModel      **
      **                 (valor por defecto: initial)                  **
@@ -325,11 +322,11 @@ fun Edit(
                             agregarGastoAlCalendario(context, "BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
                         } else {
                             showError = true
-                            error_message = error_double
+                            error_message = context.getString(R.string.error_double)
                         }
                     } else {
                         showError = true
-                        error_message = error_insert
+                        error_message = context.getString(R.string.error_insert)
                     }
                     if (!showError) {
                         showToast=true

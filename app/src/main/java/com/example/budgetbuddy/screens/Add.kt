@@ -104,9 +104,6 @@ fun Add(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scheduler = AndroidAlarmScheduler(context)
 
-    val error_double = stringResource(id = R.string.error_double)
-    val error_insert = stringResource(id = R.string.error_insert)
-
     val saveLoc by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
     val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
     /*******************************************************************
@@ -338,11 +335,11 @@ fun Add(
                             )
                         } else {
                             showError = true
-                            error_message = error_double
+                            error_message = context.getString(R.string.error_double)
                         }
                     } else {
                         showError = true
-                        error_message = error_insert
+                        error_message = context.getString(R.string.error_insert)
                     }
                     if (!showError) {
                         withContext(Dispatchers.Main) {

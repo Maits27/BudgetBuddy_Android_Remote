@@ -26,10 +26,6 @@ fun Infor(
 ) {
     val context = LocalContext.current
 
-    val shareMessage = stringResource(id = R.string.share_message)
-    val asunto = stringResource(id = R.string.asunto)
-    val contenidoMail = stringResource(id = R.string.contenidoEmail)
-
     Column (
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -45,14 +41,18 @@ fun Infor(
         Divider()
         Row {
             TextButton(onClick = {
-                compartirContenido(context, shareMessage)
+                compartirContenido(context, context.getString(R.string.share_message))
                 onConfirm()
             }
             ) {
                 Text(text =  stringResource(id = R.string.share))
             }
             TextButton(onClick = {
-                compartirContenido(context, contenidoMail, asunto = asunto)
+                compartirContenido(
+                    context,
+                    context.getString(R.string.contenidoEmail),
+                    asunto = context.getString(R.string.asunto)
+                )
                 onConfirm()
             }
             ) {
