@@ -3,9 +3,12 @@ package com.example.budgetbuddy.widgets
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Divider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -51,6 +54,7 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.Data.Room.CompactGasto
@@ -58,13 +62,13 @@ import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.shared.GastoAbierto
 import com.example.budgetbuddy.shared.NoData
+import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.ui.theme.grisOscuro
 import com.example.budgetbuddy.widgets.WidgetReceiver.Companion.UPDATE_ACTION
 import com.example.budgetbuddy.widgets.WidgetReceiver.Companion.currentUserKey
 import com.example.budgetbuddy.widgets.WidgetReceiver.Companion.todayGastoDataKey
 import kotlinx.serialization.json.Json
-import java.util.Locale
 import kotlin.text.split
-import kotlin.text.uppercase
 
 
 /*******************************************************************************
@@ -72,7 +76,6 @@ import kotlin.text.uppercase
  *******************************************************************************/
 
 class Widget : GlanceAppWidget() {
-//    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent { Content() }
     }
@@ -100,34 +103,35 @@ class Widget : GlanceAppWidget() {
             horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
             modifier = GlanceModifier
                 .fillMaxSize()
-                .background(color = Color.White)
+                .background(color = grisClaro)
                 .padding(16.dp)
         ) {
 
-            /*------------------------------------------------
-            |                     Header                     |
-            ------------------------------------------------*/
-
             Text(
-                text = if (user != null) context.getString(R.string.widget_title, user) else context.getString(R.string.widget_title_no_user),
-                modifier = GlanceModifier.fillMaxWidth().padding(bottom = 16.dp),
+                text = if (user != null && user != "") context.getString(R.string.widget_title, user.split("@").firstOrNull()) else context.getString(R.string.widget_title_no_user),
+                modifier = GlanceModifier.fillMaxWidth().padding(bottom = 1.dp),
                 style = TextStyle(
                     fontWeight = FontWeight.Medium,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center
-                ),
-                maxLines = 1
+                )
             )
 
-
-            /*------------------------------------------------
-            |               Body (Visit List)                |
-            ------------------------------------------------*/
+            Text(
+                text = if (user != null && user != "") "                                                          " else "                             ",
+                modifier = GlanceModifier.fillMaxWidth().padding(bottom = 16.dp),
+                style = TextStyle(
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline
+                )
+            )
 
             when {
 
                 // Sin LogIn
-                user == null -> {
+                user == null || user == "" -> {
                     Column(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,34 +159,6 @@ class Widget : GlanceAppWidget() {
                             GastoItem(gasto = item)
                         }
                     }
-//                    LazyColumn(modifier = GlanceModifier.fillMaxSize().defaultWeight()) {
-//                        items(gastos, itemId = { it.hashCode().toLong() }) {
-//                            Card(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(3.dp),
-//                                shape = CardDefaults.elevatedShape,
-//                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
-//                            ) {
-//                                androidx.compose.foundation.layout.Row(
-//                                    Modifier.fillMaxWidth(),
-//                                    horizontalArrangement = Arrangement.Center,
-//                                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-//                                ) {
-//                                    androidx.compose.foundation.layout.Column(
-//                                        Modifier
-//                                            .padding(16.dp)
-//                                            .weight(3f)
-//                                    ) {
-//                                        androidx.compose.material3.Text(text = it.nombre, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-//                                        androidx.compose.material3.Text(text = stringResource(id = R.string.cantidad, it.cantidad))
-//                                        androidx.compose.material3.Text(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(it.tipo, Locale.getDefault().language.lowercase())))
-//                                    }
-//
-//                                }
-//                            }
-//                        }
-//                    }
                 }
             }
 
@@ -202,32 +178,31 @@ class Widget : GlanceAppWidget() {
             verticalAlignment = Alignment.CenterVertically,
             modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-
-            /*------------------------------------------------
-            |                   Visit Data                   |
-            ------------------------------------------------*/
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = GlanceModifier.fillMaxWidth().defaultWeight()
-            ) {
-
-                //------------------   Hour   ------------------//
-
-
-
-                Spacer(GlanceModifier.width(16.dp))
-
-
-                //----------   Client Data and Town   ----------//
-
-                Column {
-                    Text(text = gasto.nombre, modifier = GlanceModifier.defaultWeight())
-                    Text(text = gasto.cantidad.toString(), modifier = GlanceModifier.defaultWeight())
-                }
+            Column {
+                Text(
+                    text = gasto.nombre,
+                    modifier = GlanceModifier
+                        .defaultWeight(),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        textDecoration = TextDecoration.Underline
+                    )
+                )
+                Spacer(GlanceModifier.height(8.dp))
+                Text(text = "   - ${gasto.cantidad}€", modifier = GlanceModifier.defaultWeight().padding(vertical = 2.dp))
+                Text(text = "   - ${gasto.tipo.tipo}", modifier = GlanceModifier.defaultWeight().padding(vertical = 2.dp))
+                Text(
+                    text = "                             ",
+                    modifier = GlanceModifier.fillMaxWidth().padding(top = 8.dp),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline
+                    )
+                )
             }
-
-
         }
     }
 
@@ -242,6 +217,13 @@ class Widget : GlanceAppWidget() {
         ) {
            Widget().update(context, glanceId)
         }
+    }
+    fun refresh(context:Context){
+        actionRunCallback<RefreshAction>()
+        val intent = Intent(context, WidgetReceiver::class.java).apply {
+            action = UPDATE_ACTION // Reemplaza UPDATE_ACTION con la acción adecuada
+        }
+        context.sendBroadcast(intent)
     }
 }
 

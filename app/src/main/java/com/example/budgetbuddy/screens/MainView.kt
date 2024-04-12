@@ -105,11 +105,10 @@ fun MainView(
     guardarFichero: (LocalDate, String) -> Boolean
 ){
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-    coroutineScope.launch(Dispatchers.IO) { Widget().updateAll(context)  }
+    Widget().refresh(context)
     /*******************************************************************
      **    Recoger el valor actual de cada flow de los ViewModel      **
      **                 (valor por defecto: initial)                  **
