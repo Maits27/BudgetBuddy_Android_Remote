@@ -20,6 +20,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,6 +47,10 @@ import com.example.budgetbuddy.shared.ErrorText
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.ui.theme.verde1
+import com.example.budgetbuddy.ui.theme.verde2
+import com.example.budgetbuddy.ui.theme.verde3
+import com.example.budgetbuddy.ui.theme.verde4
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.example.budgetbuddy.utils.NotificationPermission
@@ -50,6 +58,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
+/*****************************************************************************************
+ ***                      FRAGMENT LOGIN EN BASE A LA ORIENTACIÓN                      ***
+ *****************************************************************************************/
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun LoginPage(
@@ -57,10 +69,11 @@ fun LoginPage(
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit
 ){
-    NotificationPermission()
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     if (isVertical){
+
         var login by rememberSaveable {mutableStateOf(true)}
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -91,13 +104,25 @@ fun LoginPage(
             Divider(color = Color.DarkGray)
             Row {
                 TextButton(
-                    modifier = Modifier.padding(16.dp),
-                    onClick = {login = true}) {
+                    modifier = Modifier.padding(16.dp).weight(1f),
+                    onClick = {login = true},
+                    colors = if(login) {
+                        ButtonDefaults.textButtonColors(backgroundColor = verde4)
+                    }else{
+                        ButtonDefaults.textButtonColors(backgroundColor = Transparent)
+                    }
+                ) {
                     Text(text = "Login", color = MaterialTheme.colors.onBackground)
                 }
                 TextButton(
-                    modifier = Modifier.padding(16.dp),
-                    onClick = {login = false}) {
+                    modifier = Modifier.padding(16.dp).weight(1f),
+                    onClick = {login = false},
+                    colors = if(!login) {
+                        ButtonDefaults.textButtonColors(backgroundColor = verde4)
+                    }else{
+                        ButtonDefaults.textButtonColors(backgroundColor = Transparent)
+                    }
+                ) {
                     Text(text = "Register", color = MaterialTheme.colors.onBackground)
                 }
             }
@@ -136,9 +161,9 @@ fun LoginPage(
         }
     }
 }
-/**************************************************************************************************
- ***                                     ZONA DE LOGIN                                          ***
- **************************************************************************************************/
+/***************************************************************
+ ***                      ZONA DE LOGIN                      ***
+ ***************************************************************/
 @Composable
 fun Login(
     navController: NavController,
@@ -168,7 +193,11 @@ fun Login(
             onValueChange = {correo = it}, 
             label = { Text("Email:") },
             modifier = Modifier.padding(10.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = verdeOscuro,
+                cursorColor = verdeOscuro,
+                focusedLabelColor = verdeOscuro)
         )
         /**
          * Campo del PASSWORD
@@ -179,7 +208,11 @@ fun Login(
             label = { Text("Password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
+            visualTransformation = PasswordVisualTransformation(), // Esta línea oculta el texto
+                    colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = verdeOscuro,
+            cursorColor = verdeOscuro,
+            focusedLabelColor = verdeOscuro)
         )
         /**
          * Errores
@@ -229,9 +262,9 @@ fun Login(
 }
 
 
-/**************************************************************************************************
- ***                                   ZONA DE REGISTRO                                         ***
- **************************************************************************************************/
+/******************************************************************
+ ***                      ZONA DE REGISTRO                      ***
+ ******************************************************************/
 @Composable
 fun Register(
     navController: NavController,
@@ -263,7 +296,11 @@ fun Register(
             onValueChange = {nombre = it}, 
             label = { Text("Name:") },
             modifier = Modifier.padding(10.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = verdeOscuro,
+                cursorColor = verdeOscuro,
+                focusedLabelColor = verdeOscuro)
         )
         if (!nombreOk){
             ErrorText(text = "Incorrect name.")
@@ -274,7 +311,11 @@ fun Register(
             onValueChange = {correo = it}, 
             label = { Text("Email:") },
             modifier = Modifier.padding(10.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = verdeOscuro,
+                cursorColor = verdeOscuro,
+                focusedLabelColor = verdeOscuro)
         )
         if (!emailOk){
             ErrorText(text = "Incorrect email.")
@@ -285,7 +326,11 @@ fun Register(
             label = { Text("Password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
+            visualTransformation = PasswordVisualTransformation(),// Esta línea oculta el texto
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = verdeOscuro,
+                cursorColor = verdeOscuro,
+                focusedLabelColor = verdeOscuro)
         )
         TextField(
             value = passwd2, 
@@ -293,7 +338,11 @@ fun Register(
             label = { Text("Repeat password:") },
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
+            visualTransformation = PasswordVisualTransformation(),// Esta línea oculta el texto
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = verdeOscuro,
+                cursorColor = verdeOscuro,
+                focusedLabelColor = verdeOscuro)
         )
         if (!passwdOk){
             ErrorText(text = "Invalid password (the two of them must be the same).")
