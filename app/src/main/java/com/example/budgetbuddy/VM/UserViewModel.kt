@@ -64,15 +64,26 @@ class UserViewModel @Inject constructor(
     /*************************************************
      **                    Eventos                  **
      *************************************************/
+    fun userXEmail(email: String): AuthUser?= runBlocking {
+        userRepository.userXEmail(email)
+    }
 
     fun updateLastLoggedUsername(user: String) = runBlocking {
         Log.d("COMPARE USERS", "SET USER: $user")
         userRepository.setLastLoggedUser(user)
     }
 
+    fun isLogged(email: String): Boolean? = runBlocking {
+        userRepository.isLogged(email)
+    }
+    fun loginUser(email: String, login:Boolean): AuthUser? = runBlocking {
+        userRepository.logIn(email, login)
+    }
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
-
+    fun insertLocal(user: User){
+        viewModelScope.launch { userRepository.insertLocal(user) }
+    }
     private suspend fun añadirUsuario(nombre: String, email: String, passwd: String): Boolean {
         return withContext(Dispatchers.IO) {
             val user = AuthUser(nombre, email, passwd.hash())
@@ -91,6 +102,7 @@ class UserViewModel @Inject constructor(
         userRepository.deleteUsuario(user)
     }
     fun logout(context: Context){
+        viewModelScope.launch { userRepository.logIn(currentUser.email, false) }
         profilePicture = null
         currentUser = AuthUser("", "", "")
         viewModelScope.launch { userRepository.setLastLoggedUser("") }
@@ -116,12 +128,14 @@ class UserViewModel @Inject constructor(
     suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): HashMap<String, Boolean>{
         val result = HashMap<String, Boolean>()
         result["server"] = true
+        result["not_exist"] = false
         result["name"] = correctName(nombre)
         result["email"] = correctEmail(email)
         result["password"] = correctPasswd(p1, p2)
         if (result["name"]!! && result["email"]!! && result["password"]!!){
-            if(userRepository.userName(email)==""){
+            if(!userRepository.exists(email)){
                 Log.d("Vacio", "user vacio")
+                result["not_exist"] = true
                 result["server"] = añadirUsuario(nombre, email, p1)
                 return result
             }

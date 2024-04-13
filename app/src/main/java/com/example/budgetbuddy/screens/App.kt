@@ -34,6 +34,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -85,6 +87,9 @@ fun App(
             initial = preferencesViewModel.currentSetLang).value)
     val context = LocalContext.current
 
+    var logout by rememberSaveable {
+        mutableStateOf(false)
+    }
     val navControllerSecundario = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -166,8 +171,9 @@ fun App(
                         fusedLocationClient = fusedLocationClient,
                         onDrawerOpen = onDrawerOpen,
                         onLogout = {
-                            userViewModel.logout(context)
-                            preferencesViewModel.changeUser("")},
+                            logout = true
+                            navegar_a(navControllerSecundario, AppScreens.Loading.route)
+                                   },
                         guardarFichero
                     )
                 }
@@ -196,7 +202,15 @@ fun App(
                     Infor{ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
                 }
                 composable(AppScreens.Loading.route) {
-                    Loading(userViewModel, appViewModel){ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
+                    Loading(appViewModel){
+                        if (logout) {
+                            userViewModel.logout(context)
+                            preferencesViewModel.changeUser("")
+                            logout = false
+                            navegar_a(navControllerMain, AppScreens.LoginPage.route)
+                        }
+                        else navegar_a(navControllerSecundario, AppScreens.MainView.route)
+                    }
                 }
             }
         }

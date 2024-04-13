@@ -189,7 +189,7 @@ class AppViewModel @Inject constructor(
     private fun recogerTodosLosGastos(): Flow<List<Gasto>>{
         return gastoRepository.todosLosGastos(currentUser)
     }
-    fun upload_user_data(onConfirm: ()-> Unit){
+    fun upload_user_data(currentUser:String, onConfirm: ()-> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 gastoRepository.deleteUserData(currentUser)
@@ -198,10 +198,10 @@ class AppViewModel @Inject constructor(
                     currentUser,
                     gastos
                 )
-                onConfirm()
             } catch (_: Exception) {
                 onConfirm()
             }
+            onConfirm()
         }
     }
 }

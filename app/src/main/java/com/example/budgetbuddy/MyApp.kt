@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.Data.Room.AuthUser
+import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
@@ -33,6 +34,7 @@ import com.example.budgetbuddy.screens.App
 import com.example.budgetbuddy.screens.LoginPage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.example.budgetbuddy.utils.CalendarPermission
+import com.example.budgetbuddy.utils.authuser_to_user
 import com.example.budgetbuddy.widgets.Widget
 import com.example.budgetbuddy2.screens.MainView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -55,7 +57,12 @@ fun MyApp(
 
     NavHost(
         navController = navController,
-        startDestination = AppScreens.LoginPage.route
+        startDestination = if ((userViewModel.lastLoggedUser ?: "") == "" ){            AppScreens.LoginPage.route
+        }else{
+            appViewModel.currentUser = userViewModel.lastLoggedUser?: ""
+            userViewModel.currentUser = userViewModel.userXEmail(userViewModel.lastLoggedUser?: "")?: AuthUser("", "", "")
+            userViewModel.getProfileImage(userViewModel.lastLoggedUser?: "")
+            AppScreens.App.route}
     ) {
         composable(AppScreens.LoginPage.route) {
             LoginPage(navController, userViewModel){ user, download ->
@@ -65,12 +72,12 @@ fun MyApp(
                 preferencesViewModel.changeUser(user.email)
                 userViewModel.getProfileImage(user.email)
                 if (download==true){
-                    appViewModel.download_user_data()
+                    userViewModel.insertLocal(authuser_to_user(user))
                 }
+                appViewModel.download_user_data()
+                userViewModel.loginUser(user.email, true)
                 userViewModel.updateLastLoggedUsername(user.email)
-                Log.d("SUBSCRIBE", "SUBSCRIBE INIT")
                 subscribe()
-                Log.d("SUBSCRIBE", "SUBSCRIBE END")
             }
         }
         composable(AppScreens.App.route) {

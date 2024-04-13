@@ -20,10 +20,15 @@ import javax.inject.Singleton
  * con la BBDD
  *******************************************************************/
 interface IUserRepository: ILoginSettings {
+    suspend fun logIn(email: String, login:Boolean):AuthUser?
+    suspend fun isLogged(email: String):Boolean?
+    suspend fun exists(email: String):Boolean
+    suspend fun insertLocal(user: User)
     suspend fun insertUsuario(user: AuthUser): Boolean
     suspend fun deleteUsuario(user: User): Int
     fun todosLosUsuarios(): Flow<List<User>>
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
+    suspend fun userXEmail(email: String):AuthUser?
     fun userName(email: String): String
     suspend fun editarUsuario(user: User): Int
     suspend fun getUserProfile(email: String): Bitmap
@@ -44,6 +49,25 @@ class UserRepository @Inject constructor(
 
     override suspend fun getLastLoggedUser(): String? = loginSettings.getLastLoggedUser()
     override suspend fun setLastLoggedUser(user: String) = loginSettings.setLastLoggedUser(user)
+    override suspend fun logIn(email: String, login: Boolean): AuthUser? {
+        return httpService.loginUser(email, login)
+    }
+
+    override suspend fun isLogged(email: String): Boolean? {
+        return httpService.isLogged(email)
+    }
+
+    override suspend fun exists(email: String): Boolean {
+        val user = httpService.getUserByEmail(email)
+        if ((user?.email ?: "") != ""){
+            return true
+        }
+        return false
+    }
+
+    override suspend fun insertLocal(user: User){
+        userDao.insertUsuario(user)
+    }
 
     override suspend fun insertUsuario(user: AuthUser): Boolean{
         Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
@@ -66,6 +90,7 @@ class UserRepository @Inject constructor(
     }
 
 
+
     override suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any> {
         var result = HashMap<String, Any>()
         result["user"] = AuthUser("", "", "")
@@ -82,14 +107,13 @@ class UserRepository @Inject constructor(
             val local = userDao.usernamePassword(email, passwd)?: ""
             if (local == "") {
                 result["bajar_datos"] = true
-                userDao.insertUsuario(User(
-                    nombre = nombre,
-                    email= email,
-                    password = passwd
-                ))
             }
         }
         return result
+    }
+
+    override suspend fun userXEmail(email: String): AuthUser? {
+        return httpService.getUserByEmail(email)
     }
 
     override fun userName(email: String): String {

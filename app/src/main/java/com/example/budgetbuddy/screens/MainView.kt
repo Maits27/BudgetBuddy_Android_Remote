@@ -257,7 +257,6 @@ fun TopBarMainView(
             if (navBackStackEntry?.destination?.route == AppScreens.Home.route){
                 IconButton(onClick = {
                     onLogout()
-                    navControllerMain.navigateUp()
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.logout),

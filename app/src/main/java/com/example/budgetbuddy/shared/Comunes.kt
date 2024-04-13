@@ -496,12 +496,10 @@ fun ErrorText(text: String) {
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Loading(
-    userViewModel: UserViewModel,
     appViewModel: AppViewModel,
     onConfirm: () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
+    val currentUser = appViewModel.currentUser
     var fin by remember { mutableStateOf(false) }
 
     Column (
@@ -515,8 +513,7 @@ fun Loading(
         Divider()
         LoadingImagePlaceholder(id = R.drawable.baseline_cloud_upload_24)
         Text(text = stringResource(id = R.string.loading_data))
-        appViewModel.upload_user_data {fin = true}
+        appViewModel.upload_user_data(currentUser) {fin = true}
         if (fin){onConfirm()}
-        CloseButton { onConfirm() }
     }
 }

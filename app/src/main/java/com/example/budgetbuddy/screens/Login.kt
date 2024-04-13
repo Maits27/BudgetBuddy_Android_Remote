@@ -179,6 +179,7 @@ fun Login(
     var passwd by rememberSaveable { mutableStateOf("") }
 
     var error by remember { mutableStateOf(false) }
+    var logerror by remember { mutableStateOf(false) }
     var serverError by remember { mutableStateOf(false) }
 
     Column (
@@ -221,6 +222,10 @@ fun Login(
          */
         if(error){
             ErrorText(text = "Incorrect email or password")
+        }else if (logerror){
+            ErrorText(text = "You are logged in in other phone.\n" +
+                    "Please LogOut before LogIn.")
+
         }else if (serverError){
             ErrorText(text = "Server disconnected. Please try again later.")
         }
@@ -237,18 +242,28 @@ fun Login(
                 coroutineScope.launch(Dispatchers.IO) {
                     val result = userViewModel.correctLogIn(correo, passwd)
                     val user = result["user"]
+                    Log.d("LOGGED", user.toString())
                     val nombre = if(user is AuthUser) {user.nombre}else{""}
                     serverError = if((result["runtime"] ?: false) == true){true}else{false}
 
                     if(!serverError){
+                        val logged = userViewModel.isLogged(correo)?: false
                         withContext(Dispatchers.Main) {
                             Log.d("USER LOGGED", user.toString())
                             if(nombre!=""){
-                                onCorrectLogIn(AuthUser(nombre, correo, passwd.hash()), result["bajar_datos"]?:false)
-                                userViewModel.getProfileImage(correo)
-
-                                navegar_a(navController, AppScreens.App.route)
+                                if(!logged) {
+                                    onCorrectLogIn(
+                                        AuthUser(nombre, correo, passwd.hash()),
+                                        result["bajar_datos"] ?: false
+                                    )
+                                    userViewModel.getProfileImage(correo)
+                                    navegar_a(navController, AppScreens.App.route)
+                                }else{
+                                    logerror = true
+                                    error = false
+                                }
                             }else{
+                                logerror = false
                                 error = true
                             }
                         }
@@ -280,6 +295,7 @@ fun Register(
     var nombreOk by remember { mutableStateOf(true) }
     var emailOk by remember { mutableStateOf(true) }
     var passwdOk by remember { mutableStateOf(true) }
+    var notexist by remember { mutableStateOf(true) }
 
     var nombre by rememberSaveable { mutableStateOf("") }
     var correo by rememberSaveable { mutableStateOf("") }
@@ -352,6 +368,9 @@ fun Register(
         if (!serverOk){
             ErrorText(text = "Server disconnected. Please try again later.")
         }
+        if (!notexist){
+            ErrorText(text = "The user already exist.")
+        }
         Button(
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -366,15 +385,16 @@ fun Register(
                     val registroExitoso = userViewModel.correctRegister(nombre, correo, passwd, passwd2)
 
                     // Cambiar al hilo principal para actualizar la UI
-                    if (registroExitoso.values.all { it }) {
+                    if (registroExitoso.values.all {
+                        Log.d("LOGGED", "$it")
+                        it }) {
                         withContext(Dispatchers.Main) {
-
                             onCorrectLogIn(AuthUser(nombre, correo, passwd.hash()), false)
                             navegar_a(navController, AppScreens.App.route)
-
                         }
                     } else {
                         serverOk = registroExitoso["server"]?:true
+                        notexist = registroExitoso["not_exist"]?:true
                         nombreOk = registroExitoso["name"]?:true
                         emailOk = registroExitoso["email"]?:true
                         passwdOk = registroExitoso["password"]?:true

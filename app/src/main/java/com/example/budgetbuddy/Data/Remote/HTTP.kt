@@ -137,6 +137,25 @@ class HTTPService @Inject constructor() {
     /*******************************************************************************
     ################################    USUARIOS    ################################
      *******************************************************************************/
+    suspend fun isLogged(email: String): Boolean? {
+        val response = httpClient.get("http://34.135.202.124:8000/login/${email}")
+        return response.body()
+    }
+    @Throws(IOException::class)
+    suspend fun loginUser(email: String, login:Boolean): AuthUser? {
+        return withContext(Dispatchers.IO){
+            try {
+                val response = httpClient.post("http://34.135.202.124:8000/login/$email?login=$login") {
+                    contentType(ContentType.Application.Json)
+                }
+                response.body()
+            } catch (e: IOException) {
+                // Captura la excepción en caso de que no se pueda acceder al servidor
+                Log.e("HTTP", "Error de red: ${e.message}")
+                null // Retorna null indicando que no se encontró el usuario
+            }
+        }
+    }
 
     @Throws(IOException::class, UserExistsException::class)
     suspend fun createUser(user: AuthUser): Boolean {
@@ -237,4 +256,5 @@ class HTTPService @Inject constructor() {
         }
         response.body()
     }
+
 }

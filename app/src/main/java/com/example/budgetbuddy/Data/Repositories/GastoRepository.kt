@@ -76,6 +76,7 @@ class GastoRepository @Inject constructor(
             Log.d("UPLOAD GASTOS", "GASTO: ${gasto.id}")
             httpService.upload_gasto(email, gasto)
         }
+
     }
 
     override fun todosLosGastos(userId: String): Flow<List<Gasto>> {
