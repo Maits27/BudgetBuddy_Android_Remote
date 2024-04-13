@@ -53,6 +53,7 @@ import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.navigation.navegar_a
 import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
@@ -144,13 +145,7 @@ fun App(
                                     drawerState.close()
                                 }
                                 selectedItem.value = item
-                                navControllerSecundario.navigate(item.pantalla.route) {
-                                    popUpTo(navControllerSecundario.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                navegar_a(navControllerSecundario, item.pantalla.route)
                                 selectedItem.value = null
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -183,13 +178,7 @@ fun App(
                         userViewModel = userViewModel,
                         currentUser = appViewModel.currentUser
                     ){
-                        navControllerSecundario.navigate(AppScreens.MainView.route) {
-                            popUpTo(navControllerSecundario.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navegar_a(navControllerSecundario, AppScreens.MainView.route)
                     }
                 }
                 composable(AppScreens.Preferences.route) {
@@ -200,26 +189,13 @@ fun App(
                         onSaveLocation = {preferencesViewModel.changeSaveLocation()},
                         saveChange = saveOnCalendar,
                         saveLocation = saveLocation
-                    ) {
-                        navControllerSecundario.navigate(AppScreens.MainView.route) {
-                            popUpTo(navControllerSecundario.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                    ){
+                        navegar_a(navControllerSecundario, AppScreens.MainView.route)
+
                     }
                 }
                 composable(AppScreens.Infor.route) {
-                    Infor{
-                        navControllerSecundario.navigate(AppScreens.MainView.route) {
-                            popUpTo(navControllerSecundario.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
+                    Infor{ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
                 }
             }
         }

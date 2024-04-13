@@ -57,6 +57,7 @@ import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.navigation.navegar_a
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -144,14 +145,7 @@ fun GastoAbierto(
                             // En caso de bloqueo o congelado de la base de datos, para que no afecte al uso normal y fluido de la aplicación.
                             // (Necedario en los métodos de tipo insert, delete y update)
                             coroutineScope.launch(Dispatchers.IO) { onEdit(gasto) }
-
-                            navController.navigate(AppScreens.Edit.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navegar_a(navController, AppScreens.Edit.route)
                             onConfirm() },
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent

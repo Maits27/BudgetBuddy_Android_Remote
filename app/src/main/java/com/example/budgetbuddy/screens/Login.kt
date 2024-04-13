@@ -2,26 +2,19 @@ package com.example.budgetbuddy.screens
 
 import android.content.res.Configuration
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -38,36 +31,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.Data.Room.AuthUser
-import com.example.budgetbuddy.R
-import com.example.budgetbuddy.UserVerification.correctEmail
-import com.example.budgetbuddy.UserVerification.correctName
-import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.navigation.navegar_a
 import com.example.budgetbuddy.shared.ErrorText
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.ui.theme.grisClaro
-import com.example.budgetbuddy.ui.theme.grisOscuro
-import com.example.budgetbuddy.ui.theme.verde1
-import com.example.budgetbuddy.ui.theme.verde2
-import com.example.budgetbuddy.ui.theme.verde3
-import com.example.budgetbuddy.ui.theme.verde5
-import com.example.budgetbuddy.ui.theme.verde6
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.example.budgetbuddy.utils.NotificationPermission
-import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -158,7 +136,9 @@ fun LoginPage(
         }
     }
 }
-
+/**************************************************************************************************
+ ***                                     ZONA DE LOGIN                                          ***
+ **************************************************************************************************/
 @Composable
 fun Login(
     navController: NavController,
@@ -168,17 +148,21 @@ fun Login(
 ){
     val coroutineScope = rememberCoroutineScope()
 
-    var checked by rememberSaveable {mutableStateOf(false)}
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
+
     var error by remember { mutableStateOf(false) }
     var serverError by remember { mutableStateOf(false) }
+
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Subtitulo(mensaje = "User LogIn", true)
+        /**
+         * Campo del EMAIL
+         */
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
@@ -186,7 +170,9 @@ fun Login(
             modifier = Modifier.padding(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
-
+        /**
+         * Campo del PASSWORD
+         */
         TextField(
             value = passwd,
             onValueChange = { passwd = it },
@@ -195,7 +181,9 @@ fun Login(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = PasswordVisualTransformation() // Esta línea oculta el texto
         )
-        
+        /**
+         * Errores
+         */
         if(error){
             ErrorText(text = "Incorrect email or password")
         }else if (serverError){
@@ -219,24 +207,12 @@ fun Login(
 
                     if(!serverError){
                         withContext(Dispatchers.Main) {
-                            if(nombre!=""){
 
+                            if(nombre!=""){
                                 onCorrectLogIn(AuthUser(nombre, correo, passwd), result["bajar_datos"]?:false)
                                 userViewModel.getProfileImage(correo)
 
-                                if (!checked){
-                                    correo = ""
-                                    passwd = ""
-                                }
-
-                                navController.navigate(AppScreens.App.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-
+                                navegar_a(navController, AppScreens.App.route)
                             }else{
                                 error = true
                             }
@@ -252,6 +228,10 @@ fun Login(
     }
 }
 
+
+/**************************************************************************************************
+ ***                                   ZONA DE REGISTRO                                         ***
+ **************************************************************************************************/
 @Composable
 fun Register(
     navController: NavController,
@@ -339,13 +319,7 @@ fun Register(
                         withContext(Dispatchers.Main) {
 
                             onCorrectLogIn(AuthUser(nombre, correo, passwd), false)
-                            navController.navigate(AppScreens.App.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navegar_a(navController, AppScreens.App.route)
 
                         }
                     } else {

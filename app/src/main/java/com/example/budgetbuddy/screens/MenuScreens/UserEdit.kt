@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -106,13 +107,14 @@ fun UserEdit(
             value = nombre,
             onValueChange = {nombre = it},
             label = { Text(stringResource(id = R.string.name)) },
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         if (!nombreOk){
             ErrorText(text = stringResource(id = R.string.name_error))
         }
         ///////////////////////////////////////// Campo de Contraseña /////////////////////////////////////////
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
         Text(text = stringResource(id = R.string.edit_passwd))
         Description(mensaje = stringResource(id = R.string.edit_passwd_desc))
         TextField(

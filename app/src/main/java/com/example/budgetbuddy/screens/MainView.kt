@@ -64,6 +64,7 @@ import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.AppScreens
+import com.example.budgetbuddy.navigation.navegar_a
 import com.example.budgetbuddy.shared.ErrorAlert
 import com.example.budgetbuddy.shared.compartirContenido
 import com.example.budgetbuddy.shared.downloadNotification
@@ -163,13 +164,7 @@ fun MainView(
                 FloatButton(
                     painterResource(id = R.drawable.add)
                 ) {
-                    navController.navigate(AppScreens.Add.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navegar_a(navController, AppScreens.Add.route)
                 }
             }
         },
@@ -307,13 +302,7 @@ fun BottomBarMainView(
                 icon = { Icon(screen.icono, contentDescription = null, tint = Color.White) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.pantalla.route } == true,
                 onClick = {
-                    navController.navigate(screen.pantalla.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navegar_a(navController, screen.pantalla.route)
                 }
             )
         }
@@ -349,13 +338,7 @@ fun NavHorizontal(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
                 onClick = {
-                    navController.navigate(screen.pantalla.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navegar_a(navController, screen.pantalla.route)
                 }
             ) {
                 Icon(screen.icono, contentDescription = null, tint = Color.White)
