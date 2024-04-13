@@ -107,7 +107,6 @@ fun App(
     }
     val onEditUser: (User) -> Unit = {
         userViewModel.currentUser = user_to_authUser(it)
-        // TODO
     }
     val onEditProfile: () -> Unit = {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))

@@ -2,6 +2,7 @@ package com.example.budgetbuddy.screens
 
 import android.content.res.Configuration
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +55,7 @@ import com.example.budgetbuddy.ui.theme.verde4
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 import com.example.budgetbuddy.utils.NotificationPermission
+import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -240,9 +242,9 @@ fun Login(
 
                     if(!serverError){
                         withContext(Dispatchers.Main) {
-
+                            Log.d("USER LOGGED", user.toString())
                             if(nombre!=""){
-                                onCorrectLogIn(AuthUser(nombre, correo, passwd), result["bajar_datos"]?:false)
+                                onCorrectLogIn(AuthUser(nombre, correo, passwd.hash()), result["bajar_datos"]?:false)
                                 userViewModel.getProfileImage(correo)
 
                                 navegar_a(navController, AppScreens.App.route)
@@ -367,7 +369,7 @@ fun Register(
                     if (registroExitoso.values.all { it }) {
                         withContext(Dispatchers.Main) {
 
-                            onCorrectLogIn(AuthUser(nombre, correo, passwd), false)
+                            onCorrectLogIn(AuthUser(nombre, correo, passwd.hash()), false)
                             navegar_a(navController, AppScreens.App.route)
 
                         }
