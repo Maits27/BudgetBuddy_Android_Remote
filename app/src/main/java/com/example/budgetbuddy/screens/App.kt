@@ -57,6 +57,7 @@ import com.example.budgetbuddy.navigation.navegar_a
 import com.example.budgetbuddy.screens.MenuScreens.Infor
 import com.example.budgetbuddy.screens.MenuScreens.Preferences
 import com.example.budgetbuddy.screens.MenuScreens.UserEdit
+import com.example.budgetbuddy.shared.Loading
 import com.example.budgetbuddy.shared.Perfil
 import com.example.budgetbuddy.utils.CalendarWritePermission
 import com.example.budgetbuddy.utils.user_to_authUser
@@ -95,6 +96,7 @@ fun App(
         Diseño(AppScreens.UserEdit, painterResource(id = R.drawable.user), stringResource(id = R.string.edit)),
         Diseño(AppScreens.Preferences, painterResource(id = R.drawable.baseline_translate_24), stringResource(id = R.string.preferences)),
         Diseño(AppScreens.Infor, painterResource(id = R.drawable.infor), stringResource(id = R.string.infor)),
+        Diseño(AppScreens.Loading, painterResource(id = R.drawable.baseline_cloud_upload_24), stringResource(id = R.string.subir_nube)),
         Diseño(AppScreens.MainView, painterResource(id = R.drawable.close), stringResource(id = R.string.ok)),
     )
     val selectedItem = remember { mutableStateOf<Diseño?>(null) }
@@ -104,9 +106,6 @@ fun App(
     }
     val onThemeChange:(Int)-> Unit = {
         preferencesViewModel.changeTheme(it)
-    }
-    val onEditUser: (User) -> Unit = {
-        userViewModel.currentUser = user_to_authUser(it)
     }
     val onEditProfile: () -> Unit = {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -195,6 +194,9 @@ fun App(
                 }
                 composable(AppScreens.Infor.route) {
                     Infor{ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
+                }
+                composable(AppScreens.Loading.route) {
+                    Loading(userViewModel, appViewModel){ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
                 }
             }
         }

@@ -11,6 +11,7 @@ import androidx.navigation.NavController
  */
 
 sealed class AppScreens (val route: String) {
+    object Loading: AppScreens("Loading")
     object App: AppScreens("App")
     object Home: AppScreens("Home")
     object Add: AppScreens("Add")

@@ -1,7 +1,9 @@
 package com.example.budgetbuddy
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.health.connect.datatypes.ExerciseRoute
 import android.os.Build
 import android.util.Log
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
@@ -29,6 +32,7 @@ import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.screens.App
 import com.example.budgetbuddy.screens.LoginPage
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
+import com.example.budgetbuddy.utils.CalendarPermission
 import com.example.budgetbuddy.widgets.Widget
 import com.example.budgetbuddy2.screens.MainView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -74,15 +78,25 @@ fun MyApp(
                 user = appViewModel.currentUser,
                 preferencesViewModel = preferencesViewModel
             ) {
-                App(
-                    navControllerMain = navController,
-                    userViewModel = userViewModel,
-                    appViewModel = appViewModel,
-                    fusedLocationClient = fusedLocationClient,
-                    pickMedia = pickMedia,
-                    preferencesViewModel = preferencesViewModel,
-                    guardarFichero
-                )
+                when {
+                    (ActivityCompat.checkSelfPermission(
+                        LocalContext.current,
+                        Manifest.permission.READ_CALENDAR
+                    ) != PackageManager.PERMISSION_GRANTED)->{
+                        CalendarPermission()
+                    }else->{
+                        App(
+                            navControllerMain = navController,
+                            userViewModel = userViewModel,
+                            appViewModel = appViewModel,
+                            fusedLocationClient = fusedLocationClient,
+                            pickMedia = pickMedia,
+                            preferencesViewModel = preferencesViewModel,
+                            guardarFichero
+                        )
+                    }
+                }
+
             }
         }
     }

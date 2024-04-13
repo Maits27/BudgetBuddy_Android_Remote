@@ -225,15 +225,12 @@ class HTTPService @Inject constructor() {
     }
 
     @Throws(Exception::class)
-    suspend fun delete_user_data(email: String): List<PostGasto>? = runBlocking {
-        Log.d("HTTP", email)
-        val response = httpClient.delete("http://34.135.202.124:8000/gastos/$email/")
-        Log.d("HTTP", response.status.toString())
-        response.body()
+    suspend fun delete_user_data(email: String){
+        httpClient.delete("http://34.135.202.124:8000/gastos/$email/")
     }
 
     @Throws(Exception::class)
-    suspend fun upload_gasto(email: String, gasto: PostGasto): PostGasto? = runBlocking {
+    suspend fun upload_gasto(email: String, gasto: PostGasto): PostGasto?= runBlocking{
         val response = httpClient.post("http://34.135.202.124:8000/gastos/$email/") {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToJsonElement(gasto))

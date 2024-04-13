@@ -1,13 +1,17 @@
 package com.example.budgetbuddy.Data.Repositories
 
+import android.util.Log
 import com.example.budgetbuddy.Data.DAO.GastoDao
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Remote.HTTPService
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Room.User
+import com.example.budgetbuddy.utils.convertirGastos_PostGastos
 import com.example.budgetbuddy.utils.convertirPostGastos_Gastos
+import com.example.budgetbuddy.utils.gasto_postGastos
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +27,8 @@ interface IGastoRepository {
     suspend fun insertGastos(gastos: List<Gasto>): List<Unit>
     suspend fun deleteGasto(gasto: Gasto): Int
     suspend fun download_user_data(email: String)
+    suspend fun deleteUserData(email: String)
+    suspend fun uploadUserData(email: String, gastos: List<Gasto>)
     fun todosLosGastos(userId: String): Flow<List<Gasto>>
     fun elementosFecha(fecha: LocalDate, userId: String): Flow<List<Gasto>>
     fun gastoTotal(userId: String): Flow<Double>
@@ -58,6 +64,18 @@ class GastoRepository @Inject constructor(
     override suspend fun download_user_data(email: String) {
         val resultado = httpService.download_user_data(email)
         insertGastos(convertirPostGastos_Gastos(resultado))
+    }
+
+    override suspend fun deleteUserData(email: String) {
+        httpService.delete_user_data(email)
+    }
+
+    override suspend fun uploadUserData(email: String, gastos: List<Gasto>) {
+        val pgastos = convertirGastos_PostGastos(gastos)
+        pgastos.map { gasto ->
+            Log.d("UPLOAD GASTOS", "GASTO: ${gasto.id}")
+            httpService.upload_gasto(email, gasto)
+        }
     }
 
     override fun todosLosGastos(userId: String): Flow<List<Gasto>> {

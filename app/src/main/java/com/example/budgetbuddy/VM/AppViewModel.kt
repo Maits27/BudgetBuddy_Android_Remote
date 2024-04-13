@@ -17,8 +17,11 @@ import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.widgets.Widget
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -178,6 +181,27 @@ class AppViewModel @Inject constructor(
     fun download_user_data(){
         viewModelScope.launch {
             gastoRepository.download_user_data(currentUser)
+        }
+    }
+//    suspend fun erase_user_data(){
+//        gastoRepository.deleteUserData(currentUser)
+//    }
+    private fun recogerTodosLosGastos(): Flow<List<Gasto>>{
+        return gastoRepository.todosLosGastos(currentUser)
+    }
+    fun upload_user_data(onConfirm: ()-> Unit){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                gastoRepository.deleteUserData(currentUser)
+                val gastos = recogerTodosLosGastos().first()
+                gastoRepository.uploadUserData(
+                    currentUser,
+                    gastos
+                )
+                onConfirm()
+            } catch (_: Exception) {
+                onConfirm()
+            }
         }
     }
 }

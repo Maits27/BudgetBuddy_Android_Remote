@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.shared
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -53,6 +54,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +63,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -92,6 +95,8 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -377,7 +382,7 @@ fun Perfil(
 }
 
 @Composable
-private fun LoadingImagePlaceholder(size: Dp = 140.dp) {
+private fun LoadingImagePlaceholder(size: Dp = 140.dp, id: Int = R.drawable.start_icon) {
     // Creates an `InfiniteTransition` that runs infinite child animation values.
     val infiniteTransition = rememberInfiniteTransition()
     val alpha by infiniteTransition.animateFloat(
@@ -401,9 +406,15 @@ private fun LoadingImagePlaceholder(size: Dp = 140.dp) {
     Image(
         modifier = Modifier
             .size(size)
-            .clip(CircleShape)
+            .clip(
+                if (id == R.drawable.start_icon) {
+                    CircleShape
+                } else {
+                    RectangleShape
+                }
+            )
             .alpha(alpha),
-        painter = painterResource(id = R.drawable.start_icon),
+        painter = painterResource(id = id),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
@@ -482,3 +493,30 @@ fun ErrorText(text: String) {
     )
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun Loading(
+    userViewModel: UserViewModel,
+    appViewModel: AppViewModel,
+    onConfirm: () -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    var fin by remember { mutableStateOf(false) }
+
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ){
+        Titulo(true)
+        Divider()
+        LoadingImagePlaceholder(id = R.drawable.baseline_cloud_upload_24)
+        Text(text = stringResource(id = R.string.loading_data))
+        appViewModel.upload_user_data {fin = true}
+        if (fin){onConfirm()}
+        CloseButton { onConfirm() }
+    }
+}

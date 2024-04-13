@@ -84,4 +84,6 @@
     <string name="location">Location in map:</string>
     <string name="am_title">Today\'s expense: %s</string>
     <string name="am_body">Today\'s %s expense (%s) of %s€ that was added before is scheduled for today.</string>
+    <string name="loading_data">Loading data...</string>
+    <string name="subir_nube">Upload data to the cloud.</string>
 </resources>

@@ -63,6 +63,7 @@ import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.navigation.navegar_a
 import com.example.budgetbuddy.shared.ErrorAlert

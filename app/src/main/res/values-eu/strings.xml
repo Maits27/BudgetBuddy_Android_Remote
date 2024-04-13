@@ -84,4 +84,6 @@
     <string name="location">Lokazioa mapan:</string>
     <string name="am_title">Gaurko gastua: %s</string>
     <string name="am_body">%s (%s) gaurko %s€-ko gastua, aurretik gehitu izan zen eta gaurko programatu zen.</string>
+    <string name="loading_data">Datuak kargatzen...</string>
+    <string name="subir_nube">Igo datuak hodeira.</string>
 </resources>

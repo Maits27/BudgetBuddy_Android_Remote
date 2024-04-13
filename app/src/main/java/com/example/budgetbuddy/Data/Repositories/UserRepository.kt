@@ -26,7 +26,6 @@ interface IUserRepository: ILoginSettings {
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
     fun userName(email: String): String
     suspend fun editarUsuario(user: User): Int
-
     suspend fun getUserProfile(email: String): Bitmap
     suspend fun setUserProfile(email: String, image: Bitmap): Bitmap
 }

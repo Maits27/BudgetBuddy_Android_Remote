@@ -89,7 +89,7 @@ fun convertirGastos_PostGastos(listado: List<Gasto>?): List<PostGasto>{
 }
 
 fun gasto_postGastos(gasto: Gasto): PostGasto{
-    return  PostGasto(
+    val p = PostGasto(
         nombre = gasto.nombre,
         cantidad = gasto.cantidad.toFloat(),
         tipo = obtenerTipoEnIdioma(gasto.tipo, "es"),
@@ -99,6 +99,7 @@ fun gasto_postGastos(gasto: Gasto): PostGasto{
         user_id = gasto.userId,
         id = gasto.id
         )
+    return p
 }
 
 private fun fromLocation(location: Location?): String {
