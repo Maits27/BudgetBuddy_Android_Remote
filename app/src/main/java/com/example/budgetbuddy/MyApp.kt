@@ -23,6 +23,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.User
 import com.example.budgetbuddy.UserVerification.correctEmail
@@ -52,20 +53,17 @@ fun MyApp(
     pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
     subscribe:()-> Unit,
     guardarFichero: (LocalDate, String)-> Boolean) {
-    val navController = rememberNavController()
 
+    val navController = rememberNavController()
+    val context = LocalContext.current
+    val scheduler = AndroidAlarmScheduler(context)
 
     NavHost(
         navController = navController,
-        startDestination = if ((userViewModel.lastLoggedUser ?: "") == "" ){            AppScreens.LoginPage.route
-        }else{
-            appViewModel.currentUser = userViewModel.lastLoggedUser?: ""
-            userViewModel.currentUser = userViewModel.userXEmail(userViewModel.lastLoggedUser?: "")?: AuthUser("", "", "")
-            userViewModel.getProfileImage(userViewModel.lastLoggedUser?: "")
-            AppScreens.App.route}
+        startDestination = AppScreens.LoginPage.route
     ) {
         composable(AppScreens.LoginPage.route) {
-            LoginPage(navController, userViewModel){ user, download ->
+            LoginPage(navController, appViewModel, userViewModel){ user, download ->
                 Log.d("COMPARE USERS", user.toString())
                 appViewModel.currentUser = user.email
                 userViewModel.currentUser = user
@@ -74,7 +72,7 @@ fun MyApp(
                 if (download==true){
                     userViewModel.insertLocal(authuser_to_user(user))
                 }
-                appViewModel.download_user_data()
+                appViewModel.download_user_data(context, scheduler)
                 userViewModel.loginUser(user.email, true)
                 userViewModel.updateLastLoggedUsername(user.email)
                 subscribe()

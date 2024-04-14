@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,11 +37,13 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.budgetbuddy.Data.Room.AuthUser
+import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.navigation.navegar_a
@@ -48,13 +51,9 @@ import com.example.budgetbuddy.shared.ErrorText
 import com.example.budgetbuddy.shared.Subtitulo
 import com.example.budgetbuddy.shared.Titulo
 import com.example.budgetbuddy.ui.theme.grisClaro
-import com.example.budgetbuddy.ui.theme.verde1
-import com.example.budgetbuddy.ui.theme.verde2
-import com.example.budgetbuddy.ui.theme.verde3
 import com.example.budgetbuddy.ui.theme.verde4
 import com.example.budgetbuddy.ui.theme.verdeClaro
 import com.example.budgetbuddy.ui.theme.verdeOscuro
-import com.example.budgetbuddy.utils.NotificationPermission
 import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,6 +67,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LoginPage(
     navController: NavController,
+    appViewModel: AppViewModel,
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit
 ){
@@ -87,6 +87,7 @@ fun LoginPage(
             if (login){
                 Login(
                     navController,
+                    appViewModel,
                     userViewModel,
                     onCorrectLogIn,
                     Modifier
@@ -106,7 +107,9 @@ fun LoginPage(
             Divider(color = Color.DarkGray)
             Row {
                 TextButton(
-                    modifier = Modifier.padding(16.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f),
                     onClick = {login = true},
                     colors = if(login) {
                         ButtonDefaults.textButtonColors(backgroundColor = verde4)
@@ -117,7 +120,9 @@ fun LoginPage(
                     Text(text = "Login", color = MaterialTheme.colors.onBackground)
                 }
                 TextButton(
-                    modifier = Modifier.padding(16.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f),
                     onClick = {login = false},
                     colors = if(!login) {
                         ButtonDefaults.textButtonColors(backgroundColor = verde4)
@@ -145,6 +150,7 @@ fun LoginPage(
             ) {
                 Login(
                     navController,
+                    appViewModel,
                     userViewModel,
                     onCorrectLogIn,
                     Modifier
@@ -169,11 +175,13 @@ fun LoginPage(
 @Composable
 fun Login(
     navController: NavController,
+    appViewModel: AppViewModel,
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
@@ -251,10 +259,18 @@ fun Login(
                         withContext(Dispatchers.Main) {
                             Log.d("USER LOGGED", user.toString())
                             if(nombre!=""){
+                                Log.d("SET LLU", userViewModel.lastLoggedUser?:"")
                                 if(!logged) {
                                     onCorrectLogIn(
                                         AuthUser(nombre, correo, passwd.hash()),
-                                        result["bajar_datos"] ?: false
+                                        true
+                                    )
+                                    userViewModel.getProfileImage(correo)
+                                    navegar_a(navController, AppScreens.App.route)
+                                }else if (userViewModel.lastLoggedUser == correo){
+                                    onCorrectLogIn(
+                                        AuthUser(nombre, correo, passwd.hash()),
+                                        false
                                     )
                                     userViewModel.getProfileImage(correo)
                                     navegar_a(navController, AppScreens.App.route)
@@ -275,6 +291,15 @@ fun Login(
                 color= verdeClaro
             )
         }
+//        Spacer(modifier = Modifier.padding(16.dp))
+//        var logoutGeneral by remember {mutableStateOf(false)}
+//        if (logoutGeneral) LogoutGeneral ({ logoutGeneral = false }) {
+//            logoutGeneral = false
+//            userViewModel.logoutDeTodosLosUsuarios(context, appViewModel)
+//        }
+//        Button(onClick = { logoutGeneral = true }) {
+//
+//        }
     }
 }
 

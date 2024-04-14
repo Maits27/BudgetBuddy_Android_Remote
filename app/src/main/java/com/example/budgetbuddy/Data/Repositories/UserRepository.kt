@@ -95,7 +95,6 @@ class UserRepository @Inject constructor(
         var result = HashMap<String, Any>()
         result["user"] = AuthUser("", "", "")
         result["runtime"] = true
-        result["bajar_datos"] = false
 
         val remoto = httpService.getUserByEmail(email)
         // Si es "" es que ha conseguido respuesta nula del servidor (login incorrecto, pero server activo)
@@ -104,10 +103,6 @@ class UserRepository @Inject constructor(
         if( passwd == remoto?.password ){
             val nombre = remoto.nombre
             result["user"] = AuthUser(nombre, email, passwd)
-            val local = userDao.usernamePassword(email, passwd)?: ""
-            if (local == "") {
-                result["bajar_datos"] = true
-            }
         }
         return result
     }

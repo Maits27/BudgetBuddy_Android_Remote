@@ -85,4 +85,8 @@
     <string name="am_body">El gasto %s (%s) de %s€ que fue añadido con antelación está programado para hoy.</string>
     <string name="loading_data">Cargando datos...</string>
     <string name="subir_nube">Subir datos a la nube.</string>
+    <string name="yes">Si</string>
+    <string name="logout_general">Realizar LogOut general</string>
+    <string name="logout_general_desc">Se procederá a realizar el LogOut de todos los usuarios registrados en el dispositivo (es posible que suponga pérdida de datos). ¿Continuar?</string>
+    <string name="no">No</string>
 </resources>

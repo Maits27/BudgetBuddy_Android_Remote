@@ -1,18 +1,25 @@
 package com.example.budgetbuddy.Data.Repositories
 
+import android.content.Context
 import android.util.Log
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Data.DAO.GastoDao
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Data.Remote.PostGasto
+import com.example.budgetbuddy.Data.Room.AlarmItem
 import com.example.budgetbuddy.Data.Room.AuthUser
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Room.User
+import com.example.budgetbuddy.R
 import com.example.budgetbuddy.utils.convertirGastos_PostGastos
 import com.example.budgetbuddy.utils.convertirPostGastos_Gastos
 import com.example.budgetbuddy.utils.gasto_postGastos
+import com.example.budgetbuddy.utils.toLocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,7 +33,7 @@ interface IGastoRepository {
     suspend fun insertGasto(gasto: Gasto)
     suspend fun insertGastos(gastos: List<Gasto>): List<Unit>
     suspend fun deleteGasto(gasto: Gasto): Int
-    suspend fun download_user_data(email: String)
+    suspend fun download_user_data(email: String, context: Context, scheduler: AndroidAlarmScheduler)
     suspend fun deleteUserData(email: String)
     suspend fun uploadUserData(email: String, gastos: List<Gasto>)
     fun todosLosGastos(userId: String): Flow<List<Gasto>>
@@ -60,10 +67,32 @@ class GastoRepository @Inject constructor(
     override suspend fun deleteGasto(gasto: Gasto): Int {
         return gastoDao.deleteGasto(gasto)
     }
-
-    override suspend fun download_user_data(email: String) {
+    private fun insertarAlarmas(gastos: List<PostGasto>, context: Context, scheduler: AndroidAlarmScheduler){
+        gastos.map {
+            val fechaGasto = it.fecha.toLong().toLocalDate()
+            if (fechaGasto > LocalDate.now()){
+                scheduler.schedule(
+                    AlarmItem(
+                        time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, 11, 0),
+                        title = context.getString(R.string.am_title, it.nombre),
+                        body = context.getString(R.string.am_body, it.nombre, it.tipo, it.cantidad.toString())
+                    )
+                )
+            }else if (fechaGasto == LocalDate.now()){
+                scheduler.schedule(
+                    AlarmItem(
+                        time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, LocalDateTime.now().hour, LocalDateTime.now().minute+1),
+                        title = context.getString(R.string.am_title, it.nombre),
+                        body = context.getString(R.string.am_body, it.nombre, it.tipo, it.cantidad.toString())
+                    )
+                )
+            }
+        }
+    }
+    override suspend fun download_user_data(email: String, context: Context, scheduler: AndroidAlarmScheduler) {
         val resultado = httpService.download_user_data(email)
         insertGastos(convertirPostGastos_Gastos(resultado))
+        if (resultado!=null) insertarAlarmas(resultado, context, scheduler)
     }
 
     override suspend fun deleteUserData(email: String) {

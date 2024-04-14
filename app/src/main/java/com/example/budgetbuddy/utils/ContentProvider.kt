@@ -46,14 +46,19 @@ fun obtenerIdsCalendario(context: Context): List<Long> {
     return calendarIds
 }
 
-fun agregarGastoAlCalendario(context: Context, titulo: String, descripcion: String, fechaL: Long) {
+fun agregarGastoAlCalendario(
+    context: Context,
+    titulo: String,
+    descripcion: String,
+    fechaL: Long
+) {
     val contentResolver: ContentResolver = context.contentResolver
 
     val fecha = fechaL.toLocalDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
     val calendarIds = obtenerIdsCalendario(context)
 
-    if (fechaL> LocalDate.now().toLong()){
+    if (fechaL > LocalDate.now().toLong()){
         for (calendarId in calendarIds) {
             val timeZone = TimeZone.getDefault().id
 

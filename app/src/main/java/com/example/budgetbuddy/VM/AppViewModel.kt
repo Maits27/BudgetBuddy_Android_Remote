@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.VM
 
+import android.content.Context
 import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,12 +10,15 @@ import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Data.Enumeration.AppLanguage
 import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.Data.Room.GastoDia
 import com.example.budgetbuddy.Data.Room.GastoTipo
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
+import com.example.budgetbuddy.Data.Room.AlarmItem
+import com.example.budgetbuddy.R
 import com.example.budgetbuddy.widgets.Widget
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +29,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 /********************************************************
@@ -98,9 +103,22 @@ class AppViewModel @Inject constructor(
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
 
-    suspend fun añadirGasto(nombre: String, cantidad: Double, fecha: LocalDate, tipo: TipoGasto, latitud: Double, longitud: Double): Gasto {
-        val gasto = Gasto(nombre, cantidad, fecha, tipo, latitud, longitud, currentUser)
+    suspend fun añadirGasto(
+        context: Context,
+        scheduler: AndroidAlarmScheduler,
+        gasto: Gasto
+    ): Gasto {
+        val fechaGasto = gasto.fecha
         try {
+            if (fechaGasto > LocalDate.now()){
+                scheduler.schedule(
+                    AlarmItem(
+                        time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, 10, 0),
+                        title = context.getString(R.string.am_title, gasto.nombre),
+                        body = context.getString(R.string.am_body, gasto.nombre, gasto.tipo.tipo, gasto.cantidad.toString())
+                    )
+                )
+            }
             gastoRepository.insertGasto(gasto)
         }catch (e: Exception){
             Log.d("BASE DE DATOS!", e.toString())
@@ -178,9 +196,9 @@ class AppViewModel @Inject constructor(
         }
         return gastosAgrupados
     }
-    fun download_user_data(){
+    fun download_user_data(context: Context, scheduler: AndroidAlarmScheduler){
         viewModelScope.launch {
-            gastoRepository.download_user_data(currentUser)
+            gastoRepository.download_user_data(currentUser, context, scheduler)
         }
     }
 //    suspend fun erase_user_data(){

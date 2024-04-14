@@ -54,6 +54,7 @@ import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.Data.Enumeration.TipoGasto
 import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
 import com.example.budgetbuddy.Data.Room.AlarmItem
+import com.example.budgetbuddy.Data.Room.Gasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.shared.Calendario
@@ -313,25 +314,23 @@ fun Add(
                         if (euros.toDoubleOrNull() != null) {
                             appViewModel.cambiarFecha(fecha)
                             appViewModel.añadirGasto(
-                                nombre,
-                                euros.toDouble(),
-                                fecha,
-                                selectedOption,
-                                latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
-                                longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0}
+                                context,
+                                scheduler,
+                                Gasto(
+                                    nombre = nombre,
+                                    cantidad = euros.toDouble(),
+                                    fecha = fecha,
+                                    tipo = selectedOption,
+                                    latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
+                                    longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0},
+                                    userId = appViewModel.currentUser
+                                )
                             )
                             agregarGastoAlCalendario(
                                 context,
                                 "BUDGET BUDDY",
                                 "$nombre (${selectedOption.tipo}): $euros€",
                                 fecha.toLong()
-                            )
-                            scheduler.schedule(
-                                AlarmItem(
-                                    time = LocalDateTime.of(fecha.year, fecha.monthValue, fecha.dayOfMonth, LocalDateTime.now().hour, LocalDateTime.now().minute+1),
-                                    title = context.getString(R.string.am_title, nombre),
-                                    body = context.getString(R.string.am_body, nombre, selectedOption.tipo, euros)
-                                )
                             )
                         } else {
                             showError = true

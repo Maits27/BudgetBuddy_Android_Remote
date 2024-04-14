@@ -86,4 +86,8 @@
     <string name="am_body">%s (%s) gaurko %s€-ko gastua, aurretik gehitu izan zen eta gaurko programatu zen.</string>
     <string name="loading_data">Datuak kargatzen...</string>
     <string name="subir_nube">Igo datuak hodeira.</string>
+    <string name="yes">Bai</string>
+    <string name="logout_general">Saio amaitze orokorra egin</string>
+    <string name="logout_general_desc">Mugikorrean erregistratutako kontu guztien saio amaitzea behartuko da (hau datuen galera suposa dezake). Jarraitu?</string>
+    <string name="no">Ez</string>
 </resources>

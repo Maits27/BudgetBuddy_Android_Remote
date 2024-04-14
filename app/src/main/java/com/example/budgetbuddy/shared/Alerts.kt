@@ -58,6 +58,10 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.navigation.AppScreens
 import com.example.budgetbuddy.navigation.navegar_a
+import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.ui.theme.grisOscuro
+import com.example.budgetbuddy.ui.theme.rojoError
+import com.example.budgetbuddy.ui.theme.verdeOscuro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -150,7 +154,9 @@ fun GastoAbierto(
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent
                         ),
-                        modifier = Modifier.size(20.dp).weight(1f), // Tamaño del icono dentro del botón redondo
+                        modifier = Modifier
+                            .size(20.dp)
+                            .weight(1f), // Tamaño del icono dentro del botón redondo
                     ){
                         Icon(
                             Icons.Filled.Edit,
@@ -170,7 +176,9 @@ fun GastoAbierto(
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent
                         ),
-                        modifier = Modifier.size(20.dp).weight(1f), // Tamaño del icono dentro del botón redondo
+                        modifier = Modifier
+                            .size(20.dp)
+                            .weight(1f), // Tamaño del icono dentro del botón redondo
                     ){
                         Icon(
                             Icons.Filled.Delete,
@@ -200,3 +208,22 @@ fun GastoAbierto(
         )
     }
 }
+
+//@Composable
+//fun LogoutGeneral(onDismiss:()->Unit, onConfirm: () -> Unit){
+//    AlertDialog(
+//        containerColor = MaterialTheme.colorScheme.background,
+//        onDismissRequest = {},
+//        dismissButton = {TextButton(onClick = { onDismiss() }) {
+//            Text(text = "No", color = rojoError)
+//        }},
+//        confirmButton = { TextButton(onClick = { onConfirm() }) {
+//            Text(text = "Yes", color = verdeOscuro)
+//        }
+//        },
+//        title = { Text(text = "Do a general LogOut", color = Color.DarkGray) },
+//        text = {
+//            Text(text = "The LogOut of all the users registered in this phone will be forced (this can imply the loss of some data). Are you sure?", color = Color.DarkGray)
+//        }
+//    )
+//}

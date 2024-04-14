@@ -204,7 +204,7 @@ fun App(
                 composable(AppScreens.Loading.route) {
                     Loading(appViewModel){
                         if (logout) {
-                            userViewModel.logout(context)
+                            userViewModel.logout(context = context)
                             preferencesViewModel.changeUser("")
                             logout = false
                             navegar_a(navControllerMain, AppScreens.LoginPage.route)

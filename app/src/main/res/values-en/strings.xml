@@ -86,4 +86,8 @@
     <string name="am_body">Today\'s %s expense (%s) of %s€ that was added before is scheduled for today.</string>
     <string name="loading_data">Loading data...</string>
     <string name="subir_nube">Upload data to the cloud.</string>
+    <string name="yes">Yes</string>
+    <string name="logout_general">Do a general LogOut</string>
+    <string name="logout_general_desc">The LogOut of all the users registered in this phone will be forced (this can imply the loss of some data). Are you sure?</string>
+    <string name="no">No</string>
 </resources>

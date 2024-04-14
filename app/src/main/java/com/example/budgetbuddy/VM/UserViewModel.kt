@@ -1,38 +1,27 @@
 package com.example.budgetbuddy.VM
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.Data.Repositories.IGastoRepository
 import com.example.budgetbuddy.Data.Repositories.IUserRepository
 import com.example.budgetbuddy.Data.Room.User
-import com.example.budgetbuddy.Data.Repositories.UserRepository
 import com.example.budgetbuddy.Data.Room.AuthUser
-import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.UserVerification.correctEmail
 import com.example.budgetbuddy.UserVerification.correctName
 import com.example.budgetbuddy.UserVerification.correctPasswd
 import com.example.budgetbuddy.utils.hash
 import com.example.budgetbuddy.utils.user_to_authUser
 import com.example.budgetbuddy.widgets.Widget
-import com.example.budgetbuddy.widgets.WidgetReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -64,9 +53,21 @@ class UserViewModel @Inject constructor(
     /*************************************************
      **                    Eventos                  **
      *************************************************/
-    fun userXEmail(email: String): AuthUser?= runBlocking {
-        userRepository.userXEmail(email)
-    }
+//    fun logoutDeTodosLosUsuarios(context: Context, appViewModel: AppViewModel) = runBlocking {
+//        Log.d("LOGOUT GENERAL", "LOGOUT GENERAL")
+//        todosLosUsuarios.map {
+//            Log.d("LOGOUT GENERAL", it.toString())
+//            it.map {
+//                Log.d("LOGOUT GENERAL", it.email)
+//                viewModelScope.launch {
+//                    if( userRepository.isLogged(it.email)?:false ){
+//                        appViewModel.upload_user_data(it.email){}
+//                    }
+//                }
+//                logout(user_to_authUser(it), context)
+//            }
+//        }
+//    }
 
     fun updateLastLoggedUsername(user: String) = runBlocking {
         Log.d("COMPARE USERS", "SET USER: $user")
@@ -98,11 +99,8 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    suspend fun borrarUsuario(user: User){
-        userRepository.deleteUsuario(user)
-    }
-    fun logout(context: Context){
-        viewModelScope.launch { userRepository.logIn(currentUser.email, false) }
+    fun logout(user: AuthUser = currentUser,context: Context){
+        viewModelScope.launch { userRepository.logIn(user.email, false) }
         profilePicture = null
         currentUser = AuthUser("", "", "")
         viewModelScope.launch { userRepository.setLastLoggedUser("") }
@@ -122,7 +120,6 @@ class UserViewModel @Inject constructor(
         var r = HashMap<String, Any>()
         r["user"] = AuthUser("", "", "")
         r["runtime"] = false
-        r["bajar_datos"] = false
         return  r
     }
     suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): HashMap<String, Boolean>{

@@ -53,6 +53,7 @@ class PreferencesRepository @Inject constructor(
 
     // Set the last logged user on DataStore Preferences
     override suspend fun setLastLoggedUser(user: String) {
+        Log.d("SET LLU", user)
         context.dataStore.edit { preferences ->
             preferences[LAST_LOGGED_USER] = user
         }
