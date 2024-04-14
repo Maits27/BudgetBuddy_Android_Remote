@@ -256,5 +256,12 @@ class HTTPService @Inject constructor() {
         }
         response.body()
     }
+    @Throws(Exception::class)
+    suspend fun upload_gastos(email: String, gastos: List<PostGasto>) = runBlocking{
+        httpClient.post("http://34.135.202.124:8000/gastos_upload/$email/") {
+            contentType(ContentType.Application.Json)
+            setBody(gastos)
+        }
 
+    }
 }

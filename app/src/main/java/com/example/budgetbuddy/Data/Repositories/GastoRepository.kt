@@ -72,10 +72,11 @@ class GastoRepository @Inject constructor(
 
     override suspend fun uploadUserData(email: String, gastos: List<Gasto>) {
         val pgastos = convertirGastos_PostGastos(gastos)
-        pgastos.map { gasto ->
-            Log.d("UPLOAD GASTOS", "GASTO: ${gasto.id}")
-            httpService.upload_gasto(email, gasto)
-        }
+//        pgastos.map { gasto ->
+//            Log.d("UPLOAD GASTOS", "GASTO: ${gasto.id}")
+//            httpService.upload_gasto(email, gasto)
+//        }
+        httpService.upload_gastos(email, pgastos)
 
     }
 

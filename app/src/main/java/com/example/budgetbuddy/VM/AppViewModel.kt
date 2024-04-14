@@ -192,7 +192,7 @@ class AppViewModel @Inject constructor(
     fun upload_user_data(currentUser:String, onConfirm: ()-> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                gastoRepository.deleteUserData(currentUser)
+//                gastoRepository.deleteUserData(currentUser)
                 val gastos = recogerTodosLosGastos().first()
                 gastoRepository.uploadUserData(
                     currentUser,
