@@ -80,8 +80,9 @@ class MainActivity : AppCompatActivity() {
             if (drawable is BitmapDrawable) {
                 userViewModel.setProfileImage(appViewModel.currentUser, drawable.bitmap)
             }
+            Toast.makeText(this, this.getString(R.string.pick_ok), Toast.LENGTH_LONG).show()
         }else{
-            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show()
+            Toast.makeText(this,  this.getString(R.string.pick_error), Toast.LENGTH_LONG).show()
         }
     }
     

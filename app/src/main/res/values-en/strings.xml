@@ -90,4 +90,9 @@
     <string name="logout_general">Do a general LogOut</string>
     <string name="logout_general_desc">The LogOut of all the users registered in this phone will be forced (this can imply the loss of some data). Are you sure?</string>
     <string name="no">No</string>
+    <string name="no_calendar">There are no calendars available on the device.</string>
+    <string name="evento_added">Event added to calendar.</string>
+    <string name="calendar_add_error">Error adding event to calendar.</string>
+    <string name="pick_error">Error picking media.</string>
+    <string name="pick_ok">Changing profile picture...</string>
 </resources>

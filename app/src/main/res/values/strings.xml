@@ -89,4 +89,9 @@
     <string name="logout_general">Realizar LogOut general</string>
     <string name="logout_general_desc">Se procederá a realizar el LogOut de todos los usuarios registrados en el dispositivo (es posible que suponga pérdida de datos). ¿Continuar?</string>
     <string name="no">No</string>
+    <string name="no_calendar">No hay calendarios disponibles en el dispositivo.</string>
+    <string name="evento_added">Evento agregado al calendario.</string>
+    <string name="calendar_add_error">Error al agregar evento al calendario.</string>
+    <string name="pick_error">Error al seleccionar imagen.</string>
+    <string name="pick_ok">Cambiendo foto de perfil...</string>
 </resources>

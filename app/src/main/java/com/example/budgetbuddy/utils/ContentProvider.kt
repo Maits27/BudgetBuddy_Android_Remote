@@ -11,6 +11,8 @@ import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.res.stringResource
+import com.example.budgetbuddy.R
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.TimeZone
@@ -78,7 +80,7 @@ fun agregarGastoAlCalendario(
         // El evento no se pudo añadir por falta de calendarios de tipo LOCAL
         // Los calendarios de Google no son editables mediante el uso de ContentProviders.
         Handler(Looper.getMainLooper()).post {
-            Toast.makeText(context, "No hay calendarios disponibles en el dispositivo.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.no_calendar), Toast.LENGTH_SHORT).show()
         }
     }else{
         if (fechaL > LocalDate.now().toLong()){
@@ -99,12 +101,12 @@ fun agregarGastoAlCalendario(
                 uri?.let {
                     // El evento se insertó correctamente
                     Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(context, "Evento agregado al calendario", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.evento_added), Toast.LENGTH_SHORT).show()
                     }
                 } ?: run {
                     // Ocurrió un error al insertar el evento
                     Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(context, "Error al agregar evento al calendario", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.calendar_add_error), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
