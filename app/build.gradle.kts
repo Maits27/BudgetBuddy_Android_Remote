@@ -64,6 +64,11 @@ dependencies {
     implementation ("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.activity:activity:1.8.2")
 
+//    //Google calendar
+//    implementation ("com.google.api-client:google-api-client-android:1.30.11")
+//    implementation ("com.google.apis:google-api-services-calendar:v3-rev305-1.25.0")
+//    implementation ("com.google.android.gms:play-services-auth:21.0.0")
+
     //Encript
 //    implementation ("javax.crypto:javax.crypto-api:1.1.1")
 //    implementation ("org.bouncycastle:bcpkix-jdk15on:1.68")
