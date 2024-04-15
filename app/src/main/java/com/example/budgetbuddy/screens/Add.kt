@@ -328,7 +328,6 @@ fun Add(
                             )
                             agregarGastoAlCalendario(
                                 context,
-                                appViewModel.currentUser,
                                 "BUDGET BUDDY",
                                 "$nombre (${selectedOption.tipo}): $euros€",
                                 fecha.toLong()

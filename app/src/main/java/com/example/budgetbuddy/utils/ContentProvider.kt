@@ -44,35 +44,6 @@ fun obtenerIdsCalendario(context: Context): List<Long> {
 }
 
 @SuppressLint("Range")
-fun obtenerIdsCalendarioGoogle(user: String, context: Context): List<Long> {
-
-    val calendarIds = mutableListOf<Long>()
-    val projection = arrayOf(CalendarContract.Calendars._ID)
-
-    // Filtrar los calendarios por tipo de cuenta
-    val selection = "${CalendarContract.Calendars.ACCOUNT_TYPE} IN (?)"
-    val selectionArgs = arrayOf("com.google")
-
-    // Consultar los calendarios
-    context.contentResolver.query(
-        CalendarContract.Calendars.CONTENT_URI,
-        projection,
-        selection,
-        selectionArgs,
-        null
-    )?.use { cursor ->
-        while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID))
-            if (obtenerNombreCuentaPorId(context, id)==user) {
-                calendarIds.add(id)
-            }
-        }
-    }
-
-    return calendarIds
-}
-
-@SuppressLint("Range")
 fun obtenerNombreCuentaPorId(context: Context, calendarId: Long): String? {
     var tipoCuenta: String? = null
     val projection = arrayOf(CalendarContract.Calendars.ACCOUNT_NAME)
@@ -95,18 +66,17 @@ fun obtenerNombreCuentaPorId(context: Context, calendarId: Long): String? {
 }
 fun agregarGastoAlCalendario(
     context: Context,
-    user: String,
     titulo: String,
     descripcion: String,
     fechaL: Long
 ) {
     val contentResolver: ContentResolver = context.contentResolver
-
     val fecha = fechaL.toLocalDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
-
     val calendarIds = obtenerIdsCalendario(context)
 
     if(calendarIds.isEmpty()){
+        // El evento no se pudo añadir por falta de calendarios de tipo LOCAL
+        // Los calendarios de Google no son editables mediante el uso de ContentProviders.
         Handler(Looper.getMainLooper()).post {
             Toast.makeText(context, "No hay calendarios disponibles en el dispositivo.", Toast.LENGTH_SHORT).show()
         }
@@ -126,13 +96,10 @@ fun agregarGastoAlCalendario(
                 }
 
                 val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-
                 uri?.let {
-                    val eventoId = ContentUris.parseId(it)
                     // El evento se insertó correctamente
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(context, "Evento agregado al calendario", Toast.LENGTH_SHORT).show()
-//                    agregarReminder(context, eventoId, 480)
                     }
                 } ?: run {
                     // Ocurrió un error al insertar el evento
@@ -160,33 +127,3 @@ fun agregarReminder(context: Context, eventoId: Long, minutos: Int) {
         Log.d("Reminder", "Recordatorio insertado con ID: $reminderId")
     }
 }
-
-
-//// Configuración de la autenticación
-//val credential = GoogleAccountCredential.usingOAuth2(context, listOf(CalendarScopes.CALENDAR))
-//credential.selectedAccount = Account("tu_correo@gmail.com", "com.google")
-//
-//// Inicialización del cliente de la API de Google Calendar
-//val service = Calendar.Builder(
-//    AndroidHttp.newCompatibleTransport(),
-//    JacksonFactory.getDefaultInstance(),
-//    credential
-//)
-//    .setApplicationName("TuAppName")
-//    .build()
-//
-//// Crear evento
-//val event = Event()
-//event.summary = "Título del evento"
-//event.description = "Descripción del evento"
-//// Establecer la fecha y hora del evento
-//val startDateTime = DateTime("2024-04-06T10:00:00-07:00")
-//val start = EventDateTime().setDateTime(startDateTime)
-//event.start = start
-//val endDateTime = DateTime("2024-04-06T10:30:00-07:00")
-//val end = EventDateTime().setDateTime(endDateTime)
-//event.end = end
-//
-//// Insertar el evento en el calendario
-//val insertedEvent = service.events().insert("primary", event).execute()
-//val eventId = insertedEvent.id

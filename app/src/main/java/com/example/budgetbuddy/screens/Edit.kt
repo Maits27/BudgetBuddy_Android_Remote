@@ -319,7 +319,7 @@ fun Edit(
                                 latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
                                 longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0}
                             )
-                            agregarGastoAlCalendario(context, appViewModel.currentUser,"BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
+                            agregarGastoAlCalendario(context,"BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
                         } else {
                             showError = true
                             error_message = context.getString(R.string.error_double)
