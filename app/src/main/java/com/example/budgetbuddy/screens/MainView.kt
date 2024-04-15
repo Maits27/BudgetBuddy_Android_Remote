@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -102,7 +103,6 @@ Se le pasan los parámetros de:
  * @preferencesViewModel:    ViewModel con las preferencias de [idioma] y [tema] del usuario local.
  * @guardarFichero:          Función necesaria en caso de querer descargar un fichero, ya que esto requiere volver a la [MainActivity].
  */
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -163,6 +163,8 @@ fun MainView(
                                 description = context.getString(R.string.download_description, fecha.toString()),
                                 id = fecha.toLong().toInt()
                             )
+                        }else{
+                            Toast.makeText(context, context.getString(R.string.no_storage_permission), Toast.LENGTH_LONG).show()
                         }
                         showExpansion = false
                     }

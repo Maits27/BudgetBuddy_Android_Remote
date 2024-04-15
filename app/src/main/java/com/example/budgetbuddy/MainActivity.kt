@@ -32,7 +32,9 @@ import com.example.budgetbuddy.VM.UserViewModel
 import com.example.budgetbuddy.utils.CalendarPermission
 import com.example.budgetbuddy.utils.StoragePermission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
@@ -130,6 +132,7 @@ class MainActivity : AppCompatActivity() {
      * Descargar contenido String a fichero TXT (Requisito opcional)
      * Código de: https://www.geeksforgeeks.org/android-jetpack-compose-external-storage/
      */
+
     fun guardarDatosEnArchivo(
         appViewModel: AppViewModel,
         fecha: LocalDate,
@@ -137,8 +140,9 @@ class MainActivity : AppCompatActivity() {
     ): Boolean{
         val nombre = appViewModel.fecha_txt(fecha)
         ActivityCompat.requestPermissions(
-            this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 23
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 23
         )
+
         val folder: File =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(folder, "Factura${nombre}_${UUID.randomUUID()}.txt")

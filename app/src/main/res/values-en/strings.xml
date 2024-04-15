@@ -96,4 +96,5 @@
     <string name="pick_error">Error picking media.</string>
     <string name="pick_ok">Changing profile picture...</string>
     <string name="no_calendar_block">We\'re sorry. Without access to the calendar, the application cannot be used. \n\nPlease go to the app settings and grant permissions.</string>
+    <string name="no_storage_permission">Grant download permissions if you want to save invoices.</string>
 </resources>

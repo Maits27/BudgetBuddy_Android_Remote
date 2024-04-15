@@ -95,4 +95,5 @@
     <string name="pick_error">Error al seleccionar imagen.</string>
     <string name="pick_ok">Cambiendo foto de perfil...</string>
     <string name="no_calendar_block">Lo sentimos. Al no tener acceso al calendario la aplicación no se puede usar. \n\nPor favor, acceda a los ajustes de la aplicación y conceda permisos.</string>
+    <string name="no_storage_permission">Conceda permisos de descarga si quiere guardar facturas.</string>
 </resources>
