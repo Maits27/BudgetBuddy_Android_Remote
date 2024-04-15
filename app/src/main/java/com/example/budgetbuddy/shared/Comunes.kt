@@ -266,11 +266,14 @@ fun CloseButton(onConfirm: () -> Unit){
  * Cabecera de las tres pantallas principales para elegir la fecha
  * de la que se quiere visualizar la información
  */
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Header(
     titulo: String,
     appViewModel: AppViewModel
 ){
+
+
     var showCalendar by remember { mutableStateOf(false) }
     val onCalendarConfirm: (LocalDate) -> Unit = {
         showCalendar = false
@@ -302,6 +305,7 @@ fun Header(
         onCalendarConfirm
     )
     Divider(Modifier.padding(top = 10.dp))
+
 }
 
 @Composable
@@ -479,7 +483,42 @@ fun NoData(){
 
     }
 }
-
+/**
+ * Mensaje ante la falta de calendario
+ */
+@Composable
+fun NoCalendar(){
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.appblocked),
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .padding(12.dp),
+            tint = Color.DarkGray // Color del ícono
+        )
+        Text(
+            text = stringResource(id = R.string.no_calendar_block),
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Divider()
+        Titulo()
+    }
+}
 
 @Composable
 fun ErrorText(text: String) {

@@ -94,7 +94,6 @@ fun Edit(
     fusedLocationClient: FusedLocationProviderClient,
     modifier: Modifier = Modifier.verticalScroll(rememberScrollState())
 ){
-    Log.d("GASTO","Gasto to edit: $gasto")
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -106,6 +105,7 @@ fun Edit(
     val fecha by appViewModel.fecha.collectAsState(initial = LocalDate.now())
     val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
     val saveLoc by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
+    val saveCalendar by preferencesViewModel.saveOnCalendar(appViewModel.currentUser).collectAsState(initial = true)
 
     /*******************************************************************
      **                     Valores del formulario                    **
@@ -319,7 +319,14 @@ fun Edit(
                                 latitud = if (saveLoc){lastKnownLocation?.latitude?:0.0}else{0.0},
                                 longitud = if (saveLoc){lastKnownLocation?.longitude?:0.0}else{0.0}
                             )
-                            agregarGastoAlCalendario(context,"BUDGET BUDDY", "$nombre (${selectedOption.tipo}): $euros€", fecha.toLong())
+                            if(saveCalendar){
+                                agregarGastoAlCalendario(
+                                    context,
+                                    "BUDGET BUDDY",
+                                    "$nombre (${selectedOption.tipo}): $euros€",
+                                    fecha.toLong()
+                                )
+                            }
                         } else {
                             showError = true
                             error_message = context.getString(R.string.error_double)

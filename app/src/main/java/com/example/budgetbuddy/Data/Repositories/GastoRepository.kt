@@ -74,7 +74,7 @@ class GastoRepository @Inject constructor(
                 scheduler.schedule(
                     AlarmItem(
                         time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, 11, 0),
-                        title = context.getString(R.string.am_title, it.nombre),
+                        title = context.getString(R.string.am_title, gastos[0].user_id, it.nombre),
                         body = context.getString(R.string.am_body, it.nombre, it.tipo, it.cantidad.toString())
                     )
                 )
@@ -82,7 +82,7 @@ class GastoRepository @Inject constructor(
                 scheduler.schedule(
                     AlarmItem(
                         time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, LocalDateTime.now().hour, LocalDateTime.now().minute+1),
-                        title = context.getString(R.string.am_title, it.nombre),
+                        title = context.getString(R.string.am_title, gastos[0].user_id, it.nombre),
                         body = context.getString(R.string.am_body, it.nombre, it.tipo, it.cantidad.toString())
                     )
                 )

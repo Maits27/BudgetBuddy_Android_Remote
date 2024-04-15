@@ -114,7 +114,7 @@ class AppViewModel @Inject constructor(
                 scheduler.schedule(
                     AlarmItem(
                         time = LocalDateTime.of(fechaGasto.year, fechaGasto.monthValue, fechaGasto.dayOfMonth, 10, 0),
-                        title = context.getString(R.string.am_title, gasto.nombre),
+                        title = context.getString(R.string.am_title, currentUser, gasto.nombre),
                         body = context.getString(R.string.am_body, gasto.nombre, gasto.tipo.tipo, gasto.cantidad.toString())
                     )
                 )

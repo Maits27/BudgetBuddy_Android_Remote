@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,9 +76,14 @@ import com.example.budgetbuddy.screens.Add
 import com.example.budgetbuddy.screens.Dashboards
 import com.example.budgetbuddy.screens.Edit
 import com.example.budgetbuddy.screens.Home
+import com.example.budgetbuddy.shared.NoCalendar
+import com.example.budgetbuddy.utils.CalendarPermission
 import com.example.budgetbuddy.utils.LocationPermission
 import com.example.budgetbuddy.utils.toLong
 import com.example.budgetbuddy.widgets.Widget
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,8 +102,9 @@ Se le pasan los parámetros de:
  * @preferencesViewModel:    ViewModel con las preferencias de [idioma] y [tema] del usuario local.
  * @guardarFichero:          Función necesaria en caso de querer descargar un fichero, ya que esto requiere volver a la [MainActivity].
  */
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MainView(
     navControllerMain: NavController,
@@ -195,30 +204,33 @@ fun MainView(
         ) {
             LocationPermission()
         }
-        Row {
-            /** Necesario para los Fragments (Requisito opcional) **/
-            if (!isVertical){
-                NavHorizontal(innerPadding, navController)
-            }
-            /**
-             * [NavHost] que permite navegar entre las diferentes pantallas
-             * únicamente cambiando la vista del contenido del [Scaffold].
-             *
-             * Gracias a esto no se requiere de otra [Activity].
-             */
-            NavHost(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                startDestination = AppScreens.Home.route
-            ) {
-                composable(AppScreens.Home.route) { Home(appViewModel, idioma, navController){gastoEditable = it} }
-                composable(AppScreens.Add.route){ Add(appViewModel, preferencesViewModel, navController, fusedLocationClient, fecha)}
-                composable(AppScreens.Edit.route){ Edit(gastoEditable, appViewModel, preferencesViewModel, navController, fusedLocationClient)}
-                composable( AppScreens.Facturas.route) { Facturas(appViewModel, idioma) }
-                composable( AppScreens.Dashboards.route) { Dashboards(appViewModel, idioma.code, tema) }
+
+
+            Row {
+                /** Necesario para los Fragments (Requisito opcional) **/
+                if (!isVertical){
+                    NavHorizontal(innerPadding, navController)
+                }
+                /**
+                 * [NavHost] que permite navegar entre las diferentes pantallas
+                 * únicamente cambiando la vista del contenido del [Scaffold].
+                 *
+                 * Gracias a esto no se requiere de otra [Activity].
+                 */
+                NavHost(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController,
+                    startDestination = AppScreens.Home.route
+                ) {
+                    composable(AppScreens.Home.route) { Home(appViewModel, idioma, navController){gastoEditable = it} }
+                    composable(AppScreens.Add.route){ Add(appViewModel, preferencesViewModel, navController, fusedLocationClient, fecha)}
+                    composable(AppScreens.Edit.route){ Edit(gastoEditable, appViewModel, preferencesViewModel, navController, fusedLocationClient)}
+                    composable(AppScreens.Facturas.route) { Facturas(appViewModel, idioma) }
+                    composable(AppScreens.Dashboards.route) { Dashboards(appViewModel, idioma.code, tema) }
+                }
+
             }
 
-        }
 
     }
 }

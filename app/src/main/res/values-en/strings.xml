@@ -82,7 +82,7 @@
     <string name="widget_title_no_user">Today\'s expenses:</string>
     <string name="widget_must_login">Login.</string>
     <string name="location">Location in map:</string>
-    <string name="am_title">Today\'s expense: %s</string>
+    <string name="am_title">(%s) Today\'s expense: %s</string>
     <string name="am_body">Today\'s %s expense (%s) of %s€ that was added before is scheduled for today.</string>
     <string name="loading_data">Loading data...</string>
     <string name="subir_nube">Upload data to the cloud.</string>
@@ -95,4 +95,5 @@
     <string name="calendar_add_error">Error adding event to calendar.</string>
     <string name="pick_error">Error picking media.</string>
     <string name="pick_ok">Changing profile picture...</string>
+    <string name="no_calendar_block">We\'re sorry. Without access to the calendar, the application cannot be used. \n\nPlease go to the app settings and grant permissions.</string>
 </resources>

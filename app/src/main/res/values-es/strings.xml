@@ -82,7 +82,7 @@
     <string name="widget_title_no_user">Gastos de hoy:</string>
     <string name="widget_must_login">Inicia sesión.</string>
     <string name="location">Localización en el mapa:</string>
-    <string name="am_title">Gasto de hoy: %s</string>
+    <string name="am_title">(%s) Gasto de hoy: %s</string>
     <string name="am_body">El gasto %s (%s) de %s€ que fue añadido con antelación está programado para hoy.</string>
     <string name="loading_data">Cargando datos...</string>
     <string name="subir_nube">Subir datos a la nube.</string>
@@ -95,4 +95,5 @@
     <string name="calendar_add_error">Error al agregar evento al calendario.</string>
     <string name="pick_error">Error al seleccionar imagen.</string>
     <string name="pick_ok">Cambiendo foto de perfil...</string>
+    <string name="no_calendar_block">Lo sentimos. Al no tener acceso al calendario la aplicación no se puede usar. \n\nPor favor, acceda a los ajustes de la aplicación y conceda permisos.</string>
 </resources>

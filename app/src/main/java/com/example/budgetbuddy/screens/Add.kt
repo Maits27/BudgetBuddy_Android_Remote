@@ -106,6 +106,7 @@ fun Add(
     val scheduler = AndroidAlarmScheduler(context)
 
     val saveLoc by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
+    val saveCalendar by preferencesViewModel.saveOnCalendar(appViewModel.currentUser).collectAsState(initial = true)
     val idioma by preferencesViewModel.idioma(appViewModel.currentUser).collectAsState(initial = preferencesViewModel.currentSetLang)
     /*******************************************************************
      **                     Valores del formulario                    **
@@ -326,12 +327,15 @@ fun Add(
                                     userId = appViewModel.currentUser
                                 )
                             )
-                            agregarGastoAlCalendario(
-                                context,
-                                "BUDGET BUDDY",
-                                "$nombre (${selectedOption.tipo}): $euros€",
-                                fecha.toLong()
-                            )
+
+                            if(saveCalendar){
+                                agregarGastoAlCalendario(
+                                    context,
+                                    "BUDGET BUDDY",
+                                    "$nombre (${selectedOption.tipo}): $euros€",
+                                    fecha.toLong()
+                                )
+                            }
                         } else {
                             showError = true
                             error_message = context.getString(R.string.error_double)
