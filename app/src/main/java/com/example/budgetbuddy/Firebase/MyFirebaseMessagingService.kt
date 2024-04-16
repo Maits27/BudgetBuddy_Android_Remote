@@ -1,8 +1,6 @@
 package com.example.budgetbuddy.Firebase
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -10,8 +8,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.utils.NotificationPermission
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {

@@ -2,14 +2,13 @@ package com.example.budgetbuddy.utils
 
 import android.location.Location
 import android.util.Log
-import androidx.room.TypeConverter
-import com.example.budgetbuddy.Data.Enumeration.TipoGasto
-import com.example.budgetbuddy.Data.Enumeration.obtenerTipoDeNombre
-import com.example.budgetbuddy.Data.Enumeration.obtenerTipoEnIdioma
-import com.example.budgetbuddy.Data.Remote.PostGasto
-import com.example.budgetbuddy.Data.Room.AuthUser
-import com.example.budgetbuddy.Data.Room.Gasto
-import com.example.budgetbuddy.Data.Room.User
+import com.example.budgetbuddy.Local.Data.TipoGasto
+import com.example.budgetbuddy.Local.Data.obtenerTipoDeNombre
+import com.example.budgetbuddy.Local.Data.obtenerTipoEnIdioma
+import com.example.budgetbuddy.Local.Data.PostGasto
+import com.example.budgetbuddy.Local.Data.AuthUser
+import com.example.budgetbuddy.Local.Room.Gasto
+import com.example.budgetbuddy.Local.Room.User
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import java.math.BigInteger
@@ -88,7 +87,7 @@ fun convertirGastos_PostGastos(listado: List<Gasto>?): List<PostGasto>{
     return resultado
 }
 
-fun gasto_postGastos(gasto: Gasto): PostGasto{
+fun gasto_postGastos(gasto: Gasto): PostGasto {
     val p = PostGasto(
         nombre = gasto.nombre,
         cantidad = gasto.cantidad.toFloat(),

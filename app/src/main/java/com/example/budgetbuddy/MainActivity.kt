@@ -25,29 +25,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
-import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Remote.HTTPService
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
-import com.example.budgetbuddy.utils.CalendarPermission
-import com.example.budgetbuddy.utils.StoragePermission
+import com.example.budgetbuddy.utils.AskPermissions
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.messaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -219,23 +212,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-}
-@OptIn(ExperimentalPermissionsApi::class)
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Composable
-fun AskPermissions(){
-    val permissions = arrayOf(
-        Manifest.permission.POST_NOTIFICATIONS,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR,
-    )
-    val permissionState = rememberMultiplePermissionsState(
-        permissions = permissions.toList()
-
-    )
-    LaunchedEffect(true){
-        permissionState.launchMultiplePermissionRequest()
-    }
 }
 

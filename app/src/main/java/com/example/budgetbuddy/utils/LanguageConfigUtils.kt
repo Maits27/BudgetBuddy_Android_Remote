@@ -2,12 +2,11 @@ package com.example.budgetbuddy.utils
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.example.budgetbuddy.Data.Enumeration.AppLanguage
+import com.example.budgetbuddy.Local.Data.AppLanguage
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

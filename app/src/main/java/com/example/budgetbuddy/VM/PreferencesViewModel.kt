@@ -1,24 +1,18 @@
 package com.example.budgetbuddy.VM
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.budgetbuddy.Data.Enumeration.AppLanguage
-import com.example.budgetbuddy.preferences.IGeneralPreferences
+import com.example.budgetbuddy.Local.Data.AppLanguage
+import com.example.budgetbuddy.Preferences.IGeneralPreferences
 import com.example.budgetbuddy.utils.LanguageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 /********************************************************

@@ -4,7 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.example.budgetbuddy.Data.Room.AlarmItem
+import com.example.budgetbuddy.Local.Data.AlarmItem
 import java.time.LocalDateTime
 import java.time.ZoneId
 

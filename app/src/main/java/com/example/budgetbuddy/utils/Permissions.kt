@@ -6,34 +6,25 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun StoragePermission(){
-    val permissionState2 = rememberPermissionState(
-        permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-    LaunchedEffect(true){
-        permissionState2.launchPermissionRequest()
-    }
-    val permissionState3 = rememberPermissionState(
-        permission = Manifest.permission.READ_EXTERNAL_STORAGE
-    )
-    LaunchedEffect(true){
-        permissionState3.launchPermissionRequest()
-    }
-}
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun NotificationPermission(){
-    val permissionState = rememberPermissionState(
-        permission = android.Manifest.permission.POST_NOTIFICATIONS
+fun AskPermissions(){
+    val permissions = arrayOf(
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_CALENDAR,
+        Manifest.permission.WRITE_CALENDAR,
+    )
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = permissions.toList()
+
     )
     LaunchedEffect(true){
-        permissionState.launchPermissionRequest()
+        permissionState.launchMultiplePermissionRequest()
     }
 }
 

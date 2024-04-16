@@ -97,4 +97,6 @@
     <string name="pick_ok">Profil irudia aldatzen...</string>
     <string name="no_calendar_block">Sentitzen dugu. Egutegira sartu gabe, aplikazioa ezin da erabili. \n\nMesedez joan aplikazioaren ezarpenetara eta eman baimenak.</string>
     <string name="no_storage_permission">Eman deskargatzeko baimenak fakturak gorde nahi badituzu.</string>
+    <string name="give_loc_per">Eman itzazu lokalizazio baimenak.</string>
+    <string name="no_loc">Gastu hau ez du lokalizaziorik.</string>
 </resources>

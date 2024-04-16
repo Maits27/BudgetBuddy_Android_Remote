@@ -9,7 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.impl.utils.ForceStopRunnable.BroadcastReceiver
-import com.example.budgetbuddy.Data.Remote.HTTPService
+import com.example.budgetbuddy.Remote.HTTPService
 import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
 import javax.inject.Inject
