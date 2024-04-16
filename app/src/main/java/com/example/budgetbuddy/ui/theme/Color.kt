@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val rojoError = Color(0xff980722)
 val errorCont = Color(0xffCFFFDB)
+val naranjita = Color(0xFFFFE97E)
+val rojito = Color(0xFFFF8F8F)
 
 
 val verde1 = Color(0xff3C7046)

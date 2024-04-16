@@ -86,7 +86,7 @@ fun App(
         Diseño(AppScreens.UserEdit, painterResource(id = R.drawable.user), stringResource(id = R.string.edit)),
         Diseño(AppScreens.Preferences, painterResource(id = R.drawable.baseline_translate_24), stringResource(id = R.string.preferences)),
         Diseño(AppScreens.Infor, painterResource(id = R.drawable.infor), stringResource(id = R.string.infor)),
-        Diseño(AppScreens.Loading, painterResource(id = R.drawable.baseline_cloud_upload_24), stringResource(id = R.string.subir_nube)),
+        Diseño(AppScreens.Loading, painterResource(id = R.drawable.cloud_upload), stringResource(id = R.string.subir_nube)),
         Diseño(AppScreens.MainView, painterResource(id = R.drawable.close), stringResource(id = R.string.ok)),
     )
     val selectedItem = remember { mutableStateOf<Diseño?>(null) }

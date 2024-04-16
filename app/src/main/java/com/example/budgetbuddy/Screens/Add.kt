@@ -326,7 +326,8 @@ fun Add(
                             if(saveCalendar){
                                 agregarGastoAlCalendario(
                                     context,
-                                    "BUDGET BUDDY",
+                                    appViewModel.currentUser,
+                                    "BudgetBuddy (${appViewModel.currentUser.split("@").firstOrNull()})",
                                     "$nombre (${selectedOption.tipo}): $euros€",
                                     fecha.toLong()
                                 )

@@ -14,6 +14,7 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.example.budgetbuddy.Repositories.GastoRepository
 import com.example.budgetbuddy.Repositories.ILoginSettings
 import com.example.budgetbuddy.Local.Data.CompactGasto
+import com.example.budgetbuddy.Preferences.IGeneralPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -114,6 +115,7 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
         const val UPDATE_ACTION = "updateAction"
 
         val currentUserKey = stringPreferencesKey("currentUser")
+        val idioma = stringPreferencesKey("language")
         val todayGastoDataKey = stringPreferencesKey("data")
     }
 }

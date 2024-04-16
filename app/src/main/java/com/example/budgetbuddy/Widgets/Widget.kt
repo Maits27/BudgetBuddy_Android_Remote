@@ -3,6 +3,7 @@ package com.example.budgetbuddy.Widgets
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -35,13 +36,20 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import com.example.budgetbuddy.Local.Data.CompactGasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.Shared.NoData
 import com.example.budgetbuddy.ui.theme.grisClaro
 import com.example.budgetbuddy.Widgets.WidgetReceiver.Companion.UPDATE_ACTION
 import com.example.budgetbuddy.Widgets.WidgetReceiver.Companion.currentUserKey
+import com.example.budgetbuddy.Widgets.WidgetReceiver.Companion.idioma
 import com.example.budgetbuddy.Widgets.WidgetReceiver.Companion.todayGastoDataKey
+import com.example.budgetbuddy.ui.theme.naranjita
+import com.example.budgetbuddy.ui.theme.rojito
+import com.example.budgetbuddy.ui.theme.verde4
+import com.example.budgetbuddy.ui.theme.verde5
+import com.example.budgetbuddy.ui.theme.verdeClaro
 import kotlinx.serialization.json.Json
 import kotlin.text.split
 
@@ -79,29 +87,28 @@ class Widget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(color = grisClaro)
-                .padding(16.dp)
         ) {
 
-            Text(
-                text = if (user != null && user != "") context.getString(R.string.widget_title, user.split("@").firstOrNull()) else context.getString(R.string.widget_title_no_user),
-                modifier = GlanceModifier.fillMaxWidth().padding(bottom = 1.dp),
-                style = TextStyle(
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
+            Row (
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .background(color = verde4),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text(
+                    text = if (user != null && user != "") context.getString(R.string.widget_title, user.split("@").firstOrNull()) else context.getString(R.string.widget_title_no_user),
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 20.sp,
+                        color = ColorProvider(Color.DarkGray),
+                        textAlign = TextAlign.Center
+                    )
                 )
-            )
-
-            Text(
-                text = if (user != null && user != "") "                                                          " else "                             ",
-                modifier = GlanceModifier.fillMaxWidth().padding(bottom = 16.dp),
-                style = TextStyle(
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline
-                )
-            )
+            }
 
             when {
 
@@ -165,8 +172,35 @@ class Widget : GlanceAppWidget() {
                     )
                 )
                 Spacer(GlanceModifier.height(8.dp))
-                Text(text = "   - ${gasto.cantidad}€", modifier = GlanceModifier.defaultWeight().padding(vertical = 2.dp))
-                Text(text = "   - ${gasto.tipo.tipo}", modifier = GlanceModifier.defaultWeight().padding(vertical = 2.dp))
+                Row (
+                    modifier = GlanceModifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ){
+                    Text(text = textoAIngles(gasto.tipo.tipo),
+                        modifier = GlanceModifier
+                            .padding(vertical = 4.dp, horizontal = 8.dp).defaultWeight())
+                    Image(
+                        provider = ImageProvider(textoAIcono(gasto.tipo.tipo)),
+                        contentDescription = null,
+                        modifier = GlanceModifier.size(16.dp).defaultWeight()
+                    )
+                    var colorGasto = verde5
+                    if ( gasto.cantidad > 50) colorGasto = naranjita
+                    if (gasto.cantidad > 100) colorGasto = rojito
+
+                    Text(text = "${gasto.cantidad}€",
+                        modifier = GlanceModifier
+                            .padding(vertical = 4.dp, horizontal = 8.dp)
+                            .background(color = colorGasto).defaultWeight(),
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            color = ColorProvider(Color.DarkGray)
+                        )
+                    )
+
+
+                }
                 Text(
                     text = "                             ",
                     modifier = GlanceModifier.fillMaxWidth().padding(top = 8.dp),
@@ -200,7 +234,25 @@ class Widget : GlanceAppWidget() {
         }
         context.sendBroadcast(intent)
     }
+    private fun textoAIcono(texto:String): Int{
+        when{
+            texto == "Comida" -> return R.drawable.food
+            texto == "Hogar" -> return R.drawable.home
+            texto == "Ropa" -> return R.drawable.cloth
+            texto == "Actividad" -> return R.drawable.activity
+            texto == "Transporte" -> return R.drawable.transport
+            else -> return R.drawable.bill
+        }
+    }
+    private fun textoAIngles(texto:String): String{
+        when{
+            texto == "Comida" -> return "Food"
+            texto == "Hogar" -> return "Home"
+            texto == "Ropa" -> return "Clothes"
+            texto == "Actividad" -> return "Activity"
+            texto == "Transporte" -> return "Transport"
+            else -> return "Others"
+        }
+    }
 }
-
-
 

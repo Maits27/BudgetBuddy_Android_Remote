@@ -20,13 +20,14 @@ import java.util.TimeZone
 
 fun agregarGastoAlCalendario(
     context: Context,
+    user: String,
     titulo: String,
     descripcion: String,
     fechaL: Long
 ) {
     val contentResolver: ContentResolver = context.contentResolver
     val fecha = fechaL.toLocalDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
-    val calendarIds = obtenerIdsCalendario(context)
+    val calendarIds = obtenerIdsCalendario(context, user)
 
     if(calendarIds.isEmpty()){
         // El evento no se pudo añadir por falta de calendarios de tipo LOCAL
@@ -67,14 +68,15 @@ fun agregarGastoAlCalendario(
 }
 
 @SuppressLint("Range")
-fun obtenerIdsCalendario(context: Context): List<Long> {
+fun obtenerIdsCalendario(context: Context, user: String): List<Long> {
 
     val calendarIds = mutableListOf<Long>()
     val projection = arrayOf(CalendarContract.Calendars._ID)
 
     // Filtrar los calendarios por tipo de cuenta
-    val selection = "${CalendarContract.Calendars.ACCOUNT_TYPE} NOT IN (?)"
-    val selectionArgs = arrayOf("com.google")
+    val selection = "(${CalendarContract.Calendars.ACCOUNT_TYPE} IN (?) OR (${CalendarContract.Calendars.ACCOUNT_TYPE} NOT IN (?) AND ${CalendarContract.Calendars.ACCOUNT_NAME} = ?))"
+    val selectionArgs = arrayOf("LOCAL", "com.google", user)
+
 
     // Consultar los calendarios
     context.contentResolver.query(
