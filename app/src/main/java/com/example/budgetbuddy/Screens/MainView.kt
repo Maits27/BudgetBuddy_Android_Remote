@@ -123,7 +123,7 @@ fun MainView(
     val factura by appViewModel.facturaActual(fecha, idioma).collectAsState(initial = "")
     val total  by appViewModel.totalGasto(fecha).collectAsState(initial = 0.0)
 
-    /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
+    /**    Parámetros para el control de los estados de los composables  **/
     var showDownloadError by rememberSaveable { mutableStateOf(false) }
     var showExpansion by rememberSaveable { mutableStateOf(false) }
     var gastoEditable by remember { mutableStateOf(Gasto("", 0.0, fecha, TipoGasto.Otros, 0.0, 0.0, "")) }
@@ -202,7 +202,7 @@ fun MainView(
 
 
             Row {
-                /** Necesario para los Fragments (Requisito opcional) **/
+                /** Necesario para los Fragments **/
                 if (!isVertical){
                     NavHorizontal(innerPadding, navController)
                 }

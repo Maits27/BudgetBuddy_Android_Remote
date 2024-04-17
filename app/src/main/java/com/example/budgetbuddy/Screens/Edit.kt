@@ -117,7 +117,7 @@ fun Edit(
     var fechaTemporal by rememberSaveable {mutableStateOf(fecha)}
     var lastKnownLocation: Location? = null
 
-    /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
+    /**    Parámetros para el control de los estados de los composables  **/
     var error_message by remember { mutableStateOf("") }
     var isTextFieldFocused by remember { mutableStateOf(-1) }
     var showError by rememberSaveable { mutableStateOf(false) }

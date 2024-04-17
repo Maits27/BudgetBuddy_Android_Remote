@@ -133,7 +133,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Descargar contenido String a fichero TXT (Requisito opcional)
      * Código de: https://www.geeksforgeeks.org/android-jetpack-compose-external-storage/
      */
 
