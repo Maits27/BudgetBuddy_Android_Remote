@@ -16,8 +16,6 @@ import javax.inject.Inject
 
 @SuppressLint("RestrictedApi")
 class AlarmReceiver: BroadcastReceiver() {
-    @Inject
-    lateinit var httpClient: HTTPService
 
     @SuppressLint("RestrictedApi", "ServiceCast")
     override fun onReceive(context: Context, intent: Intent?) {

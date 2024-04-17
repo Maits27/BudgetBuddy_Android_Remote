@@ -2,8 +2,10 @@ package com.example.budgetbuddy.Shared
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.location.Location
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -84,6 +86,21 @@ import java.time.ZoneId
  * De no haber localización disponible o de no tener permisos de
  * localización se mostrará el [NoMap] explicando la situación.
  */
+
+fun getLatLngFromAddress(context: Context, mAddress: String): Pair<Double, Double>? {
+    val coder = Geocoder(context)
+    try {
+        val addressList = coder.getFromLocationName(mAddress, 1)
+        if (addressList.isNullOrEmpty()) {
+            return null
+        }
+        val location = addressList[0]
+        return Pair(location.latitude, location.longitude)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
+    }
+}
 @Composable
 fun MapScreen(
     lastKnownLocation: Location?,

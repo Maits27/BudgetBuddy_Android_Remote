@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -28,11 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.budgetbuddy.Local.Data.AppLanguage
 import com.example.budgetbuddy.Local.Data.obtenerTipoEnIdioma
+import com.example.budgetbuddy.Local.Data.textoAIcono
 import com.example.budgetbuddy.Local.Room.Gasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
@@ -100,7 +104,7 @@ fun GastoAbierto(
     var toast by remember { mutableStateOf("") }
     if(show){
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.tertiary,
+            containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = {},
             confirmButton = { TextButton(onClick = { onConfirm() }) {
                 Text(text = stringResource(id = R.string.ok))
@@ -170,10 +174,29 @@ fun GastoAbierto(
                 }
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CardElement(text = stringResource(id = R.string.cantidad, gasto.cantidad))
-                    CardElement(text = stringResource(id = R.string.tipo, obtenerTipoEnIdioma(gasto.tipo, idioma.code)))
+                    Row (
+                        modifier = Modifier.padding(5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        CardElement(text = obtenerTipoEnIdioma(gasto.tipo, idioma.code),
+                            modifier = Modifier.weight(1f))
+                        Icon(
+                            painter = painterResource(id = textoAIcono(obtenerTipoEnIdioma(gasto.tipo, "es"))),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .weight(1f)
+                        )
+                        CardElement(
+                            text = "${gasto.cantidad}€",
+                            kant = gasto.cantidad,
+                            Modifier.weight(1f)
+                        )
+                    }
+                    Divider()
                     val location = Location("")
                     location.latitude = gasto.latitud
                     location.longitude = gasto.longitud
@@ -183,7 +206,6 @@ fun GastoAbierto(
         )
     }
 }
-
 //@Composable
 //fun LogoutGeneral(onDismiss:()->Unit, onConfirm: () -> Unit){
 //    AlertDialog(

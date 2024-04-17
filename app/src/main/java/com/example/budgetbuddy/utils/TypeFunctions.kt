@@ -101,17 +101,6 @@ fun gasto_postGastos(gasto: Gasto): PostGasto {
     return p
 }
 
-private fun fromLocation(location: Location?): String {
-    val gson = Gson()
-    return location?.let { gson.toJson(it) }?:""
-}
-
-private fun toLocation(locationString: String?): Location? {
-    val gson = Gson()
-    if (locationString=="") return null
-    return locationString?.let { gson.fromJson(it, Location::class.java) }
-}
-
 fun locationToLatLng(location: Location): LatLng {
     return LatLng(location.latitude, location.longitude)
 }

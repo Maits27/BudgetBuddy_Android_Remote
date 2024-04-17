@@ -6,13 +6,14 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +37,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.ui.theme.grisClaro
+import com.example.budgetbuddy.ui.theme.naranjita
+import com.example.budgetbuddy.ui.theme.rojito
+import com.example.budgetbuddy.ui.theme.verde5
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 
 /************************************************************************
@@ -94,27 +99,22 @@ fun Description(mensaje: String){
 }
 
 @Composable
-fun CardElement(text: String){
-    Row (
-        modifier = Modifier.padding(vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Icon(
-            painter = painterResource(id = R.drawable.circle),
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .size(5.dp)
+fun CardElement(text: String, kant: Double = 0.0, modifier:Modifier = Modifier){
+    var colorGasto = grisClaro
+    if (kant > 100) colorGasto = rojito
+    else if ( kant > 50) colorGasto = naranjita
+    else if ( kant > 0) colorGasto = verde5
+    Text(
+        text = text,
+        modifier = modifier
+            .background(colorGasto, shape = RoundedCornerShape(8.dp))
+            .padding(8.dp),
+        style = TextStyle(
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 18.sp
         )
-        Text(
-            text = text,
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 18.sp
-            )
-        )
-    }
+    )
+
 }
 
 @Composable

@@ -1,5 +1,7 @@
 package com.example.budgetbuddy.Local.Data
 
+import com.example.budgetbuddy.R
+
 /*******************************************************************
  **       Clase enumerando los tipos de gastos posibles          **
  ******************************************************************/
@@ -55,5 +57,16 @@ fun obtenerTipoDeNombre(nombre: String): TipoGasto?{
         "Actividad" -> TipoGasto.Actividad
         "Otros" -> TipoGasto.Otros
         else -> null
+    }
+}
+
+fun textoAIcono(texto:String): Int{
+    when{
+        texto == "Comida" -> return R.drawable.food
+        texto == "Hogar" -> return R.drawable.home
+        texto == "Ropa" -> return R.drawable.cloth
+        texto == "Actividad" -> return R.drawable.activity
+        texto == "Transporte" -> return R.drawable.transport
+        else -> return R.drawable.bill
     }
 }

@@ -41,7 +41,6 @@ class UserViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val todosLosUsuarios = userRepository.todosLosUsuarios()
     val lastLoggedUser: String? = runBlocking { return@runBlocking userRepository.getLastLoggedUser() }
     var profilePicture: Bitmap? by mutableStateOf(null)
         private set

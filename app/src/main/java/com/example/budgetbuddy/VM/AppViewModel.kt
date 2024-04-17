@@ -42,7 +42,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val gastoRepository: IGastoRepository,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     /*************************************************
