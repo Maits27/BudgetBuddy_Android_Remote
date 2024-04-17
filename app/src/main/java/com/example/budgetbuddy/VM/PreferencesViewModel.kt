@@ -27,8 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     private val preferencesRepository: IGeneralPreferences,
-    private val languageManager: LanguageManager,
-    savedStateHandle: SavedStateHandle
+    private val languageManager: LanguageManager
 ) : ViewModel() {
 
     /*************************************************
@@ -81,9 +80,13 @@ class PreferencesViewModel @Inject constructor(
         }
     }
 
+    ////////////////////// Calendario //////////////////////
+
     fun changeSaveOnCalendar(){
         viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveOnCalendar(currentUser.first()) }
     }
+
+    ////////////////////// Localización //////////////////////
 
     fun changeSaveLocation(){
         viewModelScope.launch(Dispatchers.IO) { preferencesRepository.changeSaveLocation(currentUser.first()) }

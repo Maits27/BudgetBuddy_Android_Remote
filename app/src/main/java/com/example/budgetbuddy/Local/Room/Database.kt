@@ -11,10 +11,10 @@ import com.example.budgetbuddy.Local.DAO.UserDao
  *
  * Definición de la clase de la base de datos [Database] de ROOM.
  * (Se instancia mediante Hilt)
- * Version: 2
+ * Version: 1
  *
- * Única entidad: [Gasto]
- * Único DAO para dicha entidad: [GastoDao]
+ * Dos entidades: [Gasto] y [User]
+ * Dos DAOs para dichas entidades: [GastoDao] y [UserDao]
  *
  */
 @Database(entities = [User::class, Gasto::class], version = 1)

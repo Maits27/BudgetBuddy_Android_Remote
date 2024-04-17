@@ -31,7 +31,15 @@ import com.example.budgetbuddy.ui.theme.azulMedio
 import com.example.budgetbuddy.ui.theme.morado1
 import com.example.budgetbuddy.ui.theme.verdeOscuro
 
-
+/**
+ * Pantalla de elección de todas las preferencias
+ * del DataStore por cada [User].
+ *
+ * Se le pasan los parámetros de:
+ * Diferentes funciones en base a las acciones que se realicen
+ * sobre las preferencias y las preferencias actuales respecto a
+ * calendario y localización.
+ */
 @Composable
 fun Preferences(
     onLanguageChange:(AppLanguage) -> Unit,
@@ -55,6 +63,9 @@ fun Preferences(
         var checked2 by rememberSaveable { mutableStateOf(saveLocation) }
 
         Titulo()
+
+        ////////////////////// Idiomas //////////////////////
+
         Subtitulo(mensaje = stringResource(id = R.string.change_lang))
         Column (
             modifier = Modifier
@@ -74,6 +85,9 @@ fun Preferences(
                 }
             }
         }
+
+        ////////////////////// Paletas de color //////////////////////
+
         Subtitulo(mensaje = stringResource(id = R.string.change_theme))
         Row (
             modifier = Modifier
@@ -135,6 +149,9 @@ fun Preferences(
             }
         }
         Subtitulo(mensaje = stringResource(id = R.string.ajustes))
+
+        ////////////////////// Calendario //////////////////////
+
         Column (Modifier.fillMaxWidth()){
             Row (
                 verticalAlignment = Alignment.CenterVertically,
@@ -154,6 +171,9 @@ fun Preferences(
             }
             Description(mensaje = stringResource(id = R.string.guardar_calendario_desc))
         }
+
+        ////////////////////// Localización /////////////////////
+
         Column (Modifier.fillMaxWidth()){
             Row (
                 verticalAlignment = Alignment.CenterVertically,

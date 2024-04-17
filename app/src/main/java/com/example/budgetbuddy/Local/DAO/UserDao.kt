@@ -10,6 +10,14 @@ import androidx.room.Update
 import com.example.budgetbuddy.Local.Room.User
 import kotlinx.coroutines.flow.Flow
 
+/*************************************************
+ **               DAO de Usuarios               **
+ *************************************************/
+
+/**
+ * La DAO define la API de acceso a la base de datos de Room,
+ * sin necesidad de escribir las consultas SQL (salvo los query).
+ * */
 @Dao
 interface UserDao {
 

@@ -47,7 +47,11 @@ fun obtenerTipoEnIdioma(tipo: TipoGasto, idioma: String): String {
         else -> tipo.tipo       // Por defecto, devolver el mensaje original (Castellano)
     }
 }
-
+/**
+ * En la base de datos remota los [TipoGasto] se guardan por su nombre en formato
+ * [String] en su versión en castellano. Para hacer la conversión a la contra y
+ * guardar su tipo en la base de datos de ROOM se utiliza el siguiente método.
+ */
 fun obtenerTipoDeNombre(nombre: String): TipoGasto?{
     return when (nombre){
         "Comida" -> TipoGasto.Comida
@@ -60,6 +64,9 @@ fun obtenerTipoDeNombre(nombre: String): TipoGasto?{
     }
 }
 
+/**
+ * Se relaciona cada nombre de [TipoGasto] en castellano (por la base de datos remota) con un icono.
+ */
 fun textoAIcono(texto:String): Int{
     when{
         texto == "Comida" -> return R.drawable.food

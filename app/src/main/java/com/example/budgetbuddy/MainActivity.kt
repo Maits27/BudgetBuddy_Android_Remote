@@ -63,8 +63,16 @@ class MainActivity : AppCompatActivity() {
     val appViewModel by viewModels<AppViewModel> ()
     val preferencesViewModel by viewModels<PreferencesViewModel> ()
 
+    /**
+     * FusedLocationProviderClient o cliente de geolocalización de Google Play Services.
+     */
+    /**             (Requisito opcional)           **/
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    /**
+     * PickVisualMedia o selector de fotos para escoger imágenes de la galería.
+     */
+    /**             (Requisito obligatorio)           **/
     val pickMedia = registerForActivityResult(PickVisualMedia()){
         if (it!=null){
             var ivImage = ImageView(this)
@@ -80,7 +88,10 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,  this.getString(R.string.pick_error), Toast.LENGTH_LONG).show()
         }
     }
-    
+
+    /**
+     * Constantes
+     */
     companion object{
         const val CHANNEL_ID = "BudgetBuddy"
         const val FIREBASE_NOTIFICATION = 0
@@ -151,14 +162,12 @@ class MainActivity : AppCompatActivity() {
             fileOutputStream = FileOutputStream(file)
             fileOutputStream.write(data.toByteArray())
         } catch (e: Exception) {
-            Log.d("DOWNLOAD WARNING", "1: $e")
             return false
         } finally {
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close()
                 } catch (e: IOException) {
-                    Log.d("DOWNLOAD WARNING", "2: $e")
                     return false
                 }
             }
@@ -190,6 +199,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Método de subscripción al canal de firebase
+     */
     @OptIn(DelicateCoroutinesApi::class)
     private fun subscribeUser() {
         /**

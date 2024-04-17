@@ -29,13 +29,12 @@ import javax.inject.Singleton
  **                  Data Store                 **
  *************************************************/
 
-/**             (Requisito opcional)           **/
+
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "PREFERENCES_SETTINGS")
 
 @Singleton
 class PreferencesRepository @Inject constructor(
     private val context: Context,
-//    private val cipher: CipherUtil
 ) : IGeneralPreferences, ILoginSettings {
     val LAST_LOGGED_USER = stringPreferencesKey("last_logged_user")
     fun PREFERENCE_LANGUAGE(email: String) = stringPreferencesKey("${email}_preference_lang")
@@ -48,7 +47,6 @@ class PreferencesRepository @Inject constructor(
 
     // Set the last logged user on DataStore Preferences
     override suspend fun setLastLoggedUser(user: String) {
-        Log.d("SET LLU", user)
         context.dataStore.edit { preferences ->
             preferences[LAST_LOGGED_USER] = user
         }
@@ -61,27 +59,12 @@ class PreferencesRepository @Inject constructor(
      * Por defecto se escoge el idioma local del dispositivo Android.
      */
     override fun language(email: String): Flow<String> = context.dataStore.data.map { preferences ->
-        Log.d("IDIOMA", "Preferences to string: ${preferences.toString()}")
-        Log.d("IDIOMA", "Email: $email")
-        Log.d(
-            "IDIOMA",
-            "Preferences email o comillas: ${preferences[PREFERENCE_LANGUAGE(email)] ?: ""}"
-        )
-        Log.d("IDIOMA", "Name preferences lang email: ${PREFERENCE_LANGUAGE(email)}")
         preferences[PREFERENCE_LANGUAGE(email)] ?: "en"
 
     }
 
     override suspend fun setLanguage(email: String, code: String) {
         context.dataStore.edit { settings ->
-            Log.d("IDIOMA", "Preferences to string: ${settings.toString()}")
-            Log.d("IDIOMA", "Email: $email")
-            Log.d("IDIOMA", "Code: $code")
-            Log.d(
-                "IDIOMA",
-                "Preferences email o comillas: ${settings[PREFERENCE_LANGUAGE(email)] ?: ""}"
-            )
-            Log.d("IDIOMA", "Name preferences lang email: ${PREFERENCE_LANGUAGE(email).name}")
             settings[PREFERENCE_LANGUAGE(email)] = code
         }
     }
@@ -107,6 +90,12 @@ class PreferencesRepository @Inject constructor(
         }
     }
 
+    //////////////// Preferencias de Calendario ////////////////
+
+    /**
+     * En base a si es true o false, se guardarán los eventos del usuario
+     * en el calendario local del dispositivo
+     */
     override fun getSaveOnCalendar(email: String): Flow<Boolean> =
         context.dataStore.data.map { preferences ->
             preferences[PREFERENCE_SAVE(email)] ?: true
@@ -118,6 +107,14 @@ class PreferencesRepository @Inject constructor(
         }
     }
 
+    //////////////// Preferencias de Localización ////////////////
+
+    /**
+     * Independientemente de si hay permisos de ubicación, si esta
+     * opción se mantiene deshabilitada (false) no se accederá a la
+     * ubicación del usuario. En caso de que los permisos de localización
+     * estén deshabilitados, la lectura también.
+     */
     override fun getSaveLocation(email: String): Flow<Boolean> =
         context.dataStore.data.map { preferences ->
             if(ActivityCompat.checkSelfPermission(

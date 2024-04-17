@@ -25,20 +25,4 @@ class Converters{
         return value?.let { LocalDate.ofEpochDay(it) }
     }
 
-//    @TypeConverter
-//    fun fromLocation(location: Location?): String {
-//        Log.d("CONVERTER", "1. ENTRA: ${location.toString()}")
-//        val gson = Gson()
-//        Log.d("CONVERTER", "1. SALE: ${location?.let { gson.toJson(it) }?:""}")
-//        return location?.let { gson.toJson(it) }?:""
-//    }
-//
-//    @TypeConverter
-//    fun toLocation(locationString: String?): Location? {
-//        Log.d("CONVERTER", "2. ENTRA: ${locationString}")
-//        val gson = Gson()
-//        Log.d("CONVERTER", "2. SALE: ${locationString?.let { gson.fromJson(it, Location::class.java) }}")
-//        if (locationString=="") return null
-//        return locationString?.let { gson.fromJson(it, Location::class.java) }
-//    }
 }

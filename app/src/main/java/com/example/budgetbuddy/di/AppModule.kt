@@ -1,7 +1,9 @@
 package com.example.budgetbuddy.di
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import androidx.room.Room
+import com.example.budgetbuddy.AlarmManager.AlarmReceiver
 import com.example.budgetbuddy.Local.Room.Database
 import com.example.budgetbuddy.Local.DAO.GastoDao
 import com.example.budgetbuddy.Repositories.GastoRepository
@@ -72,6 +74,7 @@ object AppModule {
      //////////////   Repositorios Aplicación   ///////////////
     //////////////////////////////////////////////////////////
      */
+
     @Singleton
     @Provides
     fun providesUserRepository(userDao: UserDao, httpService: HTTPService, loginSettings: ILoginSettings): IUserRepository = UserRepository(userDao, httpService, loginSettings)
@@ -92,5 +95,5 @@ object AppModule {
     @Provides
     fun provideUserPreferences(@ApplicationContext app: Context): IGeneralPreferences = PreferencesRepository(app)
 
-
 }
+

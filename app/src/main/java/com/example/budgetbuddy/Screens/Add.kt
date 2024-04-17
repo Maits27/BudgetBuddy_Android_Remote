@@ -77,11 +77,12 @@ import java.time.format.DateTimeParseException
 Este composable forma la pantalla del formulario para añadir elementos.
 
 Se le pasan los parámetros de:
- * @appViewModel:  ViewModel general de la aplicación con los métodos necesarios para editar la fecha.
- * @navController: De forma que se pueda volver a la pantalla [Home].
- * @idioma:        Necesario para la conversión de tipos de gasto.
- * @fecha_actual:  Fecha en la que se presupone que se va a añadir el gasto.
- * @modifier:      Para dar un estilo predeterminado a los composables (default).
+ * @appViewModel:           ViewModel general de la aplicación con los métodos necesarios para editar la fecha.
+ * @preferencesViewModel:   ViewModel de las preferencias del usuario.
+ * @navController:          De forma que se pueda volver a la pantalla [Home].
+ * @fusedLocationClient:    Cliente para la localización actual.
+ * @fecha_actual:           Fecha en la que se presupone que se va a añadir el gasto.
+ * @modifier:               Para dar un estilo predeterminado a los composables (default).
  */
 
 
@@ -115,7 +116,7 @@ fun Add(
     //Location
     val lastKnownLocation by appViewModel.locationFlow.collectAsState(initial = null)
 
-    /**    Parámetros para el control de los estados de los composables (Requisito 5)   **/
+    /**    Parámetros para el control de los estados de los composables **/
     var error_message by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
     var enabledDate by remember { mutableStateOf(true) }
@@ -143,7 +144,6 @@ fun Add(
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
-            Log.d("LOCATION", "POST PERMISSION: ${location.toString()}")
             appViewModel.cambiarLocalizacion(location)
         }
 
@@ -324,6 +324,8 @@ fun Add(
                             )
 
                             if(saveCalendar){
+                                // En casod de que se permita, se guardará
+                                // en el calendario si cumple los requisitos.
                                 agregarGastoAlCalendario(
                                     context,
                                     appViewModel.currentUser,

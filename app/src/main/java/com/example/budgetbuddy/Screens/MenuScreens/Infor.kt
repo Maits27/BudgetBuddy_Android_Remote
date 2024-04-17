@@ -20,6 +20,15 @@ import com.example.budgetbuddy.Shared.CloseButton
 import com.example.budgetbuddy.Shared.Titulo
 import com.example.budgetbuddy.Shared.compartirContenido
 
+/***************************************************
+ ***          Pantalla auxiliar Infor             ***
+ ***************************************************/
+
+/**
+ * Composable con la información general de la aplicación
+ * Intents implícitos de envío de correo electrónico y
+ * mensajerías varias.
+ */
 @Composable
 fun Infor(
     onConfirm: () -> Unit

@@ -9,6 +9,7 @@ import com.example.budgetbuddy.Local.Room.User
 import com.example.budgetbuddy.utils.user_to_authUser
 import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +19,7 @@ import javax.inject.Singleton
  * con la BBDD
  *******************************************************************/
 interface IUserRepository: ILoginSettings {
-    suspend fun logIn(email: String, login:Boolean): AuthUser?
+    fun logIn(email: String, login:Boolean): AuthUser?
     suspend fun isLogged(email: String):Boolean?
     suspend fun exists(email: String):Boolean
     suspend fun insertLocal(user: User)
@@ -26,7 +27,6 @@ interface IUserRepository: ILoginSettings {
     suspend fun deleteUsuario(user: User): Int
     fun todosLosUsuarios(): Flow<List<User>>
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
-    suspend fun userXEmail(email: String):AuthUser?
     fun userName(email: String): String
     suspend fun editarUsuario(user: User): Int
     suspend fun getUserProfile(email: String): Bitmap
@@ -43,13 +43,42 @@ class UserRepository @Inject constructor(
     private val httpService: HTTPService,
     private val loginSettings: ILoginSettings
 ) : IUserRepository {
+
+    /********************************************************************
+     ********************         Variables         ********************
+     ********************************************************************/
+
     lateinit var profileImage: Bitmap
 
+    /********************************************************************
+     ******************         LastLoggedUser         ******************
+     ********************************************************************/
     override suspend fun getLastLoggedUser(): String? = loginSettings.getLastLoggedUser()
     override suspend fun setLastLoggedUser(user: String) = loginSettings.setLastLoggedUser(user)
-    override suspend fun logIn(email: String, login: Boolean): AuthUser? {
-        return httpService.loginUser(email, login)
+
+    /********************************************************************
+     *****************          LOCAL + REMOTO          *****************
+     ********************************************************************/
+
+    override suspend fun insertUsuario(user: AuthUser): Boolean{
+        try {
+            val remote = httpService.createUser(user)
+            if (remote) userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password))
+            return remote
+        }catch (e: Exception){
+        }
+        return false
     }
+
+    /********************************************************************
+     **********************         REMOTO         **********************
+     ********************************************************************/
+    ////////////////////// Sesión usuario //////////////////////
+
+    override fun logIn(email: String, login: Boolean): AuthUser? = runBlocking{
+        httpService.loginUser(email, login)
+    }
+    ////////////////////// Info usuario //////////////////////
 
     override suspend fun isLogged(email: String): Boolean? {
         return httpService.isLogged(email)
@@ -61,30 +90,6 @@ class UserRepository @Inject constructor(
             return true
         }
         return false
-    }
-
-    override suspend fun insertLocal(user: User){
-        userDao.insertUsuario(user)
-    }
-
-    override suspend fun insertUsuario(user: AuthUser): Boolean{
-        Log.d("REPO", "INSERT!!!!!!!!!!!!!!!!!!!!")
-        try {
-            val remote = httpService.createUser(user)
-            if (remote) userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password))
-            return remote
-        }catch (e: Exception){
-            Log.d("REPO ERROR", "$e!!!!!!!!!!!!!!!!!!!!")
-        }
-        return false
-    }
-
-    override suspend fun deleteUsuario(user: User): Int {
-        return userDao.deleteUsuario(user)
-    }
-
-    override fun todosLosUsuarios(): Flow<List<User>> {
-        return userDao.todosLosUsuarios()
     }
 
 
@@ -105,14 +110,7 @@ class UserRepository @Inject constructor(
         return result
     }
 
-    override suspend fun userXEmail(email: String): AuthUser? {
-        return httpService.getUserByEmail(email)
-    }
-
-    override fun userName(email: String): String {
-        return userDao.userName(email)?:""
-    }
-
+    ////////////////////// Editar usuario //////////////////////
     override suspend fun editarUsuario(user: User): Int {
         httpService.editUser(
             user.email,
@@ -121,6 +119,7 @@ class UserRepository @Inject constructor(
         return userDao.editarUsuario(user)
     }
 
+    ////////////////////// Imagen perfil usuario //////////////////////
     override suspend fun getUserProfile(email: String): Bitmap {
         try {
             profileImage = httpService.getUserProfile(email)
@@ -141,6 +140,31 @@ class UserRepository @Inject constructor(
         }
         return profileImage
     }
+
+
+    /********************************************************************
+     **********************         LOCAL          **********************
+     ********************************************************************/
+    ////////////////////// Insertar usuario //////////////////////
+    override suspend fun insertLocal(user: User) {
+        userDao.insertUsuario(user)
+    }
+
+    ////////////////////// Borrar usuario //////////////////////
+    override suspend fun deleteUsuario(user: User): Int {
+        return userDao.deleteUsuario(user)
+    }
+
+    ////////////////////// Info usuarios //////////////////////
+    override fun todosLosUsuarios(): Flow<List<User>> {
+        return userDao.todosLosUsuarios()
+    }
+
+    override fun userName(email: String): String {
+        return userDao.userName(email)?:""
+    }
+
+
 
 
 }

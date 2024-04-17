@@ -70,6 +70,7 @@ import com.example.budgetbuddy.Screens.Add
 import com.example.budgetbuddy.Screens.Dashboards
 import com.example.budgetbuddy.Screens.Edit
 import com.example.budgetbuddy.Screens.Home
+import com.example.budgetbuddy.Screens.Login
 import com.example.budgetbuddy.utils.LocationPermission
 import com.example.budgetbuddy.utils.toLong
 import com.example.budgetbuddy.Widgets.Widget
@@ -86,12 +87,16 @@ Este composable forma el marco general de la aplicación.
 Contiene el [NavHost] que permite navegar entre pantallas.
 
 Se le pasan los parámetros de:
+ * @navControllerMain:      [NavController] entre [App] y el [Login].
  * @appViewModel:            ViewModel general de la aplicación con los flows de la información relativa a la BBDD.
  * @preferencesViewModel:    ViewModel con las preferencias de [idioma] y [tema] del usuario local.
+ * @fusedLocationClient:     Cliente para la localización actual.
+ * @onDrawerOpen:            Al abrir el menú lateral por botón.
+ * @onLogout:                Función al cerrar sesión.
  * @guardarFichero:          Función necesaria en caso de querer descargar un fichero, ya que esto requiere volver a la [MainActivity].
  */
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(
     navControllerMain: NavController,
@@ -106,7 +111,8 @@ fun MainView(
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-    Widget().refresh(context)
+
+    Widget().refresh(context) // Actualizar Widget al recargar la página
     /*******************************************************************
      **    Recoger el valor actual de cada flow de los ViewModel      **
      **                 (valor por defecto: initial)                  **

@@ -128,6 +128,7 @@ fun Home(
                                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                 }
+                                /** Despliegue del Card del gasto **/
                                 GastoAbierto(
                                     show = show,
                                     navController = navController,

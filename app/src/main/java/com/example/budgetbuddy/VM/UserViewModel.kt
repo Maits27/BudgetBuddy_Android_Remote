@@ -51,24 +51,8 @@ class UserViewModel @Inject constructor(
     /*************************************************
      **                    Eventos                  **
      *************************************************/
-//    fun logoutDeTodosLosUsuarios(context: Context, appViewModel: AppViewModel) = runBlocking {
-//        Log.d("LOGOUT GENERAL", "LOGOUT GENERAL")
-//        todosLosUsuarios.map {
-//            Log.d("LOGOUT GENERAL", it.toString())
-//            it.map {
-//                Log.d("LOGOUT GENERAL", it.email)
-//                viewModelScope.launch {
-//                    if( userRepository.isLogged(it.email)?:false ){
-//                        appViewModel.upload_user_data(it.email){}
-//                    }
-//                }
-//                logout(user_to_authUser(it), context)
-//            }
-//        }
-//    }
 
     fun updateLastLoggedUsername(user: String) = runBlocking {
-        Log.d("COMPARE USERS", "SET USER: $user")
         userRepository.setLastLoggedUser(user)
     }
 
@@ -97,18 +81,13 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    ////////////////////// Gestionar sesión //////////////////////
     fun logout(user: AuthUser = currentUser,context: Context){
         viewModelScope.launch { userRepository.logIn(user.email, false) }
         profilePicture = null
         currentUser = AuthUser("", "", "")
         viewModelScope.launch { userRepository.setLastLoggedUser("") }
         Widget().refresh(context)
-    }
-
-    ////////////////////// Editar elementos //////////////////////
-    fun cambiarDatos(user: User) {
-        viewModelScope.launch {  userRepository.editarUsuario(user) }
-        currentUser = user_to_authUser(user)
     }
 
     suspend fun correctLogIn(email:String, passwd: String): HashMap<String, Any>{
@@ -129,15 +108,21 @@ class UserViewModel @Inject constructor(
         result["password"] = correctPasswd(p1, p2)
         if (result["name"]!! && result["email"]!! && result["password"]!!){
             if(!userRepository.exists(email)){
-                Log.d("Vacio", "user vacio")
                 result["not_exist"] = true
                 result["server"] = añadirUsuario(nombre, email, p1)
                 return result
             }
-            Log.d("NO Vacio", "user NO VACIO: ${userRepository.userName(email)}")
         }
         return result
     }
+
+    ////////////////////// Editar elementos //////////////////////
+    fun cambiarDatos(user: User) {
+        viewModelScope.launch {  userRepository.editarUsuario(user) }
+        currentUser = user_to_authUser(user)
+    }
+
+    ////////////////////// Foto de perfil //////////////////////
 
     fun setProfileImage(email: String, image: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {

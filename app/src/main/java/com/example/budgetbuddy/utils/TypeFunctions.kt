@@ -100,11 +100,16 @@ fun gasto_postGastos(gasto: Gasto): PostGasto {
         )
     return p
 }
-
+/**
+ * Conversión entre las clases [Location] y [LatLng]
+ */
 fun locationToLatLng(location: Location): LatLng {
     return LatLng(location.latitude, location.longitude)
 }
 
+/**
+ * Conversión entre las clases [AuthUser] y [User]
+ */
 fun user_to_authUser(user: User?): AuthUser{
     if (user==null) return AuthUser("", "", "")
     else return AuthUser(

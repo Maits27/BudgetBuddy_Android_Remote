@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
+import com.example.budgetbuddy.Local.Data.AlarmItem
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
@@ -28,6 +29,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -51,8 +53,7 @@ fun MyApp(
         startDestination = AppScreens.LoginPage.route
     ) {
         composable(AppScreens.LoginPage.route) {
-            LoginPage(navController, appViewModel, userViewModel){ user, download ->
-                Log.d("COMPARE USERS", user.toString())
+            LoginPage(navController, userViewModel){ user, download ->
                 appViewModel.currentUser = user.email
                 userViewModel.currentUser = user
                 preferencesViewModel.changeUser(user.email)
@@ -64,6 +65,14 @@ fun MyApp(
                 userViewModel.loginUser(user.email, true)
                 userViewModel.updateLastLoggedUsername(user.email)
                 subscribe()
+                scheduler.schedule(
+                    AlarmItem(
+                        time = LocalDateTime.now().plusHours(1),
+                        title = "",
+                        body = ""
+                    ),
+                    logout = user.email
+                )
             }
         }
         composable(AppScreens.App.route) {

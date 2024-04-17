@@ -12,6 +12,9 @@ import com.example.budgetbuddy.Local.Room.Gasto
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
+/***********************************************
+ **               DAO de Gastos               **
+ ***********************************************/
 
 /**
  * La DAO define la API de acceso a la base de datos de Room,

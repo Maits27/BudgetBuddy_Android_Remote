@@ -64,13 +64,12 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LoginPage(
     navController: NavController,
-    appViewModel: AppViewModel,
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit
 ){
     val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     if (isVertical){
-
+        /**     VERTICAL    **/
         var login by rememberSaveable {mutableStateOf(true)}
 
         Column(
@@ -84,7 +83,6 @@ fun LoginPage(
             if (login){
                 Login(
                     navController,
-                    appViewModel,
                     userViewModel,
                     onCorrectLogIn,
                     Modifier
@@ -102,6 +100,7 @@ fun LoginPage(
                 )
             }
             Divider(color = Color.DarkGray)
+            /**     Elección de pantalla    **/
             Row {
                 TextButton(
                     modifier = Modifier
@@ -132,6 +131,7 @@ fun LoginPage(
             }
         }
     }else{
+        /**     HORIZONTAL    **/
         Column (
             modifier = Modifier.verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +147,6 @@ fun LoginPage(
             ) {
                 Login(
                     navController,
-                    appViewModel,
                     userViewModel,
                     onCorrectLogIn,
                     Modifier
@@ -169,20 +168,31 @@ fun LoginPage(
 /***************************************************************
  ***                      ZONA DE LOGIN                      ***
  ***************************************************************/
+/**
+ * Login del usuario.
+ *
+ * Se le pasan los parámetros de:
+ * @navController:  [NavController] entre esta pantalla y la [App].
+ * @userViewModel:      ViewModel relativo a los usuarios.
+ * @onCorrectLogIn:     Función en caso de registro correcto.
+ */
 @Composable
 fun Login(
     navController: NavController,
-    appViewModel: AppViewModel,
     userViewModel: UserViewModel,
     onCorrectLogIn: (AuthUser, Any) -> Unit,
     modifier: Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
 
+    /*******************************************************************
+     **                     Valores del formulario                    **
+     * (rememberSaveable para no perder datos en caso de interrupción) *
+     ******************************************************************/
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
 
+    /**    Parámetros para el control de los estados de los composables  **/
     var error by remember { mutableStateOf(false) }
     var logerror by remember { mutableStateOf(false) }
     var serverError by remember { mutableStateOf(false) }
@@ -193,9 +203,9 @@ fun Login(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Subtitulo(mensaje = "User LogIn", true)
-        /**
-         * Campo del EMAIL
-         */
+
+        //////////////////// Email ////////////////////
+
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
@@ -207,9 +217,9 @@ fun Login(
                 cursorColor = verdeOscuro,
                 focusedLabelColor = verdeOscuro)
         )
-        /**
-         * Campo del PASSWORD
-         */
+
+        //////////////////// Contraseña ////////////////////
+
         TextField(
             value = passwd,
             onValueChange = { passwd = it },
@@ -222,9 +232,9 @@ fun Login(
             cursorColor = verdeOscuro,
             focusedLabelColor = verdeOscuro)
         )
-        /**
-         * Errores
-         */
+
+        //////////////////// Errores ////////////////////
+
         if(error){
             ErrorText(text = "Incorrect email or password")
         }else if (logerror){
@@ -235,6 +245,7 @@ fun Login(
             ErrorText(text = "Server disconnected. Please try again later.")
         }
 
+        //////////////////// Aceptar ////////////////////
         Button(
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -247,16 +258,13 @@ fun Login(
                 coroutineScope.launch(Dispatchers.IO) {
                     val result = userViewModel.correctLogIn(correo, passwd)
                     val user = result["user"]
-                    Log.d("LOGGED", user.toString())
                     val nombre = if(user is AuthUser) {user.nombre}else{""}
                     serverError = if((result["runtime"] ?: false) == true){true}else{false}
 
                     if(!serverError){
                         val logged = userViewModel.isLogged(correo)?: false
                         withContext(Dispatchers.Main) {
-                            Log.d("USER LOGGED", user.toString())
                             if(nombre!=""){
-                                Log.d("SET LLU", userViewModel.lastLoggedUser?:"")
                                 if(!logged) {
                                     onCorrectLogIn(
                                         AuthUser(nombre, correo, passwd.hash()),
@@ -288,15 +296,6 @@ fun Login(
                 color= verdeClaro
             )
         }
-//        Spacer(modifier = Modifier.padding(16.dp))
-//        var logoutGeneral by remember {mutableStateOf(false)}
-//        if (logoutGeneral) LogoutGeneral ({ logoutGeneral = false }) {
-//            logoutGeneral = false
-//            userViewModel.logoutDeTodosLosUsuarios(context, appViewModel)
-//        }
-//        Button(onClick = { logoutGeneral = true }) {
-//
-//        }
     }
 }
 
@@ -304,6 +303,15 @@ fun Login(
 /******************************************************************
  ***                      ZONA DE REGISTRO                      ***
  ******************************************************************/
+
+/**
+ * Registro del usuario.
+ *
+ * Se le pasan los parámetros de:
+ * @navController:  [NavController] entre esta pantalla y la [App].
+ * @userViewModel:      ViewModel relativo a los usuarios.
+ * @onCorrectLogIn:     Función en caso de registro correcto.
+ */
 @Composable
 fun Register(
     navController: NavController,
@@ -313,12 +321,17 @@ fun Register(
 ){
     val coroutineScope = rememberCoroutineScope()
 
+    /**    Parámetros para el control de los estados de los composables  **/
     var serverOk by remember { mutableStateOf(true) }
     var nombreOk by remember { mutableStateOf(true) }
     var emailOk by remember { mutableStateOf(true) }
     var passwdOk by remember { mutableStateOf(true) }
     var notexist by remember { mutableStateOf(true) }
 
+    /*******************************************************************
+     **                     Valores del formulario                    **
+     * (rememberSaveable para no perder datos en caso de interrupción) *
+     ******************************************************************/
     var nombre by rememberSaveable { mutableStateOf("") }
     var correo by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
@@ -331,6 +344,7 @@ fun Register(
     ){
         Subtitulo(mensaje = "User register", true)
 
+        //////////////////// Nombre ////////////////////
         TextField(
             value = nombre, 
             onValueChange = {nombre = it}, 
@@ -346,6 +360,7 @@ fun Register(
             ErrorText(text = "Incorrect name.")
         }
 
+        //////////////////// Email ////////////////////
         TextField(
             value = correo, 
             onValueChange = {correo = it}, 
@@ -360,6 +375,8 @@ fun Register(
         if (!emailOk){
             ErrorText(text = "Incorrect email.")
         }
+
+        //////////////////// Contraseñas ////////////////////
         TextField(
             value = passwd, 
             onValueChange = {passwd = it}, 
@@ -384,6 +401,8 @@ fun Register(
                 cursorColor = verdeOscuro,
                 focusedLabelColor = verdeOscuro)
         )
+
+        //////////////////// Errores ////////////////////
         if (!passwdOk){
             ErrorText(text = "Invalid password (the two of them must be the same).")
         }
@@ -393,6 +412,8 @@ fun Register(
         if (!notexist){
             ErrorText(text = "The user already exist.")
         }
+
+        //////////////////// Aceptar ////////////////////
         Button(
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -408,7 +429,6 @@ fun Register(
 
                     // Cambiar al hilo principal para actualizar la UI
                     if (registroExitoso.values.all {
-                        Log.d("LOGGED", "$it")
                         it }) {
                         withContext(Dispatchers.Main) {
                             onCorrectLogIn(AuthUser(nombre, correo, passwd.hash()), false)

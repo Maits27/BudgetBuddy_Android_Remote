@@ -18,6 +18,11 @@ import java.time.ZoneOffset
 import java.util.TimeZone
 
 
+/**
+ * Método para agregar el [Gasto] al calendario en caso de cumplir los requisitos
+ * y de haber un calendario válido.
+ */
+/**             (Requisito opcional)           **/
 fun agregarGastoAlCalendario(
     context: Context,
     user: String,
@@ -67,6 +72,9 @@ fun agregarGastoAlCalendario(
     }
 }
 
+/**
+ * Obtiene los ID de los calencarios válidos: LOCAL o sincronizado con el correo del [currentUser]
+ */
 @SuppressLint("Range")
 fun obtenerIdsCalendario(context: Context, user: String): List<Long> {
 
@@ -76,7 +84,6 @@ fun obtenerIdsCalendario(context: Context, user: String): List<Long> {
     // Filtrar los calendarios por tipo de cuenta
     val selection = "(${CalendarContract.Calendars.ACCOUNT_TYPE} IN (?) OR (${CalendarContract.Calendars.ACCOUNT_TYPE} NOT IN (?) AND ${CalendarContract.Calendars.ACCOUNT_NAME} = ?))"
     val selectionArgs = arrayOf("LOCAL", "com.google", user)
-
 
     // Consultar los calendarios
     context.contentResolver.query(
@@ -88,14 +95,16 @@ fun obtenerIdsCalendario(context: Context, user: String): List<Long> {
     )?.use { cursor ->
         while (cursor.moveToNext()) {
             val id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID))
-            Log.d("CALENDARIO", obtenerNombreCuentaPorId(context, id) ?:"")
             calendarIds.add(id)
         }
     }
 
     return calendarIds
 }
-
+/**
+ * Obtiene el nombre de la cuenta para el ID del calencario
+ * para verificar su validez en caso de no ser un calendario LOCAL.
+ */
 @SuppressLint("Range")
 fun obtenerNombreCuentaPorId(context: Context, calendarId: Long): String? {
     var tipoCuenta: String? = null
@@ -118,19 +127,20 @@ fun obtenerNombreCuentaPorId(context: Context, calendarId: Long): String? {
     return tipoCuenta
 }
 
+// Redundante con los AlarmManager
 
-fun agregarReminder(context: Context, eventoId: Long, minutos: Int) {
-    val contentResolver: ContentResolver = context.contentResolver
-
-    val reminderValues = ContentValues().apply {
-        put(CalendarContract.Reminders.EVENT_ID, eventoId)
-        put(CalendarContract.Reminders.MINUTES, minutos) // minutos antes del evento para mostrar el recordatorio
-        put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT) // Método de recordatorio
-    }
-
-    val uri: Uri? = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
-    uri?.let { insertedUri ->
-        val reminderId = ContentUris.parseId(insertedUri)
-        Log.d("Reminder", "Recordatorio insertado con ID: $reminderId")
-    }
-}
+//fun agregarReminder(context: Context, eventoId: Long, minutos: Int) {
+//    val contentResolver: ContentResolver = context.contentResolver
+//
+//    val reminderValues = ContentValues().apply {
+//        put(CalendarContract.Reminders.EVENT_ID, eventoId)
+//        put(CalendarContract.Reminders.MINUTES, minutos) // minutos antes del evento para mostrar el recordatorio
+//        put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT) // Método de recordatorio
+//    }
+//
+//    val uri: Uri? = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+//    uri?.let { insertedUri ->
+//        val reminderId = ContentUris.parseId(insertedUri)
+//        Log.d("Reminder", "Recordatorio insertado con ID: $reminderId")
+//    }
+//}

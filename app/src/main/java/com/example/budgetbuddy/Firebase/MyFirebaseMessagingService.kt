@@ -10,6 +10,15 @@ import com.example.budgetbuddy.MainActivity
 import com.example.budgetbuddy.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+
+/*******************************************************************************
+################################    FIREBASE    ################################
+ *******************************************************************************/
+/**
+ * Servicio de mensajería de FCM, recoge los mensajes
+ * enviados al token del dispositivo y los gestiona.
+ */
+/**             (Requisito obligatorio)           **/
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
@@ -41,6 +50,5 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // Handle token refresh here, you might need to send it to your server
     }
 }

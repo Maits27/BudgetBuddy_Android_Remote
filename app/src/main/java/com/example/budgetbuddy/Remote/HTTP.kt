@@ -27,16 +27,19 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// https://medium.com/@nirazv/how-to-make-api-calls-using-ktor-with-android-kotlin-3c8caf8c6e3a
+// Link documentación: https://medium.com/@nirazv/how-to-make-api-calls-using-ktor-with-android-kotlin-3c8caf8c6e3a
 
 
 /*******************************************************************************
  ****                               Excepciones                             ****
  *******************************************************************************/
 
-class AuthenticationException : Exception()
 class UserExistsException : Exception()
 
+/*******************************************************************************
+ ****                              Cliente HTTP                             ****
+ *******************************************************************************/
+/**             (Requisito obligatorio)           **/
 @Singleton
 class HTTPService @Inject constructor() {
     /*******************************************************************************
@@ -66,22 +69,27 @@ class HTTPService @Inject constructor() {
             }
         }
     }
+    /*******************************************************************************
+    ##########################    SUBSCRIPCIÓN FIREBASE    ##########################
+     *******************************************************************************/
     suspend fun subscribeUser(FCMClientToken: String) {
-        Log.d("SUBSCRIBE", FCMClientToken)
         httpClient.post("http://34.135.202.124:8000/notifications/subscribe/") {
             contentType(ContentType.Application.Json)
             setBody(mapOf("fcm_client_token" to FCMClientToken))
         }
     }
-    suspend fun sendNotificationToAll(content: String){
-        httpClient.post("http://34.135.202.124:8000/notifications/"){
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToJsonElement(content))
-        }
-    }
+
+//    suspend fun sendNotificationToAll(content: String){
+//        httpClient.post("http://34.135.202.124:8000/notifications/"){
+//            contentType(ContentType.Application.Json)
+//            setBody(Json.encodeToJsonElement(content))
+//        }
+//    }
     /*******************************************************************************
     ################################    USUARIOS    ################################
      *******************************************************************************/
+
+    ////////////////////// Comprobación y edición del estado de login //////////////////////
     suspend fun isLogged(email: String): Boolean? {
         val response = httpClient.get("http://34.135.202.124:8000/login/${email}")
         return response.body()
@@ -102,6 +110,7 @@ class HTTPService @Inject constructor() {
         }
     }
 
+    ////////////////////// Creación de usuario //////////////////////
     @Throws(IOException::class, UserExistsException::class)
     suspend fun createUser(user: AuthUser): Boolean {
         Log.d("HTTP", user.toString())
@@ -111,7 +120,6 @@ class HTTPService @Inject constructor() {
                     contentType(ContentType.Application.Json)
                     setBody(Json.encodeToJsonElement(user))
                 }
-                Log.d("HTTP", response.status.toString())
                 true
             } catch (e: IOException) {
                 // Captura la excepción en caso de que no se pueda acceder al servidor
@@ -121,7 +129,7 @@ class HTTPService @Inject constructor() {
         }
     }
 
-
+    ////////////////////// Información del usuario //////////////////////
     @Throws(IOException::class)
     suspend fun getUserByEmail(email: String): AuthUser? {
         return withContext(Dispatchers.IO) {
@@ -129,17 +137,14 @@ class HTTPService @Inject constructor() {
                 val response = httpClient.get("http://34.135.202.124:8000/users/$email")
                 response.body()
             } catch (e: ClientRequestException) {
-                // Manejar la excepción específica de ClientRequestException
-                Log.e("HTTP", "Error de red 1: ${e.message}")
                 AuthUser("", "", "") // Retorna null indicando que no se encontró el usuario
             } catch (e: IOException) {
-                // Manejar otras excepciones de E/S
-                Log.e("HTTP", "Error de red 2: ${e.message}")
                 null // Retorna null indicando que no se encontró el usuario
             }
         }
     }
 
+    ////////////////////// Edición del usuario //////////////////////
     @Throws(Exception::class)
     suspend fun editUser(email: String, user: AuthUser): AuthUser? = runBlocking {
         val response = httpClient.put("http://34.135.202.124:8000/users/${email}") {
@@ -149,7 +154,10 @@ class HTTPService @Inject constructor() {
         response.body()
     }
 
-    //----------   Imágen de perfil   ----------//
+    /*******************************************************************************
+    ########################    PERFIL DE USUARIO (FOTO)    ########################
+     *******************************************************************************/
+    /**             (Requisito obligatorio)           **/
 
     suspend fun getUserProfile(email: String): Bitmap {
         val response = httpClient.get("http://34.135.202.124:8000/profile/${email}")
@@ -176,31 +184,21 @@ class HTTPService @Inject constructor() {
     #################################    GASTOS    #################################
     *******************************************************************************/
 
-    /**
-     * Este método descarga los datos del usuario en el momento o el [currentUser].
-     * Se utiliza al hacer login por primera vez en el teléfono, cuando ya existían datos en la nube
-     * como al conectarse a budgetbuddy46@gmail.com o al descargarse la copia de seguridad de la nube.*/
+    ////////////////////// Descarga de todos los datos //////////////////////
     @Throws(Exception::class)
     suspend fun download_user_data(email: String): List<PostGasto>? = runBlocking {
-        Log.d("HTTP", email)
         val response = httpClient.get("http://34.135.202.124:8000/gastos/$email/")
-        Log.d("HTTP", response.status.toString())
         response.body()
     }
 
+    ////////////////////// Borrado de todos los datos //////////////////////
     @Throws(Exception::class)
     suspend fun delete_user_data(email: String){
         httpClient.delete("http://34.135.202.124:8000/gastos/$email/")
     }
 
-    @Throws(Exception::class)
-    suspend fun upload_gasto(email: String, gasto: PostGasto): PostGasto?= runBlocking{
-        val response = httpClient.post("http://34.135.202.124:8000/gastos/$email/") {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToJsonElement(gasto))
-        }
-        response.body()
-    }
+
+    ////////////////////// Actualización de todos los datos //////////////////////
     @Throws(Exception::class)
     suspend fun upload_gastos(email: String, gastos: List<PostGasto>) = runBlocking{
         httpClient.post("http://34.135.202.124:8000/gastos_upload/$email/") {

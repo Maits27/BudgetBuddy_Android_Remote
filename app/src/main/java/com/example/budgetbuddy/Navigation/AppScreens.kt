@@ -27,6 +27,11 @@ sealed class AppScreens (val route: String) {
     object UserEdit: AppScreens("UserEdit")
 }
 
+/**
+ * Método utilizado a lo largo de la aplicación y con diferentes [NavController]
+ * en diferentes [NavHost] para mantener la pila de pantallas lo más vacía posible
+ * ahorrando memoria y espacio.
+ */
 fun navegar_a(navController: NavController, ruta: String){
     navController.navigate(ruta) {
         popUpTo(navController.graph.startDestinationId) {

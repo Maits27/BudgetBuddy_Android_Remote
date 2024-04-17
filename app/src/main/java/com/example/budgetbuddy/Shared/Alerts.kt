@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
  **    Diálogos de la aplicación   **
  ************************************/
 
-// Aquí se implementan todos los diálogos (o AlertDialog) de la aplicación. (Requisito 3)
+// Aquí se implementan todos los diálogos (o AlertDialog) de la aplicación.
 
 
 /**
@@ -87,7 +87,7 @@ fun ToastMessage(context: Context, message: String) {
 
 
 /**
- * Despliegue de Card de Gasto
+ * Despliegue de Card de Gasto.
  */
 
 @Composable
@@ -206,21 +206,3 @@ fun GastoAbierto(
         )
     }
 }
-//@Composable
-//fun LogoutGeneral(onDismiss:()->Unit, onConfirm: () -> Unit){
-//    AlertDialog(
-//        containerColor = MaterialTheme.colorScheme.background,
-//        onDismissRequest = {},
-//        dismissButton = {TextButton(onClick = { onDismiss() }) {
-//            Text(text = "No", color = rojoError)
-//        }},
-//        confirmButton = { TextButton(onClick = { onConfirm() }) {
-//            Text(text = "Yes", color = verdeOscuro)
-//        }
-//        },
-//        title = { Text(text = "Do a general LogOut", color = Color.DarkGray) },
-//        text = {
-//            Text(text = "The LogOut of all the users registered in this phone will be forced (this can imply the loss of some data). Are you sure?", color = Color.DarkGray)
-//        }
-//    )
-//}

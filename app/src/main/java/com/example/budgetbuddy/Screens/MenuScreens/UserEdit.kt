@@ -40,6 +40,18 @@ import com.example.budgetbuddy.utils.hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/*******************************************************
+ ***          Pantalla auxiliar UserEdit             ***
+ *******************************************************/
+/**
+ * Edición del usuario en sesión.
+ * En caso de no escribir en la contraseña, esta se mantiene.
+ * Se guardan los mismos requisitos para ambos campos [nombre] y [contraseña].
+ *
+ * Se le pasan los parámetros de:
+ * @userViewModel: ViewModel relativo a los usuarios.
+ * @currentUser:   Usuario registrado.
+ */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun UserEdit(
@@ -49,9 +61,14 @@ fun UserEdit(
 ){
     val coroutineScope = rememberCoroutineScope()
 
+    /**    Parámetros para el control de los estados de los composables  **/
     var nombreOk by remember { mutableStateOf(true) }
     var passwdOk by remember { mutableStateOf(true) }
 
+    /*******************************************************************
+     **                     Valores del formulario                    **
+     * (rememberSaveable para no perder datos en caso de interrupción) *
+     ******************************************************************/
     var nombre by rememberSaveable { mutableStateOf("") }
     var passwd by rememberSaveable { mutableStateOf("") }
     var passwd2 by rememberSaveable { mutableStateOf("") }

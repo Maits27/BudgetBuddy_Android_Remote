@@ -56,6 +56,21 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/***************************************************
+ ***        Pantalla General de la App           ***
+ ***************************************************/
+/**
+Este composable forma la pantalla general de la aplicación con el menú lateral
+
+Se le pasan los parámetros de:
+ * @navControllerMain:      [NavController] entre esta pantalla y el [Login].
+ * @userViewModel:          ViewModel relativo a los usuarios.
+ * @appViewModel:           ViewModel general de la aplicación con los métodos necesarios para editar la fecha.
+ * @fusedLocationClient:    Cliente para la localización actual.
+ * @pickMedia:              Cliente para selección de imágenes en la galería.
+ * @preferencesViewModel:   ViewModel relativo a las preferencias de los usuarios.
+ * @guardarFichero:         Función de descarga de ficheros.
+ */
 @Composable
 fun App(
     navControllerMain: NavController,

@@ -47,6 +47,10 @@ import com.example.budgetbuddy.ui.theme.verdeOscuro
  **    Composables para definir el estilo de los elementos de la app   **
  ************************************************************************/
 
+
+/**
+ * Título de la aplicación con el nombre de la APP.
+ */
 @Composable
 fun Titulo(login: Boolean = false){
     var colorTexto = MaterialTheme.colorScheme.primary
@@ -68,7 +72,9 @@ fun Titulo(login: Boolean = false){
     )
 }
 
-
+/**
+ * Subtítulo o título de sección, después del nombre de la aplicación.
+ */
 @Composable
 fun Subtitulo(mensaje: String, login: Boolean = false){
     if (!login) HorizontalDivider(color = Color.DarkGray, thickness = 1.dp)
@@ -84,7 +90,9 @@ fun Subtitulo(mensaje: String, login: Boolean = false){
     if (login) HorizontalDivider(color = Color.DarkGray, thickness = 2.dp)
 }
 
-
+/**
+ * Descripción de elemento en letra pequeña para diferentes aclaraciones.
+ */
 @Composable
 fun Description(mensaje: String){
     Text(
@@ -97,6 +105,10 @@ fun Description(mensaje: String){
         )
     )
 }
+
+/**
+ * Elemento Card para la lista de [Gasto] en [Home]
+ */
 
 @Composable
 fun CardElement(text: String, kant: Double = 0.0, modifier:Modifier = Modifier){
@@ -117,6 +129,9 @@ fun CardElement(text: String, kant: Double = 0.0, modifier:Modifier = Modifier){
 
 }
 
+/**
+ * Mensaje de error customizable
+ */
 @Composable
 fun ErrorText(text: String) {
     Text(
@@ -129,6 +144,9 @@ fun ErrorText(text: String) {
     )
 }
 
+/**
+ * Botón de cerrado con formato y texto fijos.
+ */
 @Composable
 fun CloseButton(onConfirm: () -> Unit){
     Button(
@@ -139,24 +157,23 @@ fun CloseButton(onConfirm: () -> Unit){
     }
 }
 
+
+/**
+ * Icono en movimiento para el [Perfil] o la carga de datos al servidor
+ */
 @Composable
 fun LoadingImagePlaceholder(size: Dp = 140.dp, id: Int = R.drawable.start_icon) {
-    // Creates an `InfiniteTransition` that runs infinite child animation values.
     val infiniteTransition = rememberInfiniteTransition()
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
-        // `infiniteRepeatable` repeats the specified duration-based `AnimationSpec` infinitely.
         animationSpec = infiniteRepeatable(
-            // The `keyframes` animates the value by specifying multiple timestamps.
             animation = keyframes {
                 // One iteration is 1000 milliseconds.
                 durationMillis = 1000
                 // 0.7f at the middle of an iteration.
                 0.7f at 500
             },
-            // When the value finishes animating from 0f to 1f, it repeats by reversing the
-            // animation direction.
             repeatMode = RepeatMode.Reverse
         ), label = ""
     )

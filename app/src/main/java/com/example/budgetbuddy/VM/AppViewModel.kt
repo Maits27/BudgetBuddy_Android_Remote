@@ -81,7 +81,6 @@ class AppViewModel @Inject constructor(
 //    init {
 //        viewModelScope.launch {
 //            for (cantidad in 1 until 10){
-//                Log.d("BD-Preloading", "Loading cantidad $cantidad")
 //                añadirGasto( "Gasto Inicial 2$cantidad", 10.0*cantidad, LocalDate.of(2024,3, cantidad), TipoGasto.Comida)
 //                añadirGasto( "Gasto Inicial 5$cantidad", 4.0*cantidad, LocalDate.of(2024,3, cantidad+20), TipoGasto.Ropa)
 //                añadirGasto( "Gasto Inicial 4$cantidad", 5.0*cantidad, LocalDate.of(2024,3, cantidad+10), TipoGasto.Hogar)
@@ -118,7 +117,6 @@ class AppViewModel @Inject constructor(
             }
             gastoRepository.insertGasto(gasto)
         }catch (e: Exception){
-            Log.d("BASE DE DATOS!", e.toString())
         }
         return gasto
     }
@@ -159,10 +157,8 @@ class AppViewModel @Inject constructor(
     ////////////////////// Recopilar datos gráficos //////////////////////
 
     fun sacarDatosMes(fecha: LocalDate, listadoGastos: Flow<List<Gasto>>): Flow<List<GastoDia>>{
-        Log.d("CURRENT USER", currentUser)
         val gastosFechados = listadoGastos.map{
             it.filter { gasto ->
-                Log.d("gasto inicial", "$gasto")
                 gasto.fecha.year == fecha.year }
             .filter { gasto ->  gasto.fecha.monthValue == fecha.monthValue }
         }
@@ -193,21 +189,20 @@ class AppViewModel @Inject constructor(
         }
         return gastosAgrupados
     }
+
+    ////////////////////// Recopilar y editar datos remoto //////////////////////
     fun download_user_data(context: Context, scheduler: AndroidAlarmScheduler){
         viewModelScope.launch {
             gastoRepository.download_user_data(currentUser, context, scheduler)
         }
     }
-//    suspend fun erase_user_data(){
-//        gastoRepository.deleteUserData(currentUser)
-//    }
+
     private fun recogerTodosLosGastos(): Flow<List<Gasto>>{
         return gastoRepository.todosLosGastos(currentUser)
     }
     fun upload_user_data(currentUser:String, onConfirm: ()-> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             try {
-//                gastoRepository.deleteUserData(currentUser)
                 val gastos = recogerTodosLosGastos().first()
                 gastoRepository.uploadUserData(
                     currentUser,

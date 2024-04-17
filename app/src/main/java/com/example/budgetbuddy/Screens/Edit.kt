@@ -77,11 +77,12 @@ import java.time.format.DateTimeParseException
 Este composable forma la pantalla del formulario para editar elementos.
 
 Se le pasan los parámetros de:
- * @gasto:          elemento tipo [Gasto] que se quiere editar (con sus datos hasta el momento).
- * @ppViewModel:  ViewModel general de la aplicación con los flows de la información relativa a la [Fecha].
- * @navController: De forma que se pueda volver a la pantalla [Home].
- * @idioma:        Necesario para la conversión de tipos de gasto.
- * @modifier:      Para dar un estilo predeterminado a los composables (default).
+ * @gasto:                  Elemento tipo [Gasto] que se quiere editar (con sus datos hasta el momento).
+ * @ppViewModel:            ViewModel general de la aplicación con los flows de la información relativa a la [Fecha].
+ * @preferencesViewModel:   ViewModel relativo a las preferencias de los usuarios.
+ * @navController:          De forma que se pueda volver a la pantalla [Home].
+ * @fusedLocationClient:    Cliente para la localización actual.
+ * @modifier:               Para dar un estilo predeterminado a los composables (default).
  */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
@@ -145,7 +146,6 @@ fun Edit(
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
-            Log.d("LOCATION", "POST EDIT: ${location.toString()}")
             lastKnownLocation = location
         }
 

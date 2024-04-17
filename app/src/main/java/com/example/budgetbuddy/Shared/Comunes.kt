@@ -87,20 +87,7 @@ import java.time.ZoneId
  * localización se mostrará el [NoMap] explicando la situación.
  */
 
-fun getLatLngFromAddress(context: Context, mAddress: String): Pair<Double, Double>? {
-    val coder = Geocoder(context)
-    try {
-        val addressList = coder.getFromLocationName(mAddress, 1)
-        if (addressList.isNullOrEmpty()) {
-            return null
-        }
-        val location = addressList[0]
-        return Pair(location.latitude, location.longitude)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        return null
-    }
-}
+
 @Composable
 fun MapScreen(
     lastKnownLocation: Location?,
@@ -176,7 +163,20 @@ fun NoMap(){
         }
     }
 }
-
+//fun getLatLngFromAddress(context: Context, mAddress: String): Pair<Double, Double>? {
+//    val coder = Geocoder(context)
+//    try {
+//        val addressList = coder.getFromLocationName(mAddress, 1)
+//        if (addressList.isNullOrEmpty()) {
+//            return null
+//        }
+//        val location = addressList[0]
+//        return Pair(location.latitude, location.longitude)
+//    } catch (e: Exception) {
+//        e.printStackTrace()
+//        return null
+//    }
+//}
 
 /**
  * Cabecera de las tres pantallas principales para elegir la fecha

@@ -24,39 +24,33 @@ import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import javax.inject.Inject
 
+
+// https://developer.android.com/develop/ui/views/appwidgets?hl=es-419
 @AndroidEntryPoint
 class WidgetReceiver : GlanceAppWidgetReceiver() {
     /*************************************************
-     **                  Attributes                 **
+     **                  Atributos                  **
      *************************************************/
 
-    //-----------------   Widget   -----------------//
     override val glanceAppWidget: GlanceAppWidget = Widget()
 
     private val coroutineScope = MainScope()
 
-    //-------------   Repositorios   --------------//
     @Inject
     lateinit var gastoRepository: GastoRepository
     @Inject
     lateinit var userRepository: ILoginSettings
     /*************************************************
-     **                    Events                   **
+     **                    Eventos                  **
      *************************************************/
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-
-        Log.d("Widget", "onUpdate Called")
         observeData(context)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-
-        Log.d("Widget", "onReceive Called; Action: ${intent.action}")
-
-        // We filter actions in order to prevent updating twice in onUpdate events.
         if (intent.action == UPDATE_ACTION || intent.action.equals("ACTION_TRIGGER_LAMBDA")) {
             observeData(context)
         }
@@ -80,9 +74,6 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
             } else emptyList()
 
 
-            Log.d("Widget", "Coroutine - Data-Length: ${gastos.size}")
-
-            // Get all the widget IDs and update them
             GlanceAppWidgetManager(context).getGlanceIds(Widget::class.java).forEach { glanceId ->
                 updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { widgetDataStore ->
                     widgetDataStore.toMutablePreferences().apply {
@@ -92,7 +83,6 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
                             this[currentUserKey] = currentUsername
                             this[todayGastoDataKey] = Json.encodeToString(gastos)
                         }
-
                         // If there's no user clear all data
                         else this.clear()
 
@@ -104,7 +94,6 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
             glanceAppWidget.updateAll(context)
         }
     }
-
 
     /************************************************
      ****              Constantes                ****

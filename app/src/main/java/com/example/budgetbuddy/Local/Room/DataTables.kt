@@ -14,10 +14,8 @@ import java.util.UUID
  ******************************************************************/
 
 /**
- * Clase [Gasto], utilizada para almacenar toda la información de todos las entidades
- * tipo [Gasto] en la base de datos de Room. Si se quieren utilizar datos específicos
- * dependiendo de la pantalla (como es siempre el caso). Se recurren a las data-class
- * definidas arriba.
+ * Clase [User], utilizada para almacenar toda la información de todos las entidades
+ * tipo [User] en la base de datos de Room.
  */
 @Entity
 data class User(
@@ -27,6 +25,11 @@ data class User(
 )
 
 
+/**
+ * Clase [Gasto], utilizada para almacenar toda la información de todos las entidades
+ * tipo [Gasto] en la base de datos de Room.
+ * La foreignKey establece la conexión entre esta entidad y la de [User]
+ */
 @Entity(
     foreignKeys = [
         ForeignKey(entity = User::class, parentColumns = ["email"], childColumns = ["userId"], onDelete = ForeignKey.CASCADE),

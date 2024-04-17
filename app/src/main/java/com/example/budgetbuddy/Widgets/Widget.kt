@@ -57,6 +57,7 @@ import kotlin.text.split
 /*******************************************************************************
  ****                     Widget con listado de gastos                      ****
  *******************************************************************************/
+/**             (Requisito opcional)           **/
 
 class Widget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -234,6 +235,8 @@ class Widget : GlanceAppWidget() {
         }
         context.sendBroadcast(intent)
     }
+
+    // Métodos de traducción de tipo:
     private fun textoAIcono(texto:String): Int{
         when{
             texto == "Comida" -> return R.drawable.food
