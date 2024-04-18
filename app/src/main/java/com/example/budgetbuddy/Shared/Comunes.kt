@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import com.example.budgetbuddy.Local.Room.User
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.UserViewModel
@@ -408,6 +409,7 @@ fun NoCalendar(){
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Loading(
+    users: List<User>,
     appViewModel: AppViewModel,
     onConfirm: () -> Unit
 ) {
@@ -425,7 +427,7 @@ fun Loading(
         Divider()
         LoadingImagePlaceholder(id = R.drawable.cloud_upload)
         Text(text = stringResource(id = R.string.loading_data))
-        appViewModel.upload_user_data(currentUser) {fin = true}
+        appViewModel.upload_user_data(currentUser, users) {fin = true}
         if (fin){onConfirm()}
     }
 }

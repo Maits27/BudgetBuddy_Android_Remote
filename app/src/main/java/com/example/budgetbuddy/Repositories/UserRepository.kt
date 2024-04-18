@@ -20,7 +20,9 @@ import javax.inject.Singleton
  *******************************************************************/
 interface IUserRepository: ILoginSettings {
     fun logIn(email: String, login:Boolean): AuthUser?
+//    suspend fun logInLocal(email: String, login:Boolean)
     suspend fun isLogged(email: String):Boolean?
+//    suspend fun isLoggedLocal(email: String):Boolean?
     suspend fun exists(email: String):Boolean
     suspend fun insertLocal(user: User)
     suspend fun insertUsuario(user: AuthUser): Boolean
@@ -78,11 +80,17 @@ class UserRepository @Inject constructor(
     override fun logIn(email: String, login: Boolean): AuthUser? = runBlocking{
         httpService.loginUser(email, login)
     }
+
+//    override suspend fun logInLocal(email: String, login: Boolean) {
+//        userDao.logIn(email, login)
+//    }
     ////////////////////// Info usuario //////////////////////
 
     override suspend fun isLogged(email: String): Boolean? {
         return httpService.isLogged(email)
     }
+
+
 
     override suspend fun exists(email: String): Boolean {
         val user = httpService.getUserByEmail(email)
@@ -164,7 +172,9 @@ class UserRepository @Inject constructor(
         return userDao.userName(email)?:""
     }
 
-
+//    override suspend fun isLoggedLocal(email: String): Boolean? {
+//        return userDao.logged(email)?:false
+//    }
 
 
 }

@@ -82,10 +82,10 @@ class AlarmReceiver : BroadcastReceiver() {
 //                }
 //            }
 
-            coroutineScope.launch {
+//            coroutineScope.launch {
 //                userRepository.setLastLoggedUser("")
-                httpService.loginUser(logout, false)
-            }
+//                httpService.loginUser(logout, false)
+//            }
         }
     }
 }

@@ -21,6 +21,7 @@ import com.example.budgetbuddy.utils.correctPasswd
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ class UserViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    val todosLosUsuarios = userRepository.todosLosUsuarios()
     val lastLoggedUser: String? = runBlocking { return@runBlocking userRepository.getLastLoggedUser() }
     var profilePicture: Bitmap? by mutableStateOf(null)
         private set
@@ -59,8 +61,14 @@ class UserViewModel @Inject constructor(
     fun isLogged(email: String): Boolean? = runBlocking {
         userRepository.isLogged(email)
     }
+//    fun isLoggedLocal(email: String): Boolean? = runBlocking {
+//        userRepository.isLoggedLocal(email)
+//    }
     fun loginUser(email: String, login:Boolean): AuthUser? = runBlocking {
         userRepository.logIn(email, login)
+    }
+    fun editUser(user: User){
+        viewModelScope.launch { userRepository.editarUsuario(user) }
     }
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
@@ -82,8 +90,15 @@ class UserViewModel @Inject constructor(
     }
 
     ////////////////////// Gestionar sesión //////////////////////
-    fun logout(user: AuthUser = currentUser,context: Context){
-        viewModelScope.launch { userRepository.logIn(user.email, false) }
+    fun logout(userActual: AuthUser = currentUser, context: Context){
+        viewModelScope.launch {
+            val users = todosLosUsuarios.first()
+            for (user in users){
+//                if (user.login){
+                    userRepository.logIn(user.email, false)
+//                }
+            }
+        }
         profilePicture = null
         currentUser = AuthUser("", "", "")
         viewModelScope.launch { userRepository.setLastLoggedUser("") }

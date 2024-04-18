@@ -8,12 +8,14 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Local.Data.AlarmItem
+import com.example.budgetbuddy.Local.Room.User
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.VM.PreferencesViewModel
 import com.example.budgetbuddy.VM.UserViewModel
@@ -28,6 +30,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -46,6 +50,7 @@ fun MyApp(
 
     val navController = rememberNavController()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val scheduler = AndroidAlarmScheduler(context)
 
     NavHost(
@@ -62,6 +67,7 @@ fun MyApp(
                     userViewModel.insertLocal(authuser_to_user(user))
                 }
                 appViewModel.download_user_data(context, scheduler)
+//                userViewModel.editUser(User(user.nombre, user.email, user.password, true))
                 userViewModel.loginUser(user.email, true)
                 userViewModel.updateLastLoggedUsername(user.email)
                 subscribe()

@@ -21,7 +21,8 @@ import java.util.UUID
 data class User(
     var nombre: String,
     @PrimaryKey val email: String,
-    var password: String
+    var password: String,
+//    var login: Boolean
 )
 
 

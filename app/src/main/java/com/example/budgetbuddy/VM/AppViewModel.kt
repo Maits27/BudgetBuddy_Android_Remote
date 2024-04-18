@@ -17,6 +17,7 @@ import com.example.budgetbuddy.Local.Data.GastoTipo
 import com.example.budgetbuddy.Repositories.IGastoRepository
 import com.example.budgetbuddy.Local.Data.TipoGasto
 import com.example.budgetbuddy.Local.Data.AlarmItem
+import com.example.budgetbuddy.Local.Room.User
 import com.example.budgetbuddy.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -197,17 +198,30 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    private fun recogerTodosLosGastos(): Flow<List<Gasto>>{
-        return gastoRepository.todosLosGastos(currentUser)
+    private fun recogerTodosLosGastos(user: String): Flow<List<Gasto>>{
+        return gastoRepository.todosLosGastos(user)
     }
-    fun upload_user_data(currentUser:String, onConfirm: ()-> Unit){
+    fun upload_user_data(currentUser:String, users: List<User> = emptyList(), onConfirm: ()-> Unit){
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val gastos = recogerTodosLosGastos().first()
-                gastoRepository.uploadUserData(
-                    currentUser,
-                    gastos
-                )
+                if (users.isEmpty()){
+                    val gastos = recogerTodosLosGastos(currentUser).first()
+                    gastoRepository.uploadUserData(
+                        currentUser,
+                        gastos
+                    )
+                }else{
+                    for (user in users){
+//                        if (user.login){
+                            val gastos = recogerTodosLosGastos(user.email).first()
+                            gastoRepository.uploadUserData(
+                                user.email,
+                                gastos
+                            )
+//                        }
+                    }
+                }
             } catch (_: Exception) {
                 onConfirm()
             }

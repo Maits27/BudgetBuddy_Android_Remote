@@ -96,6 +96,7 @@ fun App(
 
     val saveOnCalendar by preferencesViewModel.saveOnCalendar(appViewModel.currentUser).collectAsState(initial = true)
     val saveLocation by preferencesViewModel.saveLocation(appViewModel.currentUser).collectAsState(initial = true)
+    val users by userViewModel.todosLosUsuarios.collectAsState(initial = emptyList())
     // icons to mimic drawer destinations
     val items = listOf(
         Diseño(AppScreens.UserEdit, painterResource(id = R.drawable.user), stringResource(id = R.string.edit)),
@@ -202,7 +203,7 @@ fun App(
                     Infor{ navegar_a(navControllerSecundario, AppScreens.MainView.route) }
                 }
                 composable(AppScreens.Loading.route) {
-                    Loading(appViewModel){
+                    Loading(users, appViewModel){
                         if (logout) {
                             userViewModel.logout(context = context)
                             preferencesViewModel.changeUser("")
