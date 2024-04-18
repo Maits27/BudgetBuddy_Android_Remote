@@ -139,7 +139,15 @@ fun Add(
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-
+        Log.d("NO HAY PERMISO",  ActivityCompat.checkSelfPermission(
+            LocalContext.current,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ).toString())
+        Log.d("NO HAY PERMISO", ActivityCompat.checkSelfPermission(
+            LocalContext.current,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ).toString())
+        Log.d("NO HAY PERMISO", "NO HAY PERMISO LOCALIZACION")
     }
     fusedLocationClient.lastLocation
         .addOnSuccessListener { location: Location? ->
@@ -298,6 +306,7 @@ fun Add(
         Calendario(show = (isTextFieldFocused == 2), onCalendarConfirm)
 
         if (saveLoc && lastKnownLocation!=null) MapScreen(lastKnownLocation = lastKnownLocation)
+        else Log.d("NO HAY PERMISOS", "$saveLoc $lastKnownLocation")
 
         /** Botón para añadir elemento en Room **/
         Button(

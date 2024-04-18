@@ -47,30 +47,33 @@ fun agregarGastoAlCalendario(
         }
     }else{
         if (fechaL > LocalDate.now().toLong()){
-            val timeZone = TimeZone.getDefault().id
+            for (calendarId in calendarIds){
+                val timeZone = TimeZone.getDefault().id
 
-            val values = ContentValues().apply {
-                put(CalendarContract.Events.DTSTART, fecha)
-                put(CalendarContract.Events.DTEND, fecha + (60 * 60 * 1000)) // Duración de 1 hora
-                put(CalendarContract.Events.ALL_DAY, 1) // Evento de todo el día
-                put(CalendarContract.Events.TITLE, titulo)
-                put(CalendarContract.Events.DESCRIPTION, descripcion)
-                put(CalendarContract.Events.CALENDAR_ID, calendarIds[0])
-                put(CalendarContract.Events.EVENT_TIMEZONE, timeZone) // Agregar el campo eventTimezone
+                val values = ContentValues().apply {
+                    put(CalendarContract.Events.DTSTART, fecha)
+                    put(CalendarContract.Events.DTEND, fecha + (60 * 60 * 1000)) // Duración de 1 hora
+                    put(CalendarContract.Events.ALL_DAY, 1) // Evento de todo el día
+                    put(CalendarContract.Events.TITLE, titulo)
+                    put(CalendarContract.Events.DESCRIPTION, descripcion)
+                    put(CalendarContract.Events.CALENDAR_ID, calendarId)
+                    put(CalendarContract.Events.EVENT_TIMEZONE, timeZone) // Agregar el campo eventTimezone
+                }
+
+                val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+                uri?.let {
+                    // El evento se insertó correctamente
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(context, context.getString(R.string.evento_added), Toast.LENGTH_SHORT).show()
+                    }
+                } ?: run {
+                    // Ocurrió un error al insertar el evento
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(context, context.getString(R.string.calendar_add_error), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
 
-            val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-            uri?.let {
-                // El evento se insertó correctamente
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(context, context.getString(R.string.evento_added), Toast.LENGTH_SHORT).show()
-                }
-            } ?: run {
-                // Ocurrió un error al insertar el evento
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(context, context.getString(R.string.calendar_add_error), Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 }
@@ -98,10 +101,11 @@ fun obtenerIdsCalendario(context: Context): List<Long> {
     )?.use { cursor ->
         while (cursor.moveToNext()) {
             val id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID))
+            Log.d("CALENDARIO", id.toString())
             calendarIds.add(id)
         }
     }
-
+    Log.d("CALENDARIO", calendarIds.toString())
     return calendarIds
 }
 
@@ -128,6 +132,7 @@ fun obtenerIdsCalendarioXEmail(context: Context, user: String): List<Long> {
     )?.use { cursor ->
         while (cursor.moveToNext()) {
             val id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID))
+            Log.d("CALENDARIO GOOGLE", id.toString())
             calendarIds.add(id)
         }
     }
@@ -158,6 +163,7 @@ fun obtenerIdsCalendarioLOCAL(context: Context): List<Long> {
     )?.use { cursor ->
         while (cursor.moveToNext()) {
             val id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID))
+            Log.d("CALENDARIO LOCAL", id.toString())
             calendarIds.add(id)
         }
     }
