@@ -126,13 +126,13 @@ fun UserEdit(
                     if ( (passwd=="" && passwd2=="")){
                         coroutineScope.launch(Dispatchers.IO) {
                             // Ejecuta el código que puede bloquear el hilo principal aquí
-                            userViewModel.cambiarDatos(User(nombre, currentUser, userViewModel.currentUser.password))
+                            userViewModel.cambiarDatos(User(nombre, currentUser, userViewModel.currentUser.password, true))
                         }
                         onConfirm()
                     }else if(correctPasswd(passwd, passwd2)){
                         coroutineScope.launch(Dispatchers.IO) {
                             // Ejecuta el código que puede bloquear el hilo principal aquí
-                            userViewModel.cambiarDatos(User(nombre, currentUser, passwd.hash()))
+                            userViewModel.cambiarDatos(User(nombre, currentUser, passwd.hash(), true))
                         }
                         onConfirm()
                     }else{

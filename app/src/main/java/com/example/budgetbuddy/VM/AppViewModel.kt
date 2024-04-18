@@ -213,13 +213,13 @@ class AppViewModel @Inject constructor(
                     )
                 }else{
                     for (user in users){
-//                        if (user.login){
+                        if (user.login){
                             val gastos = recogerTodosLosGastos(user.email).first()
                             gastoRepository.uploadUserData(
                                 user.email,
                                 gastos
                             )
-//                        }
+                        }
                     }
                 }
             } catch (_: Exception) {

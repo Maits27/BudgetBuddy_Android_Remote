@@ -120,10 +120,11 @@ fun user_to_authUser(user: User?): AuthUser{
 }
 
 fun authuser_to_user(user: AuthUser?): User{
-    if (user==null) return User("", "", "")
+    if (user==null) return User("", "", "", false)
     else return User(
         nombre = user.nombre,
         email = user.email,
-        password = user.password
+        password = user.password,
+        true
     )
 }

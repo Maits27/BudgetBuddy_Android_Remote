@@ -67,8 +67,8 @@ class UserViewModel @Inject constructor(
     fun loginUser(email: String, login:Boolean): AuthUser? = runBlocking {
         userRepository.logIn(email, login)
     }
-    fun editUser(user: User){
-        viewModelScope.launch { userRepository.editarUsuario(user) }
+    fun editUserLocal(user: User){
+        viewModelScope.launch { userRepository.editarUsuarioLocal(user) }
     }
 
     ////////////////////// Añadir y eliminar elementos //////////////////////
@@ -90,13 +90,13 @@ class UserViewModel @Inject constructor(
     }
 
     ////////////////////// Gestionar sesión //////////////////////
-    fun logout(userActual: AuthUser = currentUser, context: Context){
+    fun logout(context: Context){
         viewModelScope.launch {
             val users = todosLosUsuarios.first()
             for (user in users){
-//                if (user.login){
+                if (user.login){
                     userRepository.logIn(user.email, false)
-//                }
+                }
             }
         }
         profilePicture = null

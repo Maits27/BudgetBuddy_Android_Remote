@@ -31,6 +31,7 @@ interface IUserRepository: ILoginSettings {
     suspend fun userNamePassword(email: String, passwd:String): HashMap<String, Any>
     fun userName(email: String): String
     suspend fun editarUsuario(user: User): Int
+    suspend fun editarUsuarioLocal(user: User)
     suspend fun getUserProfile(email: String): Bitmap
     suspend fun setUserProfile(email: String, image: Bitmap): Bitmap
 }
@@ -65,7 +66,7 @@ class UserRepository @Inject constructor(
     override suspend fun insertUsuario(user: AuthUser): Boolean{
         try {
             val remote = httpService.createUser(user)
-            if (remote) userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password))
+            if (remote) userDao.insertUsuario(User(nombre = user.nombre, email = user.email, password = user.password, true))
             return remote
         }catch (e: Exception){
         }
@@ -81,9 +82,6 @@ class UserRepository @Inject constructor(
         httpService.loginUser(email, login)
     }
 
-//    override suspend fun logInLocal(email: String, login: Boolean) {
-//        userDao.logIn(email, login)
-//    }
     ////////////////////// Info usuario //////////////////////
 
     override suspend fun isLogged(email: String): Boolean? {
@@ -125,6 +123,9 @@ class UserRepository @Inject constructor(
             user_to_authUser(user)
         )
         return userDao.editarUsuario(user)
+    }
+    override suspend fun editarUsuarioLocal(user: User) {
+        userDao.editarUsuario(user)
     }
 
     ////////////////////// Imagen perfil usuario //////////////////////

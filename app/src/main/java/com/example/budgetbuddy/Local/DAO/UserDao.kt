@@ -46,9 +46,9 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE email=:email")
     fun existe(email: String): Boolean
 
-//    @Transaction
-//    @Query("SELECT login FROM User WHERE email=:email")
-//    fun logged(email: String): Boolean
+    @Transaction
+    @Query("SELECT login FROM User WHERE email=:email")
+    fun logged(email: String): Boolean
 
 //    @Transaction
 //    @Query("UPDATE User SET login=:login WHERE email=:email")

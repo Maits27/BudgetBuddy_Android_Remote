@@ -65,9 +65,10 @@ fun MyApp(
                 userViewModel.getProfileImage(user.email)
                 if (download==true){
                     userViewModel.insertLocal(authuser_to_user(user))
+                }else{
+                    userViewModel.editUserLocal(User(user.nombre, user.email, user.password, true))
                 }
                 appViewModel.download_user_data(context, scheduler)
-//                userViewModel.editUser(User(user.nombre, user.email, user.password, true))
                 userViewModel.loginUser(user.email, true)
                 userViewModel.updateLastLoggedUsername(user.email)
                 subscribe()

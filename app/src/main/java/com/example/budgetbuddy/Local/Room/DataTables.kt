@@ -22,7 +22,7 @@ data class User(
     var nombre: String,
     @PrimaryKey val email: String,
     var password: String,
-//    var login: Boolean
+    var login: Boolean
 )
 
 
