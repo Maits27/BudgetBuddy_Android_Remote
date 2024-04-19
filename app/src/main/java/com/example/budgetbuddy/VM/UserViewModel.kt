@@ -117,15 +117,16 @@ class UserViewModel @Inject constructor(
     suspend fun correctRegister(nombre: String, email: String, p1:String, p2:String): HashMap<String, Boolean>{
         val result = HashMap<String, Boolean>()
         result["server"] = true
-        result["not_exist"] = false
+        result["not_exist"] = true
         result["name"] = correctName(nombre)
         result["email"] = correctEmail(email)
         result["password"] = correctPasswd(p1, p2)
         if (result["name"]!! && result["email"]!! && result["password"]!!){
             if(!userRepository.exists(email)){
-                result["not_exist"] = true
                 result["server"] = añadirUsuario(nombre, email, p1)
                 return result
+            }else{
+                result["not_exist"] = false
             }
         }
         return result
