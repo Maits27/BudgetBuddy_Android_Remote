@@ -1,3 +1,4 @@
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -23,6 +24,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        val keystorefile = project.rootProject.file("local.properties")
+        val properties = Properties()
+        properties.load(keystorefile.inputStream())
+        val MAPS_KEY = properties.getProperty("MAPS_KEY")?:""
+        manifestPlaceholders["MAPS_KEY"] = MAPS_KEY
 
         javaCompileOptions {
             annotationProcessorOptions {
