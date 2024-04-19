@@ -2,8 +2,16 @@ package com.example.budgetbuddy.Widgets
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -115,6 +123,7 @@ class Widget : GlanceAppWidget() {
 
                 // Sin LogIn
                 user == null || user == "" -> {
+                    Log.d("WIDGET", user.toString())
                     Column(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,12 +135,25 @@ class Widget : GlanceAppWidget() {
 
                 // LogIn pero sin gastos
                 gastos.isEmpty() -> {
+                    Log.d("WIDGET", "GASTO EMPTY")
                     Column(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = GlanceModifier.fillMaxSize().defaultWeight()
                     ) {
-                        NoData()
+                        Image(
+                            provider = ImageProvider(R.drawable.close),
+                            contentDescription = null,
+                            modifier = GlanceModifier.size(120.dp).defaultWeight()
+                        )
+                        Text(text = "No data",
+                            modifier = GlanceModifier
+                                .defaultWeight(),
+                            style = TextStyle(
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 20.sp,
+                                color = ColorProvider(Color.DarkGray)
+                            ))
                     }
                 }
 

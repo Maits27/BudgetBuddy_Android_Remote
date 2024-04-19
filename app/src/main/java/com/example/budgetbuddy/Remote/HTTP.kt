@@ -91,6 +91,7 @@ class HTTPService @Inject constructor() {
 
     ////////////////////// Comprobación y edición del estado de login //////////////////////
     suspend fun isLogged(email: String): Boolean? {
+        if (email=="") return false
         val response = httpClient.get("http://34.135.202.124:8000/login/${email}")
         return response.body()
     }
