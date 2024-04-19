@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Local.Data.AppLanguage
 import com.example.budgetbuddy.Local.Data.obtenerTipoEnIdioma
 import com.example.budgetbuddy.Local.Data.textoAIcono
@@ -100,6 +101,8 @@ fun GastoAbierto(
     onEdit: (Gasto) -> Unit,
     onConfirm: () -> Unit
 ){
+    val context = LocalContext.current
+    val scheduler = AndroidAlarmScheduler(context)
     val coroutineScope = rememberCoroutineScope()
     var toast by remember { mutableStateOf("") }
     if(show){
@@ -150,7 +153,7 @@ fun GastoAbierto(
                             // En caso de bloqueo o congelado de la base de datos, para que no afecte al uso normal y fluido de la aplicación.
                             // (Necedario en los métodos de tipo insert, delete y update)
                             toast = gasto.nombre
-                            coroutineScope.launch(Dispatchers.IO) {appViewModel.borrarGasto(gasto)}
+                            coroutineScope.launch(Dispatchers.IO) {appViewModel.borrarGasto(gasto, context, scheduler)}
                             onConfirm() },
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent

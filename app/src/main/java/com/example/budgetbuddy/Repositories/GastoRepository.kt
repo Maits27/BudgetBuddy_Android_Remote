@@ -143,7 +143,7 @@ class GastoRepository @Inject constructor(
             }else if (fechaGasto == LocalDate.now()){
                 scheduler.schedule(
                     AlarmItem(
-                        time = LocalDateTime.now().plusMinutes(2),
+                        time = LocalDateTime.now().plusSeconds(15),
                         title = context.getString(R.string.am_title, gastos[0].user_id, it.nombre),
                         body = context.getString(R.string.am_body, it.nombre, it.tipo, it.cantidad.toString())
                     )

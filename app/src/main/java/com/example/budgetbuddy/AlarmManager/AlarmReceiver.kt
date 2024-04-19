@@ -31,10 +31,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @SuppressLint("RestrictedApi")
 class AlarmReceiver : BroadcastReceiver() {
-    val httpService = HTTPService()
-    private val coroutineScope = MainScope()
-    @Inject
-    lateinit var userRepository: ILoginSettings
 
     @SuppressLint("RestrictedApi")
     override fun onReceive(context: Context, intent: Intent?) {
@@ -42,7 +38,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val title = intent?.getStringExtra("TITLE")?: return
         val body = intent.getStringExtra("BODY") ?: return
-        val logout = intent.getStringExtra("LOGOUT") ?: return
 
         val notificationId = System.currentTimeMillis().toInt()
         if (title!="" || body!=""){
@@ -64,28 +59,6 @@ class AlarmReceiver : BroadcastReceiver() {
                     notify(notificationId, builder.build())
                 }
             }
-        }else{
-//            val builder = NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-//                .setSmallIcon(R.drawable.logout)
-//                .setContentTitle(logout)
-//                .setContentText("Logout after 1h")
-//                .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                .setAutoCancel(true)
-//
-//            with(NotificationManagerCompat.from(context)) {
-//                if (ActivityCompat.checkSelfPermission(
-//                        context,
-//                        Manifest.permission.POST_NOTIFICATIONS
-//                    ) == PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    notify(notificationId, builder.build())
-//                }
-//            }
-
-//            coroutineScope.launch {
-//                userRepository.setLastLoggedUser("")
-//                httpService.loginUser(logout, false)
-//            }
         }
     }
 }

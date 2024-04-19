@@ -122,7 +122,14 @@ class AppViewModel @Inject constructor(
         return gasto
     }
 
-    suspend fun borrarGasto(gasto: Gasto){
+    suspend fun borrarGasto(gasto: Gasto, context:Context, scheduler: AndroidAlarmScheduler){
+        scheduler.cancel(
+            AlarmItem(
+                time = LocalDateTime.of(gasto.fecha.year, gasto.fecha.monthValue, gasto.fecha.dayOfMonth, 11, 0),
+                title = context.getString(R.string.am_title, gasto.userId, gasto.nombre),
+                body = context.getString(R.string.am_body, gasto.nombre, gasto.tipo, gasto.cantidad.toString())
+            )
+        )
         gastoRepository.deleteGasto(gasto)
     }
 

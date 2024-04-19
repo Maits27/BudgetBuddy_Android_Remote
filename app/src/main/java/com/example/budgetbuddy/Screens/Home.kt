@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import com.example.budgetbuddy.AlarmManager.AndroidAlarmScheduler
 import com.example.budgetbuddy.Local.Data.AppLanguage
 import com.example.budgetbuddy.VM.AppViewModel
 import com.example.budgetbuddy.Local.Room.Gasto
