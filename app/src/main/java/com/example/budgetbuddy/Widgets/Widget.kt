@@ -46,6 +46,7 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.example.budgetbuddy.Local.Data.CompactGasto
+import com.example.budgetbuddy.Local.Data.TipoGasto
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.Shared.NoData
 import com.example.budgetbuddy.ui.theme.grisClaro
@@ -83,6 +84,7 @@ class Widget : GlanceAppWidget() {
         val prefs = currentState<Preferences>()
 
         val user = prefs[currentUserKey]
+        val idioma = prefs[idioma]?:"en"
         val data: String? = prefs[todayGastoDataKey]
 
         val gastos: List<CompactGasto> = if (data != null) Json.decodeFromString(data) else emptyList()
@@ -106,7 +108,7 @@ class Widget : GlanceAppWidget() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text(
-                    text = if (user != null && user != "") context.getString(R.string.widget_title, user.split("@").firstOrNull()) else context.getString(R.string.widget_title_no_user),
+                    text = if (user != null && user != "") context.getString(R.string.widget_title, user.split("@").firstOrNull()) else "Today's expenses:",
                     modifier = GlanceModifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
@@ -129,7 +131,7 @@ class Widget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = GlanceModifier.fillMaxSize().defaultWeight()
                     ) {
-                        Text(text = context.getString(R.string.widget_must_login))
+                        Text(text = "Log In")
                     }
                 }
 
@@ -161,7 +163,7 @@ class Widget : GlanceAppWidget() {
                 else -> {
                     LazyColumn(modifier = GlanceModifier.fillMaxSize().defaultWeight()) {
                         items(gastos, itemId = { it.hashCode().toLong() }) { item ->
-                            GastoItem(gasto = item)
+                            GastoItem(gasto = item, idioma)
                         }
                     }
                 }
@@ -178,7 +180,7 @@ class Widget : GlanceAppWidget() {
     }
 
     @Composable
-    fun GastoItem(gasto: CompactGasto){
+    fun GastoItem(gasto: CompactGasto, idioma: String){
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
@@ -200,7 +202,7 @@ class Widget : GlanceAppWidget() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ){
-                    Text(text = textoAIngles(gasto.tipo.tipo),
+                    Text(text = textoAIngles(gasto.tipo.tipo, idioma),
                         modifier = GlanceModifier
                             .padding(vertical = 4.dp, horizontal = 8.dp).defaultWeight())
                     Image(
@@ -269,14 +271,25 @@ class Widget : GlanceAppWidget() {
             else -> return R.drawable.bill
         }
     }
-    private fun textoAIngles(texto:String): String{
-        when{
-            texto == "Comida" -> return "Food"
-            texto == "Hogar" -> return "Home"
-            texto == "Ropa" -> return "Clothes"
-            texto == "Actividad" -> return "Activity"
-            texto == "Transporte" -> return "Transport"
-            else -> return "Others"
+    private fun textoAIngles(texto:String, idioma: String): String{
+        return when (idioma) {
+            "eu" -> when (texto) {   // Euskera
+                "Comida" -> "Janaria"
+                "Hogar" -> "Etxea"
+                "Ropa" -> "Arropa"
+                "Actividad" -> "Jarduera"
+                "Transporte" -> "Garraioa"
+                else -> "Besteak"
+            }
+            "en" -> when (texto) {   // Inglés
+                "Comida" -> "Food"
+                "Hogar" -> "Home"
+                "Ropa" -> "Clothes"
+                "Actividad" -> "Activity"
+                "Transporte" -> "Transport"
+                else -> "Others"
+            }
+            else -> texto       // Por defecto, devolver el mensaje original (Castellano)
         }
     }
 }

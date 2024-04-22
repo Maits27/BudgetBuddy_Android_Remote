@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -113,14 +116,9 @@ fun UserEdit(
         if (!passwdOk){
             ErrorText(text = stringResource(id = R.string.passwd_error))
         }
-        androidx.compose.material.Button(
+        Button(
             modifier = Modifier.padding(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = verdeOscuro,
-                contentColor = grisClaro,
-                disabledBackgroundColor = grisClaro,
-                disabledContentColor = verdeOscuro,
-            ),
+            shape = RectangleShape,
             onClick = {
                 if (correctName(nombre)){
                     if ( (passwd=="" && passwd2=="")){
@@ -147,8 +145,8 @@ fun UserEdit(
         ) {
             Text(
                 text = stringResource(id = R.string.edit),
-                Modifier.background(color = verdeOscuro),
-                color = verdeClaro
+                Modifier.background(color = MaterialTheme.colorScheme.primary),
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
         CloseButton { onConfirm() }

@@ -40,6 +40,8 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
     lateinit var gastoRepository: GastoRepository
     @Inject
     lateinit var userRepository: ILoginSettings
+    @Inject
+    lateinit var preferences: IGeneralPreferences
     /*************************************************
      **                    Eventos                  **
      *************************************************/
@@ -81,6 +83,7 @@ class WidgetReceiver : GlanceAppWidgetReceiver() {
                         // If there's a user update data.
                         if (currentUsername != "") {
                             this[currentUserKey] = currentUsername
+                            this[idioma] = preferences.language(currentUsername).first()
                             this[todayGastoDataKey] = Json.encodeToString(gastos)
                         }
                         // If there's no user clear all data
